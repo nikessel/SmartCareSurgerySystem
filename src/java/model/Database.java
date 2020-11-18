@@ -44,23 +44,23 @@ class Database {
     private static final ArrayList BOOKINGLIST = new ArrayList<Booking>();
 
     // Getters for all object lists in the system
-    public static ArrayList<Patient> getPatientList() {
+    public static ArrayList<Patient> getPATIENTLIST() {
         return PATIENTLIST;
     }
 
-    public static ArrayList getADMINLIST() {
+    public static ArrayList<Admin> getADMINLIST() {
         return ADMINLIST;
     }
 
-    public static ArrayList getDOCTORLIST() {
+    public static ArrayList<Doctor> getDOCTORLIST() {
         return DOCTORLIST;
     }
 
-    public static ArrayList getNURSELIST() {
+    public static ArrayList<Nurse> getNURSELIST() {
         return NURSELIST;
     }
 
-    public static ArrayList getBOOKINGLIST() {
+    public static ArrayList<Booking> getBOOKINGLIST() {
         return BOOKINGLIST;
     }
 
@@ -109,7 +109,7 @@ class Database {
         try {
             Connect();
             executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM patients WHERE patient_id = " + patientID);
+            ResultSet rs = Database.executeQuery("SELECT address FROM patients WHERE patient_id = " + patientID);
 
             // iterate through the sql resultset
             while (rs.next()) {
