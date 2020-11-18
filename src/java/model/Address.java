@@ -12,21 +12,10 @@ package model;
 public class Address {
     String postcode;
     String town;
+    String county;
     String addressLine1;
     String addressLine2;
-
-    public Address(String postcode, String town, String addressLine1, String addressLine2) {
-        this.postcode = postcode;
-        this.town = town;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-    }
-
-    public Address(String postcode, String town, String addressLine1) {
-        this.postcode = postcode;
-        this.town = town;
-        this.addressLine1 = addressLine1;
-    }
+    String telephoneNumber;
 
     public String getPostcode() {
         return postcode;
@@ -42,6 +31,14 @@ public class Address {
 
     public void setTown(String town) {
         this.town = town;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 
     public String getAddressLine1() {
@@ -60,10 +57,21 @@ public class Address {
         this.addressLine2 = addressLine2;
     }
 
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
     @Override
     public String toString() {
-        return "Address{" + "postcode=" + postcode + ", town=" + town + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + '}';
+        return "Address{" + "postcode=" + postcode + ", town=" + town + ", county=" + county + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", telephoneNumber=" + telephoneNumber + '}';
     }
+                
+
+
     
     
 }
