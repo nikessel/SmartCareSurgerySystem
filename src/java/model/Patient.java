@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author niklas
@@ -12,13 +14,34 @@ package model;
 public class Patient extends User {
 
     int patientID;
+    Date dateOfBirth;
+    Address address;
 
-    public Patient(String username, String password, String firstName, String surName, int patientID) {
+    public Patient(String username, String password, String firstName, 
+            String surName, int patientID, Date dateOfBirth, Address address) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.patientID = patientID;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
+
+    public int getPatientID() {
+        return patientID;
+    }
+
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     
