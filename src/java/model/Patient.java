@@ -16,6 +16,7 @@ public class Patient extends User {
     int patientID;
     Date dateOfBirth;
     Address address;
+    
 
     public Patient(String username, String password, String firstName, 
             String surName, int patientID, Date dateOfBirth, Address address) {
@@ -44,6 +45,20 @@ public class Patient extends User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", patientID=" + patientID + ", dateOfBirth=" + dateOfBirth + ", address=" + address + '}';
+    }
+
+    
     
     
 }

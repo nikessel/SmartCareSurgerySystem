@@ -10,22 +10,23 @@ package model;
  * @author niklas
  */
 public class Address {
-    String postcode;
-    String town;
-    String county;
+
     String addressLine1;
     String addressLine2;
+    String postcode;
+    String county;
+    String town;
     String telephoneNumber;
 
-    public Address(String postcode, String town, String county, String addressLine1, String addressLine2, String telephoneNumber) {
-        this.postcode = postcode;
-        this.town = town;
-        this.county = county;
+    public Address(String addressLine1, String addressLine2, String postcode, String county, String town, String telephoneNumber) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
+        this.postcode = postcode;
+        this.county = county;
+        this.town = town;
         this.telephoneNumber = telephoneNumber;
     }
-    
+
     
 
     public String getPostcode() {
@@ -80,9 +81,5 @@ public class Address {
     public String toString() {
         return "Address{" + "postcode=" + postcode + ", town=" + town + ", county=" + county + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", telephoneNumber=" + telephoneNumber + '}';
     }
-                
 
-
-    
-    
 }
