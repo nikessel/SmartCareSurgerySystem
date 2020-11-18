@@ -17,6 +17,17 @@ public class Address {
     String addressLine2;
     String telephoneNumber;
 
+    public Address(String postcode, String town, String county, String addressLine1, String addressLine2, String telephoneNumber) {
+        this.postcode = postcode;
+        this.town = town;
+        this.county = county;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.telephoneNumber = telephoneNumber;
+    }
+    
+    
+
     public String getPostcode() {
         return postcode;
     }
