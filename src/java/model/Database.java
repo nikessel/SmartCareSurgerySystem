@@ -6,6 +6,7 @@
 package model;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,12 +28,11 @@ public class Database {
 
     private static Connection connection;
     private static Statement statement;
-    private static boolean displayErrors = true;
     private static final String DATABASESTRING = "jdbc:mysql://127.0.0.1:3306";
     private static final String USERNAME = "user";
     private static final String PASSWORD = "password";
     private static final String DATABASENAME = "sql_smart_care_surgery_database";
-    private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients"};
+    private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
 
     // This method connects to the database
     // IP, username and password are hardcoded
@@ -46,6 +46,16 @@ public class Database {
             System.out.println(e);
         }
 
+    }
+
+    private static void closeConnection() {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
 
     // Getter for statement required for writing back to the Database directly
@@ -83,9 +93,7 @@ public class Database {
         telephoneNumber = stringArray[5];
 
         if (addressLine1.isEmpty()) {
-            if (displayErrors) {
-                System.err.println("Database error getting address");
-            }
+            System.err.println("Database error getting address");
         }
         // Return the object
         return new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
@@ -131,64 +139,15 @@ public class Database {
                 return new Admin(username, password, firstName, surName, isFullTime, id);
             }
         } catch (SQLException e) {
+            System.out.println(e);
+        } finally {closeConnection();}
 
-        }
-
-        if (displayErrors) {
-            System.err.println("Database error getting admin");
-        }
+        System.err.println("Database error getting admin");
 
         return new Admin("", "", "", "", false, -1);
     }
 
-    public static void printDatabaseTable(String tableToPrint) {
-        try {
-            if ("all".equals(tableToPrint)) {
-                for (String TABLENAMES1 : TABLENAMES) {
-                    System.out.println("");
-                    System.out.println("---------- " + TABLENAMES1 + " ----------");
-                    System.out.println("");
-                    printDatabaseTable(TABLENAMES1);
-                }
-                return;
-            }
-
-            String idString = tableToPrint.substring(0, tableToPrint.length() - 1) + "_id";
-
-            String queryString = "SELECT " + idString
-                    + " FROM " + tableToPrint + ";";
-
-            connect();
-            ResultSet rs = Database.executeQuery(queryString);
-
-            // iterate through the sql resultset
-            while (rs.next()) {
-                int id = rs.getInt(idString);
-
-                switch (tableToPrint) {
-                    case "admins":
-                        System.out.println(getAdmin(id));
-                        break;
-                    case "doctors":
-                        System.out.println(getDoctor(id));
-                        break;
-                    case "nurses":
-                        System.out.println(getNurse(id));
-                        break;
-                    case "patients":
-                        System.out.println(getPatient(id));
-                        break;
-
-                }
-
-            }
-        } catch (SQLException e) {
-            if (displayErrors) {
-                System.out.println(e);
-            }
-        }
-    }
-
+    // Single user get methods
     public static Doctor getDoctor(int doctorID) {
         connect();
         try {
@@ -208,12 +167,11 @@ public class Database {
                 return new Doctor(username, password, firstName, surName, isFullTime, id);
             }
         } catch (SQLException e) {
+            System.out.println(e);
 
-        }
+        } finally {closeConnection();}
 
-        if (displayErrors) {
-            System.err.println("Database error getting doctor");
-        }
+        System.err.println("Database error getting doctor");
 
         return new Doctor("", "", "", "", false, -1);
     }
@@ -237,12 +195,10 @@ public class Database {
                 return new Nurse(username, password, firstName, surName, isFullTime, nurseID);
             }
         } catch (SQLException e) {
+            System.out.println(e);
+        } finally {closeConnection();}
 
-        }
-
-        if (displayErrors) {
-            System.err.println("Database error getting nurse");
-        }
+        System.err.println("Database error getting nurse");
 
         return new Nurse("", "", "", "", false, -1);
     }
@@ -266,14 +222,110 @@ public class Database {
                 return new Patient(username, password, firstName, surName, patientID, dateOfBirth, address);
             }
         } catch (SQLException e) {
+            System.out.println(e);
+        } finally {closeConnection();}
 
-        }
-
-        if (displayErrors) {
-            System.err.println("Database error getting patient");
-        }
+        System.err.println("Database error getting patient");
 
         return new Patient("", "", "", "", -1, new java.sql.Date(0000 - 00 - 00), new Address("", "", "", "", "", ""));
+    }
+
+    public static Consultation getConsultation(int consultationID) {
+        connect();
+
+        Patient patient = new Patient();
+        Doctor doctor = new Doctor();
+        Nurse nurse = new Nurse();
+        java.sql.Date consultationDate = java.sql.Date.valueOf("1970-01-01");
+
+        try {
+            ResultSet rs = executeQuery("SELECT * FROM consultations WHERE consultation_id=" + consultationID + ";");
+
+            // iterate through the sql resultset
+            while (rs.next()) {
+                patient = getPatient(rs.getInt("patient_id"));
+                doctor = getDoctor(rs.getInt("doctor_id"));
+                nurse = getNurse(rs.getInt("nurse_id"));
+                consultationDate = rs.getDate("consultation_date");
+
+                // Return the object
+                return new Consultation(patient, doctor, nurse, consultationDate, consultationID);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {closeConnection();}
+
+        System.err.println("Database error getting consultation");
+
+        return new Consultation(patient, doctor, nurse, consultationDate, consultationID);
+    }
+
+    public static ArrayList<Object> getAllFromDatabase(String tableToGet) {
+
+        ArrayList<Object> outputList = new ArrayList();
+
+        try {
+            String idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
+
+            String queryString = "SELECT " + idString
+                    + " FROM " + tableToGet + ";";
+
+            connect();
+            ResultSet rs = Database.executeQuery(queryString);
+
+            // iterate through the sql resultset
+            while (rs.next()) {
+                int id = rs.getInt(idString);
+
+                switch (tableToGet) {
+                    case "admins":
+                        outputList.add(getAdmin(id));
+                        break;
+                    case "doctors":
+                        outputList.add(getDoctor(id));
+                        break;
+                    case "nurses":
+                        outputList.add(getNurse(id));
+                        break;
+                    case "patients":
+                        outputList.add(getPatient(id));
+                        break;
+                    case "consultations":
+                        outputList.add(getConsultation(id));
+                        break;
+
+                }
+
+            }
+        } catch (SQLException e) {
+
+            System.out.println(e);
+
+        } finally {closeConnection();}
+
+        return outputList;
+    }
+
+    public static void printDatabaseTable(String tableToPrint) {
+        ArrayList<Object> thisTable = new ArrayList();
+
+        if ("all".equals(tableToPrint)) {
+            for (String TABLENAMES1 : TABLENAMES) {
+                System.out.println("");
+                System.out.println("---------- " + TABLENAMES1 + " ----------");
+                System.out.println("");
+
+                printDatabaseTable(TABLENAMES1);
+            }
+            return;
+        }
+
+        thisTable = getAllFromDatabase(tableToPrint);
+
+        // Print the table
+        for (int i = 0; i < thisTable.size(); i++) {
+            System.out.println(thisTable.get(i));
+        }
     }
 
     /*
@@ -300,7 +352,6 @@ public class Database {
         }
     }
      */
-
  /*
     The method saves any valid SmartCareSurgery database object in the 
     A mySQL INSERT command will be generated based on the 
@@ -420,6 +471,30 @@ public class Database {
                     + "date_of_birth='" + parsed.getDateOfBirth() + "', "
                     + "address='" + address + "'";
 
+        } else if (object instanceof Consultation) {
+
+            Consultation parsed = (Consultation) object;
+
+            table = "consultations";
+
+            fieldString = "patient_id, doctor_id, nurse_id, consultation_date";
+
+            if (parsed.getConsulationID() != -1) {
+                idString = ", " + String.valueOf(parsed.getConsulationID());
+                 fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
+            }
+
+            valueString = "" + parsed.getPatient().getPatientID()
+                    + ", " + parsed.getDoctor().getDoctorID()
+                    + ", " + parsed.getNurse().getNurseID()
+                    + ", '" + parsed.getConsulationDate() + "'"
+                    + idString;
+
+            updateString = "patient_id=" + parsed.getPatient().getPatientID() + ", "
+                    + "doctor_id=" + parsed.getDoctor().getDoctorID() + ", "
+                    + "nurse_id=" + parsed.getNurse().getNurseID() + ", "
+                    + "consultation_date='" + parsed.getConsulationDate() + "'";
+
         } else {
             System.out.println("Error writing object to database, "
                     + "object type not found.");
@@ -434,7 +509,7 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Error writing object to database");
-        }
+        } finally {closeConnection();}
     }
 
     /*
@@ -466,19 +541,26 @@ public class Database {
             idString = "doctor_id";
             idValue = String.valueOf(parsed.getDoctorID());
 
-        }  else if (object instanceof Nurse) {
+        } else if (object instanceof Nurse) {
             Nurse parsed = (Nurse) object;
 
             table = "nurses";
             idString = "nurse_id";
             idValue = String.valueOf(parsed.getNurseID());
 
-        }  else if (object instanceof Patient) {
+        } else if (object instanceof Patient) {
             Patient parsed = (Patient) object;
 
             table = "patients";
             idString = "patient_id";
             idValue = String.valueOf(parsed.getPatientID());
+
+        }  else if (object instanceof Consultation) {
+            Consultation parsed = (Consultation) object;
+
+            table = "consultations";
+            idString = "consultation_id";
+            idValue = String.valueOf(parsed.getConsulationID());
 
         } else {
             System.out.println("Error writing object to database, "
@@ -493,8 +575,8 @@ public class Database {
             statement.executeUpdate(queryString);
         } catch (Exception e) {
             System.out.println(e);
-            System.err.println("Error deleting object from database");
-        }
+            System.err.println("Error deleting object from database (ID not found?)");
+        } finally {closeConnection();}
     }
 
 }

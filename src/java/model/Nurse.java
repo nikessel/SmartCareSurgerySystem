@@ -13,6 +13,10 @@ public class Nurse extends Employee {
 
     private int nurseID;
 
+    public Nurse() {
+        
+    }
+    
     public Nurse(String username, String password, String firstName, String surName, boolean isFullTime) {
         this.username = username;
         this.password = password;

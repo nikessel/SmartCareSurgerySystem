@@ -13,6 +13,10 @@ public class Doctor extends Employee {
 
     private int doctorID;
 
+    public Doctor() {
+        
+    }
+    
     public Doctor(String username, String password, String firstName, String surName, boolean isFullTime) {
         this.username = username;
         this.password = password;

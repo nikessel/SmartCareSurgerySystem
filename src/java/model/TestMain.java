@@ -12,8 +12,9 @@ package model;
 public class TestMain {
 
     public static void main(String[] args) {
+        
+        /*
         Database.printDatabaseTable("all");
-
         Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true, 1001);
         Database.writeObjectToDatabase(admin);
 
@@ -26,9 +27,12 @@ public class TestMain {
         Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", "sad", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
         Database.writeObjectToDatabase(patient);
 
-        Database.printDatabaseTable("nurses");
-        Database.deleteObjectFromDatabase(Database.getNurse(3004));
-        Database.printDatabaseTable("nurses");
+        Database.deleteObjectFromDatabase(Database.getNurse(3002));
+        
+        System.out.println(Database.getConsultation(5005));
+        
+        Database.printDatabaseTable("all");
+        */
 
     }
 
