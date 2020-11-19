@@ -135,8 +135,33 @@ class Database {
 
         return new Address("", "", "", "", "", "");
     }
-    
-        public static void initialiseDoctors() {
+
+    public static void initialiseAdmins() {
+
+        ADMINLIST.clear();
+
+        try {
+            executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.executeQuery("SELECT * FROM admins;");
+
+            // iterate through the sql resultset
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("first_name");
+                String surName = rs.getString("sur_name");
+                int adminID = rs.getInt("admin_id");
+
+                // print the results
+                ADMINLIST.add(new Admin(username, password, firstName, surName, adminID));
+            }
+        } catch (Exception e) {
+
+            System.err.println("Database error getting admin");
+        }
+    }
+
+    public static void initialiseDoctors() {
 
         DOCTORLIST.clear();
 
@@ -158,6 +183,31 @@ class Database {
         } catch (Exception e) {
 
             System.err.println("Database error getting doctor");
+        }
+    }
+    
+        public static void initialiseNurses() {
+
+        NURSELIST.clear();
+
+        try {
+            executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.executeQuery("SELECT * FROM nurses;");
+
+            // iterate through the sql resultset
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("first_name");
+                String surName = rs.getString("sur_name");
+                int nurseID = rs.getInt("nurse_id");
+
+                // print the results
+                NURSELIST.add(new Nurse(username, password, firstName, surName, nurseID));
+            }
+        } catch (Exception e) {
+
+            System.err.println("Database error getting nurse");
         }
     }
 

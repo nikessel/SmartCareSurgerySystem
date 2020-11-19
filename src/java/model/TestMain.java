@@ -23,13 +23,27 @@ public class TestMain {
         for (int i = 0; i < length; i++) {
             System.out.println(Database.getDOCTORLIST().get(i));
         }
+
+        length = Database.getADMINLIST().size();
+
+        for (int i = 0; i < length; i++) {
+            System.out.println(Database.getADMINLIST().get(i));
+        }
+
+        length = Database.getNURSELIST().size();
+
+        for (int i = 0; i < length; i++) {
+            System.out.println(Database.getNURSELIST().get(i));
+        }
     }
 
     public static void main(String[] args) {
         Database.Connect();
         Database.initialisePatients();
         Database.initialiseDoctors();
-        
+        Database.initialiseAdmins();
+        Database.initialiseNurses();
+
         print_all_users();
 
     }
