@@ -26,7 +26,9 @@ public class TestMain {
         Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", "sad", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
         Database.writeObjectToDatabase(patient);
 
-        Database.printDatabaseTable("all");
+        Database.printDatabaseTable("nurses");
+        Database.deleteObjectFromDatabase(Database.getNurse(3004));
+        Database.printDatabaseTable("nurses");
 
     }
 

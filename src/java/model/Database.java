@@ -452,7 +452,28 @@ public class Database {
         String idString = "";
         String idValue = "";
 
-        if (object instanceof Patient) {
+        if (object instanceof Admin) {
+            Admin parsed = (Admin) object;
+
+            table = "admins";
+            idString = "admin_id";
+            idValue = String.valueOf(parsed.getAdminID());
+
+        } else if (object instanceof Doctor) {
+            Doctor parsed = (Doctor) object;
+
+            table = "doctors";
+            idString = "doctor_id";
+            idValue = String.valueOf(parsed.getDoctorID());
+
+        }  else if (object instanceof Nurse) {
+            Nurse parsed = (Nurse) object;
+
+            table = "nurses";
+            idString = "nurse_id";
+            idValue = String.valueOf(parsed.getNurseID());
+
+        }  else if (object instanceof Patient) {
             Patient parsed = (Patient) object;
 
             table = "patients";
@@ -472,7 +493,7 @@ public class Database {
             statement.executeUpdate(queryString);
         } catch (Exception e) {
             System.out.println(e);
-            System.err.println("Error writing object to database");
+            System.err.println("Error deleting object from database");
         }
     }
 
