@@ -24,49 +24,30 @@ The Database class also contains methods for writing objects back to the databas
 for permanent storage.
 
  */
-class Database {
+public class Database {
 
-    private static Connection connection;
-    private static Statement statement;
-    private static final String DATABASESTRING = "jdbc:mysql://127.0.0.1:3306";
-    private static final String USERNAME = "user";
-    private static final String PASSWORD = "password";
-    private static final String DATABASENAME = "sql_smart_care_surgery_database";
+    private Connection connection;
+    private Statement statement;
+    private boolean displayErrors;
+    private String DATABASESTRING = "jdbc:mysql://127.0.0.1:3306";
+    private String USERNAME = "user";
+    private String PASSWORD = "password";
+    private String DATABASENAME = "sql_smart_care_surgery_database";
 
-    // System user lists
-    private static final ArrayList PATIENTLIST = new ArrayList<Patient>();
-    private static final ArrayList ADMINLIST = new ArrayList<Admin>();
-    private static final ArrayList DOCTORLIST = new ArrayList<Doctor>();
-    private static final ArrayList NURSELIST = new ArrayList<Nurse>();
-
-    // System object lists
-    // No list for the Address class as it is stored as an attribute
-    private static final ArrayList BOOKINGLIST = new ArrayList<Booking>();
-
-    // Getters for all object lists in the system
-    public static ArrayList<Patient> getPATIENTLIST() {
-        return PATIENTLIST;
+    // Singleton configuration
+    private static Database database = new Database();
+    
+    public static Database getDatabase() {
+        return database;
     }
 
-    public static ArrayList<Admin> getADMINLIST() {
-        return ADMINLIST;
-    }
-
-    public static ArrayList<Doctor> getDOCTORLIST() {
-        return DOCTORLIST;
-    }
-
-    public static ArrayList<Nurse> getNURSELIST() {
-        return NURSELIST;
-    }
-
-    public static ArrayList<Booking> getBOOKINGLIST() {
-        return BOOKINGLIST;
+    public void setDisplayErrors(boolean displayErrors) {
+        this.displayErrors = displayErrors;
     }
 
     // This method connects to the database
     // IP, username and password is hardcoded
-    public static void Connect() {
+    public void connect() {
         try {
             connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
             statement = connection.createStatement();
@@ -77,12 +58,12 @@ class Database {
 
     // Getter for statement required for writing back to the Database directly
     // from other classes
-    public static Statement getStatement() {
+    public Statement getStatement() {
         return statement;
     }
 
     // Executes read operation on the database, takes a mySQL command as input
-    public static ResultSet executeQuery(String query) {
+    public ResultSet executeQuery(String query) {
         if (!"".equals(query)) {
             try {
                 ResultSet rs = statement.executeQuery(query);
@@ -91,7 +72,7 @@ class Database {
                 System.out.println(e);
             }
         } else {
-            System.out.println("A query must be passed to function executeQuery()");
+            System.out.println("A query must be passed to function database.executeQuery()");
         }
         return null;
     }
@@ -104,12 +85,12 @@ class Database {
     all other classes.
      */
     // System user inititialisations
-    private static Address getAddress(int patientID) {
+    private Address getAddress(int patientID) {
 
         try {
-            Connect();
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT address FROM patients WHERE patient_id = " + patientID);
+            database.connect();
+            database.executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.database.executeQuery("SELECT address FROM patients WHERE patient_id = " + patientID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -126,23 +107,25 @@ class Database {
                 town = string_array[4];
                 telephoneNumber = string_array[5];
 
+                // Return the object
                 return new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
-            System.err.println("Database error receiving patient address");
+        }
+        
+        if (displayErrors) {
+            System.err.println("Database error getting address");
         }
 
         return new Address("", "", "", "", "", "");
     }
 
-    public static void initialiseAdmins() {
-
-        ADMINLIST.clear();
+    public Admin getAdmin(int adminID) {
 
         try {
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM admins;");
+            database.executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.database.executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID + ";");
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -151,24 +134,27 @@ class Database {
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
-                int adminID = rs.getInt("admin_id");
-
-                // print the results
-                ADMINLIST.add(new Admin(username, password, firstName, surName, isFullTime, adminID));
+                int id = rs.getInt("admin_id");
+                
+                // Return the object
+                return new Admin(username, password, firstName, surName, isFullTime, id);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
+        }
+        
+        if (displayErrors) {
             System.err.println("Database error getting admin");
         }
+        
+        return new Admin("", "", "", "", false, -1);
     }
 
-    public static void initialiseDoctors() {
-
-        DOCTORLIST.clear();
+    public Doctor getDoctor(int doctorID) {
 
         try {
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM doctors;");
+            database.executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.database.executeQuery("SELECT * FROM doctors WHERE doctor_id=" + doctorID + ";");
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -177,24 +163,27 @@ class Database {
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
-                int doctorID = rs.getInt("doctor_id");
+                int id = rs.getInt("doctor_id");
 
-                // print the results
-                DOCTORLIST.add(new Doctor(username, password, firstName, surName, isFullTime, doctorID));
+                // Return the object
+                return new Doctor(username, password, firstName, surName, isFullTime, id);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
+        }
+        
+        if (displayErrors) {
             System.err.println("Database error getting doctor");
         }
+        
+        return new Doctor("", "", "", "", false, -1);
     }
     
-        public static void initialiseNurses() {
-
-        NURSELIST.clear();
+        public Nurse getNurse(int nurseID) {
 
         try {
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM nurses;");
+            database.executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.database.executeQuery("SELECT * FROM nurses WHERE nurse_id=" + nurseID + ";");
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -203,24 +192,28 @@ class Database {
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
-                int nurseID = rs.getInt("nurse_id");
+                int id = rs.getInt("nurse_id");
 
-                // print the results
-                NURSELIST.add(new Nurse(username, password, firstName, surName, isFullTime, nurseID));
+                // Return the object
+                return new Nurse(username, password, firstName, surName, isFullTime, id);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
+        }
+        
+        if (displayErrors) {
             System.err.println("Database error getting nurse");
         }
+        
+        return new Nurse("", "", "", "", false, -1);
     }
-
-    public static void initialisePatients() {
-
-        PATIENTLIST.clear();
+        
+        
+    public Patient getPatient(int patientID) {
 
         try {
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM patients;");
+            database.executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.database.executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID + ";");
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -228,27 +221,32 @@ class Database {
                 String password = rs.getString("password");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
-                int patientID = rs.getInt("patient_id");
+                int id = rs.getInt("patient_id");
                 Address address = getAddress(patientID);
                 Date dateOfBirth = rs.getDate("date_of_birth");
 
-                // print the results
-                PATIENTLIST.add(new Patient(username, password, firstName, surName, patientID, dateOfBirth, address));
+                // Return the object
+                return new Patient(username, password, firstName, surName, patientID, dateOfBirth, address);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
+        }
+        
+        if (displayErrors) {
             System.err.println("Database error getting patient");
         }
+        
+        return new Patient("", "", "", "", -1, new java.util.Date(0000-00-00), new Address("", "", "", "", "", ""));
     }
 
     /*
     // System object initialisations
-    public static void initialiseBookings() {
+    public void initialiseBookings() {
 
         BOOKINGLIST.clear();
         try {
-            executeQuery("USE sql_health_care_pro_database");
-            ResultSet rs = Database.executeQuery("SELECT * FROM appointments;");
+            database.executeQuery("USE sql_health_care_pro_database");
+            ResultSet rs = Database.database.executeQuery("SELECT * FROM appointments;");
 
             // iterate through the java resultset
             while (rs.next()) {
@@ -274,10 +272,10 @@ class Database {
     A ON DUBLICATE restriction will also be added, so the database will update
     exiting entries, instead of adding dublicate rows.
      */
-    public static void writeObjectToDatabase(Object object) {
+    public void writeObjectToDatabase(Object object) {
 
-        Connect();
-        executeQuery("USE " + DATABASENAME);
+        database.connect();
+        database.executeQuery("USE " + DATABASENAME);
 
         String queryString;
         String table = "";
@@ -332,10 +330,10 @@ class Database {
     the database
     
      */
-    public static void deleteObjectFromDatabase(Object object) {
+    public void deleteObjectFromDatabase(Object object) {
 
-        Connect();
-        executeQuery("USE " + DATABASENAME);
+        database.connect();
+        database.executeQuery("USE " + DATABASENAME);
 
         String queryString;
         String table = "";

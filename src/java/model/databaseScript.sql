@@ -26,6 +26,7 @@ create table doctors (
 insert into doctors (username, password, first_name, sur_name, doctor_id, is_full_time) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', 1, true);
 insert into doctors (username, password, first_name, sur_name, doctor_id, is_full_time) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', 2, false);
 
+
 DROP TABLE nurses;
 create table nurses (
 	username VARCHAR(50),

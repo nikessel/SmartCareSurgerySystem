@@ -12,40 +12,61 @@ package model;
 public class TestMain {
 
     public static void print_all_users() {
-        int length = Database.getPATIENTLIST().size();
+        Database database = Database.getDatabase();
+        database.setDisplayErrors(false);
 
-        for (int i = 0; i < length; i++) {
-            System.out.println(Database.getPATIENTLIST().get(i));
+        int i = 1;
+
+        Admin thisAdmin = database.getAdmin(i);
+
+        while (thisAdmin.getAdminID() != -1) {
+            System.out.println(thisAdmin);
+
+            i++;
+            thisAdmin = database.getAdmin(i);
         }
+        
+        i = 1;
 
-        length = Database.getDOCTORLIST().size();
+        Doctor thisDoctor = database.getDoctor(i);
 
-        for (int i = 0; i < length; i++) {
-            System.out.println(Database.getDOCTORLIST().get(i));
+        while (thisDoctor.getDoctorID() != -1) {
+            System.out.println(thisDoctor);
+
+            i++;
+            thisDoctor = database.getDoctor(i);
         }
+        
+        i = 1;
 
-        length = Database.getADMINLIST().size();
+        Nurse thisNurse = database.getNurse(i);
 
-        for (int i = 0; i < length; i++) {
-            System.out.println(Database.getADMINLIST().get(i));
+        while (thisNurse.getNurseID() != -1) {
+            System.out.println(thisNurse);
+
+            i++;
+            thisNurse = database.getNurse(i);
         }
+        
+        i = 1;
 
-        length = Database.getNURSELIST().size();
+        Patient thisPatient = database.getPatient(i);
 
-        for (int i = 0; i < length; i++) {
-            System.out.println(Database.getNURSELIST().get(i));
+        while (thisPatient.getPatientID() != -1) {
+            System.out.println(thisPatient);
+
+            i++;
+            thisPatient = database.getPatient(i);
         }
+        
+        database.setDisplayErrors(true);
+
     }
 
     public static void main(String[] args) {
-        Database.Connect();
-        Database.initialisePatients();
-        Database.initialiseDoctors();
-        Database.initialiseAdmins();
-        Database.initialiseNurses();
+        Database.getDatabase().connect();
 
         print_all_users();
-
     }
 
 }
