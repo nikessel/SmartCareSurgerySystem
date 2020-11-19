@@ -150,10 +150,11 @@ class Database {
                 String password = rs.getString("password");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
+                boolean isFullTime = rs.getBoolean("is_full_time");
                 int adminID = rs.getInt("admin_id");
 
                 // print the results
-                ADMINLIST.add(new Admin(username, password, firstName, surName, adminID));
+                ADMINLIST.add(new Admin(username, password, firstName, surName, isFullTime, adminID));
             }
         } catch (Exception e) {
 
@@ -175,10 +176,11 @@ class Database {
                 String password = rs.getString("password");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
+                boolean isFullTime = rs.getBoolean("is_full_time");
                 int doctorID = rs.getInt("doctor_id");
 
                 // print the results
-                DOCTORLIST.add(new Doctor(username, password, firstName, surName, doctorID));
+                DOCTORLIST.add(new Doctor(username, password, firstName, surName, isFullTime, doctorID));
             }
         } catch (Exception e) {
 
@@ -200,10 +202,11 @@ class Database {
                 String password = rs.getString("password");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
+                boolean isFullTime = rs.getBoolean("is_full_time");
                 int nurseID = rs.getInt("nurse_id");
 
                 // print the results
-                NURSELIST.add(new Nurse(username, password, firstName, surName, nurseID));
+                NURSELIST.add(new Nurse(username, password, firstName, surName, isFullTime, nurseID));
             }
         } catch (Exception e) {
 

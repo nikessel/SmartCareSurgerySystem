@@ -8,13 +8,11 @@ create table admins (
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
+        is_full_time boolean,
 	admin_id INT
 );
-insert into admins (username, password, first_name, sur_name, admin_id) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', 1);
-insert into admins (username, password, first_name, sur_name, admin_id) values ('mpoyle1', '7U3MgO', 'Maible', 'Poyle', 2);
-insert into admins (username, password, first_name, sur_name, admin_id) values ('lpandya2', 'N0cOToD', 'Lawrence', 'Pandya', 3);
-insert into admins (username, password, first_name, sur_name, admin_id) values ('bkubas3', 'du6rJXEiRAS', 'Brok', 'Kubas', 4);
-insert into admins (username, password, first_name, sur_name, admin_id) values ('vwray4', 'e31evI', 'Viola', 'Wray', 5);
+insert into admins (username, password, first_name, sur_name, admin_id, is_full_time) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', 1, true);
+
 
 DROP TABLE doctors;
 create table doctors (
@@ -22,19 +20,11 @@ create table doctors (
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
+        is_full_time boolean,
 	doctor_id INT
 );
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', 1);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', 2);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('delvin2', 'PSa2LbZzvxMy', 'Davita', 'Elvin', 3);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('abru3', 'MyrEAQ', 'Arnaldo', 'Bru', 4);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('mjewes4', 'aN7kBuMHRu', 'Marice', 'Jewes', 5);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('bbrunke5', 'I0p5OoBPou', 'Bonny', 'Brunke', 6);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('aconneely6', 'PI8IvyYPEdF', 'Alvis', 'Conneely', 7);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('lbletsor7', 'PT4jDKN8w8', 'Leonanie', 'Bletsor', 8);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('floding8', 'HY1tLTWz', 'Fanchon', 'Loding', 9);
-insert into doctors (username, password, first_name, sur_name, doctor_id) values ('bhaigh9', '1fujq1ewaZ', 'Brit', 'Haigh', 10);
-
+insert into doctors (username, password, first_name, sur_name, doctor_id, is_full_time) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', 1, true);
+insert into doctors (username, password, first_name, sur_name, doctor_id, is_full_time) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', 2, false);
 
 DROP TABLE nurses;
 create table nurses (
@@ -42,29 +32,10 @@ create table nurses (
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
+        is_full_time boolean,
 	nurse_id INT
 );
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('mbleasdale0', 'T2PkF0', 'Mollie', 'Bleasdale', 1);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('kcatford1', '05hSAyU73', 'Konstanze', 'Catford', 2);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('rodunneen2', '1fMMP84rQlpf', 'Reena', 'O''Dunneen', 3);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('skinkead3', 'aoLItJNzwU4v', 'Svend', 'Kinkead', 4);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('xjakubiak4', 'ccHG7qi', 'Xavier', 'Jakubiak', 5);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('lpock5', 'jUZAUS', 'Leshia', 'Pock', 6);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('blissenden6', 'vW9Tjjz', 'Bronnie', 'Lissenden', 7);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('ivalentin7', 'NhY1JGS3127p', 'Illa', 'Valentin', 8);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('blangcaster8', 'PgrtKs4X7Wr', 'Bartlett', 'Langcaster', 9);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('gcaro9', 'BVZ6Q4', 'Guy', 'Caro', 10);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('eklewia', 'j9yGr2DX', 'Eilis', 'Klewi', 11);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('molomanb', 'Mkzy1XqBJ4H', 'Melva', 'Oloman', 12);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('mwardlawc', 'sTaAQnbpR', 'Merola', 'Wardlaw', 13);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('kgadaultd', 'Aq6DrW', 'Kort', 'Gadault', 14);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('jbyee', '28yAgiouCnU6', 'Jean', 'Bye', 15);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('smcreidyf', 'UuBw6m', 'Stanleigh', 'McReidy', 16);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('clambling', 'Zmfk06jZXun', 'Carlen', 'Lamblin', 17);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('rgundryh', 'W8UyT2UKc', 'Rona', 'Gundry', 18);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('jcutmarei', 'oeXWPvqc', 'Jami', 'Cutmare', 19);
-insert into nurses (username, password, first_name, sur_name, nurse_id) values ('sandryushinj', 'HSlASyZ6K', 'Sharyl', 'Andryushin', 20);
-
+insert into nurses (username, password, first_name, sur_name, nurse_id, is_full_time) values ('mbleasdale0', 'T2PkF0', 'Mollie', 'Bleasdale', 1, false);
 
 DROP TABLE patients;
 create table patients (

@@ -9,15 +9,16 @@ package model;
  *
  * @author niklas
  */
-public class Admin extends User {
+public class Admin extends Employee {
     
     int adminID;
 
-    public Admin(String username, String password, String firstName, String surName, int adminID) {
+    public Admin(String username, String password, String firstName, String surName, boolean isFullTime, int adminID) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.surName = surName;
+        this.isFullTime = isFullTime;
         this.adminID = adminID;
     }
 
@@ -31,7 +32,9 @@ public class Admin extends User {
 
     @Override
     public String toString() {
-        return "Admin{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", adminID=" + adminID + '}';
+        return "Admin{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + isFullTime + ", adminID=" + adminID + '}';
     }
+
+
 
 }

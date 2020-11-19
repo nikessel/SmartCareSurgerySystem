@@ -24,12 +24,12 @@ public abstract class User {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -52,5 +52,10 @@ public abstract class User {
     public String toString() {
         return "User{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + '}';
     }
+
+    
+    
+
+    
 
 }

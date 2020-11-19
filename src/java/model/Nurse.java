@@ -9,18 +9,19 @@ package model;
  *
  * @author niklas
  */
-public class Nurse extends User {
+public class Nurse extends Employee {
 
     int nurseID;
 
-    public Nurse(String username, String password, String firstName, String surName, int nurseID) {
+    public Nurse(String username, String password, String firstName, String surName, boolean isFullTime, int nurseID) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.surName = surName;
+        this.isFullTime = isFullTime;
         this.nurseID = nurseID;
     }
-    
+
     public int getNurseID() {
         return nurseID;
     }
@@ -31,9 +32,9 @@ public class Nurse extends User {
 
     @Override
     public String toString() {
-        return "Nurse{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", nurseID=" + nurseID + '}';
+        return "Nurse{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + isFullTime + ", nurseID=" + nurseID + '}';
     }
-    
+
     
     
 }

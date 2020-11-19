@@ -9,22 +9,33 @@ package model;
  *
  * @author niklas
  */
-public class Doctor extends User{
+public class Doctor extends Employee {
 
     int doctorID;
 
-    public Doctor(String username, String password, String firstName, String surName, int doctorID) {
+    public Doctor(String username, String password, String firstName, String surName, boolean isFullTime, int doctorID) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.surName = surName;
+        this.isFullTime = isFullTime;
         this.doctorID = doctorID;
     }
 
-    @Override
-    public String toString() {
-        return "Doctor{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", doctorID=" + doctorID + '}';
+    public int getDoctorID() {
+        return doctorID;
+    }
+
+    public void setDoctorID(int doctorID) {
+        this.doctorID = doctorID;
     }
     
     
+
+    @Override
+    public String toString() {
+        return "Doctor{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + isFullTime + ", doctorID=" + doctorID + '}';
+    }
+    
+
 }
