@@ -325,15 +325,16 @@ public class Database {
             fieldString = "username, password, first_name, sur_name, is_full_time";
 
             if (parsed.getAdminID() != -1) {
-                idString = String.valueOf(parsed.getAdminID()) + ", ";
+                idString = ", " + String.valueOf(parsed.getAdminID());
                 fieldString = "username, password, first_name, sur_name, admin_id, is_full_time";
             }
 
-            valueString = "'" + parsed.getUsername()
-                    + "', '" + parsed.getPassword()
-                    + "', '" + parsed.getFirstName()
-                    + "', '" + parsed.getSurName()
-                    + "', " + parsed.isFullTime();
+            valueString = "'" + parsed.getUsername() + "'"
+                    + ", '" + parsed.getPassword() + "'"
+                    + ", '" + parsed.getFirstName() + "'"
+                    + ", '" + parsed.getSurName() + "'"
+                    + idString
+                    + ", " + parsed.isFullTime();
 
             updateString = "username='" + parsed.getUsername() + "', "
                     + "password='" + parsed.getPassword() + "', "
@@ -345,70 +346,79 @@ public class Database {
             Doctor parsed = (Doctor) object;
 
             table = "doctors";
-            fieldString = "username, password, first_name, sur_name, doctor_id, is_full_time";
+            fieldString = "username, password, first_name, sur_name, is_full_time";
 
-            if (parsed.getDoctorID()!= -1) {
-                idString = String.valueOf(parsed.getDoctorID()) + ", ";
-                fieldString = "username, password, first_name, sur_name, admin_id, is_full_time";
+            if (parsed.getDoctorID() != -1) {
+                idString = ", " + String.valueOf(parsed.getDoctorID());
+                fieldString = "username, password, first_name, sur_name, doctor_id, is_full_time";
             }
 
-            valueString = "'" + parsed.getUsername()
-                    + "', '" + parsed.getPassword()
-                    + "', '" + parsed.getFirstName()
-                    + "', '" + parsed.getSurName()
-                    + "', " + parsed.getDoctorID()
+            valueString = "'" + parsed.getUsername() + "'"
+                    + ", '" + parsed.getPassword() + "'"
+                    + ", '" + parsed.getFirstName() + "'"
+                    + ", '" + parsed.getSurName() + "'"
+                    + idString
                     + ", " + parsed.isFullTime();
 
             updateString = "username='" + parsed.getUsername() + "', "
                     + "password='" + parsed.getPassword() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
-                    + "doctor_id=" + parsed.getDoctorID() + ", "
                     + "is_full_time=" + parsed.isFullTime();
 
         } else if (object instanceof Nurse) {
             Nurse parsed = (Nurse) object;
 
             table = "nurses";
-            fieldString = "username, password, first_name, sur_name, nurse_id, is_full_time";
+            fieldString = "username, password, first_name, sur_name, is_full_time";
 
-            valueString = "'" + parsed.getUsername()
-                    + "', '" + parsed.getPassword()
-                    + "', '" + parsed.getFirstName()
-                    + "', '" + parsed.getSurName()
-                    + "', " + parsed.getNurseID()
+            if (parsed.getNurseID() != -1) {
+                idString = ", " + String.valueOf(parsed.getNurseID());
+                fieldString = "username, password, first_name, sur_name, nurse_id, is_full_time";
+            }
+
+            valueString = "'" + parsed.getUsername() + "'"
+                    + ", '" + parsed.getPassword() + "'"
+                    + ", '" + parsed.getFirstName() + "'"
+                    + ", '" + parsed.getSurName() + "'"
+                    + idString
                     + ", " + parsed.isFullTime();
 
             updateString = "username='" + parsed.getUsername() + "', "
                     + "password='" + parsed.getPassword() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
-                    + "nurse_id=" + parsed.getNurseID() + ", "
                     + "is_full_time=" + parsed.isFullTime();
 
         } else if (object instanceof Patient) {
+
             Patient parsed = (Patient) object;
 
             String address = convertAddressToString(parsed.getAddress());
 
             table = "patients";
-            fieldString = "username, password, first_name, sur_name, patient_id, address, date_of_birth";
 
-            valueString = "'" + parsed.getUsername()
-                    + "', '" + parsed.getPassword()
-                    + "', '" + parsed.getFirstName()
-                    + "', '" + parsed.getSurName()
-                    + "', " + parsed.getPatientID()
-                    + ", '" + address
-                    + "', '" + parsed.getDateOfBirth() + "'";
+            fieldString = "username, password, first_name, sur_name, date_of_birth, address";
+
+            if (parsed.getPatientID() != -1) {
+                idString = ", " + String.valueOf(parsed.getPatientID());
+                fieldString = "username, password, first_name, sur_name, patient_id, date_of_birth, address";
+            }
+
+            valueString = "'" + parsed.getUsername() + "'"
+                    + ", '" + parsed.getPassword() + "'"
+                    + ", '" + parsed.getFirstName() + "'"
+                    + ", '" + parsed.getSurName() + "'"
+                    + idString
+                    + ", '" + parsed.getDateOfBirth() + "'"
+                    + ", '" + address + "'";
 
             updateString = "username='" + parsed.getFirstName() + "', "
                     + "password='" + parsed.getSurName() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
-                    + "patient_id=" + parsed.getPatientID() + ", "
-                    + "address='" + address + "', "
-                    + "date_of_birth='" + parsed.getDateOfBirth() + "'";
+                    + "date_of_birth='" + parsed.getDateOfBirth() + "', "
+                    + "address='" + address + "'";
 
         } else {
             System.out.println("Error writing object to database, "

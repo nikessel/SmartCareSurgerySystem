@@ -14,7 +14,7 @@ public class TestMain {
     public static void main(String[] args) {
         Database.printDatabaseTable("all");
 
-        Admin admin = new Admin("dds", "dsd", "dsd", "dsds", true);
+        Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true, 1001);
         Database.writeObjectToDatabase(admin);
 
         Doctor doctor = new Doctor("dds", "dsd", "dsd", "dsds", true);

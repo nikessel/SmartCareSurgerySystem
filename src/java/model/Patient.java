@@ -37,6 +37,7 @@ public class Patient extends User {
         this.patientID = patientID;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+
     }
 
     public int getPatientID() {
