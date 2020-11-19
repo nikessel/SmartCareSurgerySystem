@@ -11,12 +11,12 @@ package model;
  */
 public class Address {
 
-    String addressLine1;
-    String addressLine2;
-    String postcode;
-    String county;
-    String town;
-    String telephoneNumber;
+    private String addressLine1;
+    private String addressLine2;
+    private String postcode;
+    private String county;
+    private String town;
+    private String telephoneNumber;
 
     public Address(String addressLine1, String addressLine2, String postcode, String county, String town, String telephoneNumber) {
         this.addressLine1 = addressLine1;
@@ -79,7 +79,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" + "postcode=" + postcode + ", town=" + town + ", county=" + county + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", telephoneNumber=" + telephoneNumber + '}';
+        return "Address{" + "addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", postcode=" + postcode + ", county=" + county + ", town=" + town + ", telephoneNumber=" + telephoneNumber + '}';
     }
 
 }

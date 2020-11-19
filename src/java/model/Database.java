@@ -36,7 +36,7 @@ public class Database {
 
     // Singleton configuration
     private static Database database = new Database();
-    
+
     public static Database getDatabase() {
         return database;
     }
@@ -46,11 +46,12 @@ public class Database {
     }
 
     // This method connects to the database
-    // IP, username and password is hardcoded
+    // IP, username and password are hardcoded
     public void connect() {
         try {
             connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
             statement = connection.createStatement();
+            database.executeQuery("USE " + DATABASENAME);
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -77,6 +78,39 @@ public class Database {
         return null;
     }
 
+    private Address convertStringToAddress(String thisAddressString) {
+
+        String[] stringArray = thisAddressString.split("-");
+
+        String addressLine1, addressLine2, postcode, county, town, telephoneNumber;
+
+        addressLine1 = stringArray[0];
+        addressLine2 = stringArray[1];
+        postcode = stringArray[2];
+        county = stringArray[3];
+        town = stringArray[4];
+        telephoneNumber = stringArray[5];
+
+        if (addressLine1.isEmpty()) {
+            if (displayErrors) {
+                System.err.println("Database error getting address");
+            }
+        }
+        // Return the object
+        return new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
+    }
+
+    private String convertAddressToString(Address thisAddress) {
+
+        return thisAddress.getAddressLine1() + "-"
+                + thisAddress.getAddressLine2() + "-"
+                + thisAddress.getPostcode() + "-"
+                + thisAddress.getCounty() + "-"
+                + thisAddress.getTown() + "-"
+                + thisAddress.getTelephoneNumber();
+
+    }
+
     /*
     The object initialisation methods below query the database for object attributes.
     The method will loop through every object in the repective database tables 
@@ -85,47 +119,11 @@ public class Database {
     all other classes.
      */
     // System user inititialisations
-    private Address getAddress(int patientID) {
-
-        try {
-            database.connect();
-            database.executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.database.executeQuery("SELECT address FROM patients WHERE patient_id = " + patientID);
-
-            // iterate through the sql resultset
-            while (rs.next()) {
-                String address_string = rs.getString("address");
-
-                String[] string_array = address_string.split("-");
-
-                String addressLine1, addressLine2, postcode, county, town, telephoneNumber;
-
-                addressLine1 = string_array[0];
-                addressLine2 = string_array[1];
-                postcode = string_array[2];
-                county = string_array[3];
-                town = string_array[4];
-                telephoneNumber = string_array[5];
-
-                // Return the object
-                return new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
-            }
-        } catch (SQLException e) {
-
-        }
-        
-        if (displayErrors) {
-            System.err.println("Database error getting address");
-        }
-
-        return new Address("", "", "", "", "", "");
-    }
-
     public Admin getAdmin(int adminID) {
 
         try {
-            database.executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.database.executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID + ";");
+
+            ResultSet rs = database.executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID + ";");
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -135,18 +133,18 @@ public class Database {
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
                 int id = rs.getInt("admin_id");
-                
+
                 // Return the object
                 return new Admin(username, password, firstName, surName, isFullTime, id);
             }
         } catch (SQLException e) {
 
         }
-        
+
         if (displayErrors) {
             System.err.println("Database error getting admin");
         }
-        
+
         return new Admin("", "", "", "", false, -1);
     }
 
@@ -171,15 +169,15 @@ public class Database {
         } catch (SQLException e) {
 
         }
-        
+
         if (displayErrors) {
             System.err.println("Database error getting doctor");
         }
-        
+
         return new Doctor("", "", "", "", false, -1);
     }
-    
-        public Nurse getNurse(int nurseID) {
+
+    public Nurse getNurse(int nurseID) {
 
         try {
             database.executeQuery("USE " + DATABASENAME);
@@ -200,20 +198,18 @@ public class Database {
         } catch (SQLException e) {
 
         }
-        
+
         if (displayErrors) {
             System.err.println("Database error getting nurse");
         }
-        
+
         return new Nurse("", "", "", "", false, -1);
     }
-        
-        
+
     public Patient getPatient(int patientID) {
 
         try {
-            database.executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.database.executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID + ";");
+            ResultSet rs = database.executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID + ";");
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -222,7 +218,7 @@ public class Database {
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 int id = rs.getInt("patient_id");
-                Address address = getAddress(patientID);
+                Address address = convertStringToAddress(rs.getString("address"));
                 Date dateOfBirth = rs.getDate("date_of_birth");
 
                 // Return the object
@@ -231,12 +227,12 @@ public class Database {
         } catch (SQLException e) {
 
         }
-        
+
         if (displayErrors) {
             System.err.println("Database error getting patient");
         }
-        
-        return new Patient("", "", "", "", -1, new java.util.Date(0000-00-00), new Address("", "", "", "", "", ""));
+
+        return new Patient("", "", "", "", -1, new java.util.Date(0000 - 00 - 00), new Address("", "", "", "", "", ""));
     }
 
     /*
@@ -265,17 +261,13 @@ public class Database {
      */
 
  /*
-    The method saves valid SmartCareSurgery in the database.
-    The input will thereafter be parsed as it the actual object.
-    At this point a mySQL INSERT command will be generated based on the 
+    The method saves any valid SmartCareSurgery database object in the database.
+    A mySQL INSERT command will be generated based on the 
     attributes in the object.
     A ON DUBLICATE restriction will also be added, so the database will update
     exiting entries, instead of adding dublicate rows.
      */
     public void writeObjectToDatabase(Object object) {
-
-        database.connect();
-        database.executeQuery("USE " + DATABASENAME);
 
         String queryString;
         String table = "";
@@ -283,12 +275,30 @@ public class Database {
         String valueString = "";
         String updateString = "";
 
-        if (object instanceof Patient) {
+        if (object instanceof Admin) {
+            Admin parsed = (Admin) object;
+
+            table = "admins";
+            fieldString = "username, password, first_name, sur_name, admin_id, is_full_time";
+
+            valueString ="'" + parsed.getUsername()
+                    + "', '" + parsed.getPassword()
+                    + "', '" + parsed.getFirstName()
+                    + "', '" + parsed.getSurName()
+                    + "', " + parsed.getAdminID()
+                    + ", " + parsed.isIsFullTime();
+
+            updateString = "username='" + parsed.getFirstName() + "', "
+                    + "password='" + parsed.getSurName() + "', "
+                    + "first_name='" + parsed.getFirstName() + "', "
+                    + "sur_name='" + parsed.getSurName() + "', "
+                    + "patient_id=" + parsed.getPatientID() + ", "
+                    + "address='" + address.toString() + "', "
+                    + "date_of_birth='" + parsed.getDateOfBirth() + "'";
+        } else if (object instanceof Patient) {
             Patient parsed = (Patient) object;
 
-            writeObjectToDatabase(parsed.getAddress());
-
-            Address address = getAddress(parsed.getPatientID());
+            Address address = convertStringToAddress("");
 
             table = "patients";
             fieldString = "username, password, first_name, sur_name, patient_id, address, date_of_birth";

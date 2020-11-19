@@ -13,9 +13,9 @@ import java.util.Date;
  */
 public class Patient extends User {
 
-    int patientID;
-    Date dateOfBirth;
-    Address address;
+    private int patientID;
+    private Date dateOfBirth;
+    private Address address;
     
 
     public Patient(String username, String password, String firstName, 

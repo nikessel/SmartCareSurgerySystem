@@ -11,7 +11,7 @@ package model;
  */
 public class Nurse extends Employee {
 
-    int nurseID;
+    private int nurseID;
 
     public Nurse(String username, String password, String firstName, String surName, boolean isFullTime, int nurseID) {
         this.username = username;

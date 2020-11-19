@@ -12,10 +12,10 @@ import java.util.Date;
  * @author niklas
  */
 public class Booking {
-    int bookingID;
-    Patient patient;
-    Doctor doctor;
-    Date bookingDate;
+    private int bookingID;
+    private Patient patient;
+    private Doctor doctor;
+    private Date bookingDate;
 
     public Booking(int bookingID, Patient patient, Doctor doctor, Date bookingDate) {
         this.bookingID = bookingID;

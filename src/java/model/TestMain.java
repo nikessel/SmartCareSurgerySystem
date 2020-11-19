@@ -11,7 +11,7 @@ package model;
  */
 public class TestMain {
 
-    public static void print_all_users() {
+    public static void print_all_objects() {
         Database database = Database.getDatabase();
         database.setDisplayErrors(false);
 
@@ -66,7 +66,7 @@ public class TestMain {
     public static void main(String[] args) {
         Database.getDatabase().connect();
 
-        print_all_users();
+        print_all_objects();
     }
 
 }

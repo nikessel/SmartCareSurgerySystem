@@ -11,7 +11,7 @@ package model;
  */
 public class Admin extends Employee {
     
-    int adminID;
+    private int adminID;
 
     public Admin(String username, String password, String firstName, String surName, boolean isFullTime, int adminID) {
         this.username = username;
