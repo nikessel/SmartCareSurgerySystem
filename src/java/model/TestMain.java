@@ -11,62 +11,23 @@ package model;
  */
 public class TestMain {
 
-    public static void print_all_objects() {
-        Database database = Database.getDatabase();
-        database.setDisplayErrors(false);
-
-        int i = 1;
-
-        Admin thisAdmin = database.getAdmin(i);
-
-        while (thisAdmin.getAdminID() != -1) {
-            System.out.println(thisAdmin);
-
-            i++;
-            thisAdmin = database.getAdmin(i);
-        }
-        
-        i = 1;
-
-        Doctor thisDoctor = database.getDoctor(i);
-
-        while (thisDoctor.getDoctorID() != -1) {
-            System.out.println(thisDoctor);
-
-            i++;
-            thisDoctor = database.getDoctor(i);
-        }
-        
-        i = 1;
-
-        Nurse thisNurse = database.getNurse(i);
-
-        while (thisNurse.getNurseID() != -1) {
-            System.out.println(thisNurse);
-
-            i++;
-            thisNurse = database.getNurse(i);
-        }
-        
-        i = 1;
-
-        Patient thisPatient = database.getPatient(i);
-
-        while (thisPatient.getPatientID() != -1) {
-            System.out.println(thisPatient);
-
-            i++;
-            thisPatient = database.getPatient(i);
-        }
-        
-        database.setDisplayErrors(true);
-
-    }
-
     public static void main(String[] args) {
-        Database.getDatabase().connect();
+        Database.printDatabaseTable("all");
 
-        print_all_objects();
+        Admin admin = new Admin("dds", "dsd", "dsd", "dsds", true);
+        Database.writeObjectToDatabase(admin);
+
+        Doctor doctor = new Doctor("dds", "dsd", "dsd", "dsds", true);
+        Database.writeObjectToDatabase(doctor);
+
+        Nurse nurse = new Nurse("dds", "dsd", "dsd", "dsds", true);
+        Database.writeObjectToDatabase(nurse);
+
+        Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", "sad", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
+        Database.writeObjectToDatabase(patient);
+
+        Database.printDatabaseTable("all");
+
     }
 
 }

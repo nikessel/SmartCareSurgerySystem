@@ -9,9 +9,11 @@ create table admins (
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
         is_full_time boolean,
-	admin_id INT
+	admin_id INT PRIMARY KEY AUTO_INCREMENT
 );
-insert into admins (username, password, first_name, sur_name, admin_id, is_full_time) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', 1, true);
+ALTER TABLE admins AUTO_INCREMENT=1000; 
+
+insert into admins (username, password, first_name, sur_name, is_full_time) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', true);
 
 
 DROP TABLE doctors;
@@ -21,10 +23,12 @@ create table doctors (
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
         is_full_time boolean,
-	doctor_id INT
+	doctor_id INT PRIMARY KEY AUTO_INCREMENT
 );
-insert into doctors (username, password, first_name, sur_name, doctor_id, is_full_time) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', 1, true);
-insert into doctors (username, password, first_name, sur_name, doctor_id, is_full_time) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', 2, false);
+ALTER TABLE doctors AUTO_INCREMENT=2000;
+
+insert into doctors (username, password, first_name, sur_name, is_full_time) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', true);
+insert into doctors (username, password, first_name, sur_name, is_full_time) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', false);
 
 
 DROP TABLE nurses;
@@ -34,9 +38,11 @@ create table nurses (
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
         is_full_time boolean,
-	nurse_id INT
+	nurse_id INT PRIMARY KEY AUTO_INCREMENT
 );
-insert into nurses (username, password, first_name, sur_name, nurse_id, is_full_time) values ('mbleasdale0', 'T2PkF0', 'Mollie', 'Bleasdale', 1, false);
+ALTER TABLE nurses AUTO_INCREMENT=3000;
+
+insert into nurses (username, password, first_name, sur_name, is_full_time) values ('mbleasdale0', 'T2PkF0', 'Mollie', 'Bleasdale', false);
 
 DROP TABLE patients;
 create table patients (
@@ -44,57 +50,59 @@ create table patients (
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
-	patient_id INT,
+	patient_id INT PRIMARY KEY AUTO_INCREMENT,
 	date_of_birth DATE,
 	address VARCHAR(100)
 );
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('sblakely0', 'xDKTJasG7wMT', 'Sanders', 'Blakely', 1, '1931-12-21', '9129 Sommers Junction--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('elittlefair1', 'qk3P6h9', 'Ezechiel', 'Littlefair', 2, '1935-08-21', '0207 Sage Place--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('mlauthian2', 'mytJJ9YN', 'Melissa', 'Lauthian', 3, '1933-07-13', '4 Dovetail Way--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('mflacknoe3', 'bxPjQKQkP02', 'Maxie', 'Flacknoe', 4, '1937-07-22', '530 Anhalt Circle--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('xcawley4', '2atGj8z', 'Xena', 'Cawley', 5, '1981-04-18', '333 Mccormick Hill--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('lstopforth5', 'UlbVEoXy', 'Lorelei', 'Stopforth', 6, '1973-09-15', '7 Manley Terrace--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('jgiorgioni6', 'J4QCZl', 'Jeno', 'Giorgioni', 7, '1954-12-02', '8 Springview Road--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('gmcgrouther7', 'fNhaqBZnw', 'Goddart', 'McGrouther', 8, '1981-02-11', '8 Carpenter Hill--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('jletchmore8', 'ppJ2wJ75', 'Jess', 'Letchmore', 9, '1932-10-23', '2577 Myrtle Center--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('dkeasy9', 'iMxaY9Uf56DJ', 'Dodie', 'Keasy', 10, '1947-01-08', '52313 Pond Hill--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('wkenealya', '2H2UpUD', 'Warde', 'Kenealy', 11, '1941-10-09', '867 Columbus Road--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('glittlecoteb', 'BUsUfLKfmYM', 'Guendolen', 'Littlecote', 12, '1962-03-15', '3 Knutson Point--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('aharwickc', 'aQikDuCF', 'Amble', 'Harwick', 13, '1967-07-10', '65148 Pankratz Center--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('bsnufflebottomd', '3GizKe7DdP7', 'Bryana', 'Snufflebottom', 14, '1958-03-19', '222 Luster Place--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('bbooye', 'Y1GDK8', 'Bailey', 'Booy', 15, '1944-05-10', '85598 Sloan Circle--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('awhitelawf', 'sc6T7PUGg', 'Adelbert', 'Whitelaw', 16, '1955-03-06', '316 Aberg Avenue--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('dshiltong', '1G4DCBaR', 'Dolf', 'Shilton', 17, '1971-08-25', '7704 Bartillon Center--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('jbjorkanh', '63jnsk5guqy8', 'Jeddy', 'Bjorkan', 18, '1977-09-15', '5 Sommers Junction--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('emillikeni', 'eHU0yC9QK', 'Evey', 'Milliken', 19, '1951-01-29', '4 Loftsgordon Avenue--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('icallissj', 'FyuVwO', 'Ida', 'Calliss', 20, '1946-04-10', '06617 Hovde Center--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('tpawlickik', 'V21KR7', 'Tobye', 'Pawlicki', 21, '1955-09-09', '427 Shelley Trail--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('rproudl', 'zWwpTcuxfS', 'Rea', 'Proud', 22, '1954-04-21', '11 Dottie Hill--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('sdakem', 'Rt2F3lF68', 'Shaun', 'Dake', 23, '1963-06-27', '6 Westend Terrace--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('jripleyn', 'Gnee7t', 'Jerrilee', 'Ripley', 24, '1939-08-01', '0013 Village Green Parkway--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('askippono', 'oYrhI7IBsE2', 'Alejandra', 'Skippon', 25, '1976-03-04', '8316 Knutson Avenue--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('grichesp', 'vUICLzkO', 'Gus', 'Riches', 26, '1946-04-25', '00 Stuart Alley--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('cbodicumq', 'YT19ZiZXsdSf', 'Clerc', 'Bodicum', 27, '1946-11-14', '09337 Ridgeway Pass--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('adibollr', 'lmIQGaI', 'Avivah', 'Diboll', 28, '1955-05-25', '9003 Eastwood Point--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('wabelsons', 'YCDA34Ye9', 'Wyn', 'Abelson', 29, '1964-02-08', '31845 Mifflin Lane--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('lrobkert', 'EI48mSra3u', 'Lynnea', 'Robker', 30, '1962-06-24', '2 Veith Road--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('rreicheltu', 'Bne0KnjwnWJz', 'Rees', 'Reichelt', 31, '1971-01-16', '173 Oak Valley Place--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('gkroinv', 'nuPfASZN', 'Griff', 'Kroin', 32, '1988-02-21', '2 Red Cloud Avenue--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('frowetw', 'GxajXzW', 'Felipa', 'Rowet', 33, '1984-10-29', '4904 Union Circle--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('bsemonx', 'SNgio1VG1GB', 'Beulah', 'Semon', 34, '1987-08-01', '060 Gerald Place--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('kjanickiy', 'Gw4JqfRg', 'Ki', 'Janicki', 35, '1950-07-18', '221 Forest Dale Plaza--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('rtrumpz', 'z05P6HdzH', 'Rand', 'Trump', 36, '1935-05-17', '97 Ohio Point--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('rpierri10', 't7v01ctYECb3', 'Roz', 'Pierri', 37, '1993-04-17', '35343 Killdeer Circle--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('kgloucester11', 'wEv769Hh2mBu', 'Kit', 'Gloucester', 38, '1938-04-19', '49850 International Avenue--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('jswinn12', '3lpTslqVz', 'Jerrylee', 'Swinn', 39, '1967-08-05', '0269 Washington Circle--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('credborn13', 'lo2w1s9uiUJR', 'Clerc', 'Redborn', 40, '1986-06-19', '44010 Graceland Point--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('hpechacek14', '05Ad7T2ya6e', 'Harli', 'Pechacek', 41, '1991-05-30', '6495 Kennedy Road--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('kmorilla15', '11gK3EFnEpc', 'Ki', 'Morilla', 42, '1984-06-17', '0611 Veith Lane--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('npietruszka16', 'OXyDA04T0t', 'Nicol', 'Pietruszka', 43, '1962-11-13', '23 Scofield Parkway--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('jcastanie17', 'Klx1UEvPGQBj', 'Jarvis', 'Castanie', 44, '1985-05-12', '7891 Weeping Birch Center--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('ibromell18', 'hCxi1jnBTI', 'Iona', 'Bromell', 45, '1944-11-09', '6510 Forest Run Plaza--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('eostler19', 'oJ7pRfs', 'Elisabetta', 'Ostler', 46, '1987-07-11', '6 Elmside Pass--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('rbordis1a', 'E1QdEAfkI', 'Rozamond', 'Bordis', 47, '1946-02-25', '318 Myrtle Alley--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('zdyer1b', 'sTEIny', 'Zak', 'Dyer', 48, '1984-12-07', '6 Waxwing Alley--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('cmallya1c', 'e0mizaas', 'Cesya', 'Mallya', 49, '1970-03-11', '8187 Crownhardt Point--BE16 3LO-county-Bristol-958297970322');
-insert into patients (username, password, first_name, sur_name, patient_id, date_of_birth, address) values ('cstranks1d', 'YByo3U5Ji', 'Celka', 'Stranks', 50, '1989-06-17', '0 Mendota Road--BE16 3LO-county-Bristol-958297970322');
+ALTER TABLE patients AUTO_INCREMENT=4000;
+
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('rglendinning0', 'kYiKqjh82Grf', 'Ray', 'Glendinning', '1992-03-14', '1 Melby Parkway--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('aconstantinou1', 'i4g3gpIN5e', 'Amby', 'Constantinou', '1934-01-17', '773 Bowman Lane--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('adeathridge2', 'hTC0HBw5vby9', 'Albina', 'Deathridge', '1931-02-09', '54 Prairie Rose Terrace--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('aquinet3', 'Qvv6Wrb', 'Alexine', 'Quinet', '1937-07-12', '95846 Melrose Center--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('jparres4', 'Ki48Z7hGMqC', 'Junia', 'Parres', '1949-09-05', '0292 Lyons Trail--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('amchirrie5', 'gCJyJlktgjOC', 'Alecia', 'M''Chirrie', '1978-07-10', '53781 Darwin Point--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('mfomichkin6', 'Tf783vN', 'Maribelle', 'Fomichkin', '1945-02-02', '91 Anzinger Place--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('gwhitcher7', '7cZkBKfEJ42', 'Giorgio', 'Whitcher', '1992-11-12', '1627 Forest Run Road--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ccorpe8', 'OkGr9FR0j', 'Claudianus', 'Corpe', '2000-07-14', '55603 Melby Hill--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ljellings9', '9HXetauiBWnk', 'Louis', 'Jellings', '1974-10-27', '8595 American Ash Way--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('espoorsa', 'B2DDV4BaM', 'Elizabeth', 'Spoors', '1951-02-07', '511 Porter Alley--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('wwestgateb', 'Up6YeUweJ', 'Wilmette', 'Westgate', '1950-11-11', '6688 Cordelia Crossing--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('msandcraftc', 'tyfzJv', 'Marwin', 'Sandcraft', '1993-08-17', '630 Hazelcrest Trail--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('cocooneyd', 'Fwwi1bKfnWIJ', 'Crissie', 'O''Cooney', '1955-12-07', '3127 Holmberg Court--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('eborleye', 'Av1NUW0NNlF7', 'Emilee', 'Borley', '1989-11-16', '9714 Schmedeman Plaza--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ckundtf', 'u9cRfqxcBWV', 'Claiborne', 'Kundt', '1980-04-08', '0 Loeprich Place--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('tdrinnang', 'Z1jFtOlhUGE', 'Tadeas', 'Drinnan', '1989-11-29', '51553 Commercial Pass--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('osambellsh', '9qYaCRf', 'Obediah', 'Sambells', '1944-07-04', '077 Steensland Avenue--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('kblakeneyi', 'hcCZm9', 'Kareem', 'Blakeney', '1959-08-11', '43 Troy Hill--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('gkilohj', 'vdTVICWEy7SD', 'Garner', 'Kiloh', '1990-06-01', '30620 West Hill--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('dhearthfieldk', 'vZFSFgUaQaQT', 'Donal', 'Hearthfield', '1938-01-15', '941 Rieder Point--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('lsauntonl', 'CuznTP', 'Lusa', 'Saunton', '1990-08-02', '7423 Lake View Place--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('odurramm', 'GpSHb0mCON1m', 'Ode', 'Durram', '1996-03-22', '4 Kim Hill--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('slargentn', 'DBhJf8WJ7', 'Shay', 'Largent', '1984-05-24', '4 Buhler Way--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('imccombeo', 'bVBMirQLd2n', 'Irma', 'McCombe', '1981-07-23', '1056 Beilfuss Parkway--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ntrahearp', 'k7O5zfQ9a', 'Norbie', 'Trahear', '1950-02-15', '006 Onsgard Park--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('pluxonq', 'ulcbbnYit', 'Phil', 'Luxon', '1956-06-06', '38056 Warrior Road--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('kbauduccior', 'axqtQj', 'Kerwin', 'Bauduccio', '1944-04-16', '6 3rd Place--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('smackaigs', 'rStADDmPFr', 'Shayla', 'MacKaig', '1952-01-14', '49 Sloan Point--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('bbrooksbiet', 'caxrcMZyh', 'Brade', 'Brooksbie', '1961-03-20', '52320 Blue Bill Park Road--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('rmontfordu', 'zMHxityxv', 'Rina', 'Montford', '1991-12-12', '197 Onsgard Parkway--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ldomsallav', 'PHcMkekGb', 'Lew', 'Domsalla', '1985-07-23', '496 Nobel Street--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('cwealdw', 'DXskEdz', 'Consuela', 'Weald', '1952-08-16', '085 Gina Terrace--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('rfrancoisx', 'fPdxVjiB', 'Rikki', 'Francois', '1937-03-03', '3476 East Terrace--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('balbasiniy', 'I6aLS2FaI', 'Beryl', 'Albasini', '1961-01-03', '2 Eastwood Place--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('kgibbensz', 'fpMRvv0o', 'Karl', 'Gibbens', '1956-09-08', '32 Bluestem Alley--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('etavner10', 'eTJjbS6', 'Even', 'Tavner', '1937-06-18', '49534 8th Center--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('pmccray11', 'DdyV76ahhTK', 'Perl', 'McCray', '1944-01-16', '8 Independence Road--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('gdaily12', 'P5zMXi', 'Grove', 'Daily', '1937-03-31', '430 Stang Way--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('gshutte13', 'eCwdMqQ', 'Garrek', 'Shutte', '1981-02-24', '1 Logan Terrace--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ccettell14', 'wv1oEm', 'Chevalier', 'Cettell', '1957-06-02', '59 Ridgeway Terrace--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ghardman15', 'mFYwsxR', 'Gray', 'Hardman', '1977-01-29', '13275 Northridge Avenue--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('jcraze16', 'brVFi9hSd', 'Jeni', 'Craze', '1961-10-17', '1464 Hudson Avenue--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('ppengelley17', 'sthKQBRgOnj', 'Port', 'Pengelley', '1945-02-20', '9814 Surrey Point--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('tshepland18', 'eHYTiUu', 'Theodore', 'Shepland', '1941-06-14', '3005 Huxley Park--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('dthrift19', 'Xk2nWW4hiFQA', 'Dela', 'Thrift', '1973-05-06', '9792 Buell Plaza--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('tgolling1a', 'qaZ0p1', 'Tiphanie', 'Golling', '1994-03-23', '23631 Nevada Pass--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('nirlam1b', '3phD2rvY', 'Nathanial', 'Irlam', '1939-07-22', '3 Fairfield Parkway--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('dbuckler1c', 'OOaTdpHYgVS', 'Dorelle', 'Buckler', '1933-03-07', '4 Washington Parkway--BE16 3LO-county-Bristol-958297970322');
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('econrad1d', '5fCpMDuKljN', 'Emalia', 'Conrad', '1979-09-22', '30564 Riverside Place--BE16 3LO-county-Bristol-958297970322');

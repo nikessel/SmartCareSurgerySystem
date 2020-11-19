@@ -5,7 +5,7 @@
  */
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -14,12 +14,22 @@ import java.util.Date;
 public class Patient extends User {
 
     private int patientID;
-    private Date dateOfBirth;
-    private Address address;
-    
+    java.sql.Date dateOfBirth;
+    Address address;
 
-    public Patient(String username, String password, String firstName, 
-            String surName, int patientID, Date dateOfBirth, Address address) {
+    public Patient(String username, String password, String firstName,
+            String surName, java.sql.Date dateOfBirth, Address address) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.surName = surName;
+        this.patientID = -1;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
+
+    public Patient(String username, String password, String firstName,
+            String surName, int patientID, java.sql.Date dateOfBirth, Address address) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -33,16 +43,12 @@ public class Patient extends User {
         return patientID;
     }
 
-    public void setPatientID(int patientID) {
-        this.patientID = patientID;
+    public String getDateOfBirth() {
+        return String.valueOf(dateOfBirth);
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = Date.valueOf(dateOfBirth);
     }
 
     public Address getAddress() {
@@ -58,7 +64,4 @@ public class Patient extends User {
         return "Patient{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", patientID=" + patientID + ", dateOfBirth=" + dateOfBirth + ", address=" + address + '}';
     }
 
-    
-    
-    
 }
