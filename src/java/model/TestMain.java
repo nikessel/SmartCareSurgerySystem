@@ -11,18 +11,27 @@ package model;
  */
 public class TestMain {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        Database.Connect();
-        Database.initialisePatients();
-        
+    public static void print_all_users() {
         int length = Database.getPATIENTLIST().size();
-        
+
         for (int i = 0; i < length; i++) {
             System.out.println(Database.getPATIENTLIST().get(i));
         }
+
+        length = Database.getDOCTORLIST().size();
+
+        for (int i = 0; i < length; i++) {
+            System.out.println(Database.getDOCTORLIST().get(i));
+        }
     }
-    
+
+    public static void main(String[] args) {
+        Database.Connect();
+        Database.initialisePatients();
+        Database.initialiseDoctors();
+        
+        print_all_users();
+
+    }
+
 }

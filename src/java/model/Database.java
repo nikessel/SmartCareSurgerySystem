@@ -135,6 +135,31 @@ class Database {
 
         return new Address("", "", "", "", "", "");
     }
+    
+        public static void initialiseDoctors() {
+
+        DOCTORLIST.clear();
+
+        try {
+            executeQuery("USE " + DATABASENAME);
+            ResultSet rs = Database.executeQuery("SELECT * FROM doctors;");
+
+            // iterate through the sql resultset
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("first_name");
+                String surName = rs.getString("sur_name");
+                int doctorID = rs.getInt("doctor_id");
+
+                // print the results
+                DOCTORLIST.add(new Doctor(username, password, firstName, surName, doctorID));
+            }
+        } catch (Exception e) {
+
+            System.err.println("Database error getting doctor");
+        }
+    }
 
     public static void initialisePatients() {
 

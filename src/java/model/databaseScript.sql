@@ -2,6 +2,27 @@
 # USE sql_smart_care_surgery_database;
 
 
+DROP TABLE doctors;
+create table doctors (
+	username VARCHAR(50),
+	password VARCHAR(50),
+	first_name VARCHAR(50),
+	sur_name VARCHAR(50),
+	doctor_id INT
+);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', 1);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', 2);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('delvin2', 'PSa2LbZzvxMy', 'Davita', 'Elvin', 3);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('abru3', 'MyrEAQ', 'Arnaldo', 'Bru', 4);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('mjewes4', 'aN7kBuMHRu', 'Marice', 'Jewes', 5);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('bbrunke5', 'I0p5OoBPou', 'Bonny', 'Brunke', 6);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('aconneely6', 'PI8IvyYPEdF', 'Alvis', 'Conneely', 7);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('lbletsor7', 'PT4jDKN8w8', 'Leonanie', 'Bletsor', 8);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('floding8', 'HY1tLTWz', 'Fanchon', 'Loding', 9);
+insert into doctors (username, password, first_name, sur_name, doctor_id) values ('bhaigh9', '1fujq1ewaZ', 'Brit', 'Haigh', 10);
+
+
+
 DROP TABLE patients;
 create table patients (
 	username VARCHAR(50),
