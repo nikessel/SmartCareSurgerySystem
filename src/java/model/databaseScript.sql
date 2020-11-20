@@ -1,3 +1,5 @@
+
+# Uncomment next two lines if setting up database for the first time
 # CREATE SCHEMA sql_smart_care_surgery_database;
 # USE sql_smart_care_surgery_database;
 
@@ -8,6 +10,7 @@ DROP TABLE doctors;
 DROP TABLE nurses;
 DROP TABLE patients;
 
+# Recreate and populate tables with test data
 create table admins (
 	username VARCHAR(50),
 	password VARCHAR(50),
