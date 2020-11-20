@@ -13,9 +13,11 @@ public class TestMain {
 
     public static void main(String[] args) {
         
-        /*
+        
         Database.printDatabaseTable("all");
-        Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true, 1001);
+        
+        System.exit(0);
+        Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true);
         Database.writeObjectToDatabase(admin);
 
         Doctor doctor = new Doctor("dds", "dsd", "dsd", "dsds", true);
@@ -32,7 +34,7 @@ public class TestMain {
         System.out.println(Database.getConsultation(5005));
         
         Database.printDatabaseTable("all");
-        */
+        
 
     }
 
