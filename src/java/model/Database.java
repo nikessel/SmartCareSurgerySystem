@@ -28,9 +28,9 @@ public class Database {
 
     private static Connection connection;
     private static Statement statement;
-    private static final String DATABASESTRING = "jdbc:mysql://127.0.0.1:3306";
-    private static final String USERNAME = "user";
-    private static final String PASSWORD = "password";
+    private static final String DATABASESTRING = "jdbc:mysql://95.179.206.75:3306";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "1qRqabnPy8FZQh1NsWmhZ";
     private static final String DATABASENAME = "sql_smart_care_surgery_database";
     private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
 
