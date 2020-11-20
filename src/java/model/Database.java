@@ -328,35 +328,11 @@ public class Database {
         }
     }
 
-    /*
-    // System object initialisations
-    public static void initialiseBookings() {
-
-        BOOKINGLIST.clear();
-        try {
-            executeQuery("USE sql_health_care_pro_database");
-            ResultSet rs = Database.executeQuery("SELECT * FROM appointments;");
-
-            // iterate through the java resultset
-            while (rs.next()) {
-                int appointmentID = rs.getInt("appointment_id");
-                int patientID = rs.getInt("patient_id");
-                int doctorID = rs.getInt("doctor_id");
-                Date bookingDate = rs.getDate("booking_date");
-
-                BOOKINGLIST.add(new Booking(patientID, patient, doctor, appointmentDate));
-            }
-        } catch (Exception e) {
-
-            System.err.println("Database error getting appointments");
-        }
-    }
-     */
  /*
     The method saves any valid SmartCareSurgery database object in the 
     A mySQL INSERT command will be generated based on the 
     attributes in the object.
-    A ON DUBLICATE restriction will also be added, so the database will update
+    An ON DUBLICATE restriction will also be added, so the database will update
     exiting entries, instead of adding dublicate rows.
      */
     public static void writeObjectToDatabase(Object object) {
