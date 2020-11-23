@@ -1,9 +1,10 @@
 
 # Uncomment next two lines if setting up database for the first time
 # CREATE SCHEMA sql_smart_care_surgery_database;
-# USE sql_smart_care_surgery_database;
+USE sql_smart_care_surgery_database;
 
 # Delete all tables
+DROP TABLE invoices;
 DROP TABLE consultations;
 DROP TABLE admins;
 DROP TABLE doctors;
@@ -19,7 +20,7 @@ create table admins (
         is_full_time boolean,
 	admin_id INT PRIMARY KEY AUTO_INCREMENT
 );
-ALTER TABLE admins AUTO_INCREMENT=1000; 
+ALTER TABLE admins AUTO_INCREMENT=10000; 
 
 insert into admins (username, password, first_name, sur_name, is_full_time) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', true);
 
@@ -33,7 +34,7 @@ create table doctors (
         is_full_time boolean,
 	doctor_id INT PRIMARY KEY AUTO_INCREMENT
 );
-ALTER TABLE doctors AUTO_INCREMENT=2000;
+ALTER TABLE doctors AUTO_INCREMENT=20000;
 
 insert into doctors (username, password, first_name, sur_name, is_full_time) values ('', '', '', '', false);
 insert into doctors (username, password, first_name, sur_name, is_full_time) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', true);
@@ -48,7 +49,7 @@ create table nurses (
         is_full_time boolean,
 	nurse_id INT PRIMARY KEY AUTO_INCREMENT
 );
-ALTER TABLE nurses AUTO_INCREMENT=3000;
+ALTER TABLE nurses AUTO_INCREMENT=30000;
 
 insert into nurses (username, password, first_name, sur_name, is_full_time) values ('', '', '', '', false);
 insert into nurses (username, password, first_name, sur_name, is_full_time) values ('mbleasdale0', 'T2PkF0', 'Mollie', 'Bleasdale', false);
@@ -63,7 +64,7 @@ create table patients (
 	date_of_birth DATE,
 	address VARCHAR(100)
 );
-ALTER TABLE patients AUTO_INCREMENT=4000;
+ALTER TABLE patients AUTO_INCREMENT=40000;
 
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('rglendinning0', 'kYiKqjh82Grf', 'Ray', 'Glendinning', '1992-03-14', '1 Melby Parkway--BE16 3LO-county-Bristol-958297970322');
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('aconstantinou1', 'i4g3gpIN5e', 'Amby', 'Constantinou', '1934-01-17', '773 Bowman Lane--BE16 3LO-county-Bristol-958297970322');
@@ -118,7 +119,7 @@ insert into patients (username, password, first_name, sur_name, date_of_birth, a
 
 
 create table consultations (
-	patient_id INT,
+	patient_id INT UNIQUE,
 	doctor_id INT,
         nurse_id INT,
 	consultation_date DATE,
@@ -139,35 +140,72 @@ create table consultations (
             ON UPDATE RESTRICT
             ON DELETE RESTRICT
 );
-ALTER TABLE consultations AUTO_INCREMENT=5000;
+ALTER TABLE consultations AUTO_INCREMENT=50000;
 
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4028, 2001, 3000, '2019-11-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4035, 2002, 3001, '2020-08-24');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4025, 2002, 3001, '2020-11-10');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4041, 2002, 3001, '2020-08-25');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4048, 2001, 3000, '2019-12-07');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4011, 2001, 3000, '2020-06-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4027, 2001, 3000, '2019-12-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4028, 2001, 3000, '2020-12-25');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4031, 2001, 3001, '2020-08-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4041, 2002, 3001, '2020-04-14');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4038, 2002, 3001, '2021-04-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4024, 2000, 3001, '2021-01-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4046, 2000, 3001, '2020-04-14');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4038, 2001, 3001, '2021-04-11');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4025, 2002, 3000, '2021-03-18');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4040, 2000, 3001, '2020-10-08');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4003, 2002, 3000, '2020-12-06');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4016, 2002, 3001, '2020-09-23');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4038, 2000, 3001, '2020-03-23');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4011, 2002, 3001, '2020-02-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4025, 2000, 3001, '2020-12-28');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4023, 2001, 3000, '2020-01-16');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4041, 2001, 3001, '2020-09-03');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4003, 2000, 3001, '2020-09-27');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4044, 2002, 3000, '2020-02-20');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4044, 2002, 3000, '2021-03-03');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4036, 2000, 3001, '2020-11-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4016, 2001, 3001, '2020-08-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4047, 2001, 3000, '2020-09-27');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (4017, 2002, 3000, '2020-03-15');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40021, 20002, 30001, '2020-10-27');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40020, 20001, 30000, '2020-05-12');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40031, 20001, 30001, '2020-12-19');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40002, 20001, 30001, '2020-03-05');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40015, 20001, 30000, '2020-11-06');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40039, 20002, 30001, '2020-02-18');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40023, 20000, 30001, '2021-02-23');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20002, 30001, '2020-01-15');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40000, 20001, 30000, '2021-01-16');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20001, 30001, '2020-04-16');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20000, 30001, '2021-03-14');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40027, 20002, 30001, '2020-02-22');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40018, 20002, 30000, '2020-12-13');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40033, 20000, 30001, '2020-09-19');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20001, 30001, '2020-07-15');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40000, 20002, 30001, '2021-01-28');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40036, 20001, 30001, '2020-01-22');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40024, 20002, 30001, '2020-02-22');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40013, 20001, 30000, '2020-10-24');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40022, 20002, 30000, '2019-12-25');
+
+
+
+create table invoices (
+	price DECIMAL(7,2),
+	date_of_invoice DATE,
+	consultation_id INT,
+        CONSTRAINT fk_consultation
+        FOREIGN KEY (consultation_id) 
+        REFERENCES consultations(consultation_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+);
+insert into invoices (price, date_of_invoice, consultation_id) values (5291.92, '5/18/2020', 50020);
+insert into invoices (price, date_of_invoice, consultation_id) values (7747.29, '2/7/2020', 50019);
+insert into invoices (price, date_of_invoice, consultation_id) values (736.51, '10/13/2020', 50004);
+insert into invoices (price, date_of_invoice, consultation_id) values (8428.91, '11/13/2020', 50004);
+insert into invoices (price, date_of_invoice, consultation_id) values (8631.31, '12/25/2019', 50003);
+insert into invoices (price, date_of_invoice, consultation_id) values (2133.37, '3/30/2020', 50005);
+insert into invoices (price, date_of_invoice, consultation_id) values (9120.76, '11/9/2020', 50015);
+insert into invoices (price, date_of_invoice, consultation_id) values (8614.25, '12/9/2020', 50013);
+insert into invoices (price, date_of_invoice, consultation_id) values (1090.61, '11/13/2020', 50010);
+insert into invoices (price, date_of_invoice, consultation_id) values (6653.48, '3/7/2020', 50000);
+ALTER TABLE consultations AUTO_INCREMENT=60000;
+
+create table invoices (
+	price DECIMAL(6,2),
+	date_of_invoice DATE,
+        consultation_id INT,
+        CONSTRAINT fk_consultation
+        FOREIGN KEY (consultation_id) 
+        REFERENCES consultations(consultation_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+);
+
+
+insert into invoices (consultation_id, price, date_of_invoice) values (1, 1773.57, '2020-03-27');
+insert into invoices (consultation_id, price, date_of_invoice) values (2, 764.92, '2019-12-26');
+insert into invoices (consultation_id, price, date_of_invoice) values (3, 1124.27, '2019-11-24');
+insert into invoices (consultation_id, price, date_of_invoice) values (4, 853.33, '2020-01-29');
+insert into invoices (consultation_id, price, date_of_invoice) values (5, 1228.03, '2020-04-23');
+insert into invoices (consultation_id, price, date_of_invoice) values (6, 987.84, '2020-09-26');
+insert into invoices (consultation_id, price, date_of_invoice) values (7, 1702.53, '2020-03-26');
+insert into invoices (consultation_id, price, date_of_invoice) values (8, 568.18, '2020-01-02');
+insert into invoices (consultation_id, price, date_of_invoice) values (9, 683.97, '2020-05-29');
+insert into invoices (consultation_id, price, date_of_invoice) values (10, 1274.24, '2020-09-04');
