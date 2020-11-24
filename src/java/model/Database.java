@@ -5,10 +5,17 @@
  */
 package model;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /**
  *
@@ -35,6 +42,16 @@ public class Database {
     private static final String PASSWORD = "1qRqabnPy8FZQh1NsWmhZ";
     private static final String DATABASENAME = "sql_smart_care_surgery_database";
     private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
+
+    // Hashing variables for PBKDF2
+    static byte[] hash;
+    static char[] thisPassCharArray;
+    static byte[] thisSalt;
+    static int iterations = 65536;
+    static int keyLength = 512;
+    static KeySpec spec;
+    static SecureRandom random = new SecureRandom();
+    
 
     // This method connects to the database
     // IP, username and password are hardcoded
@@ -64,6 +81,43 @@ public class Database {
     // from other classes
     public static Statement getStatement() {
         return statement;
+    }
+
+    public static byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
+
+        try {
+            SecretKeyFactory thisFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+            PBEKeySpec specification = new PBEKeySpec(password, salt, iterations, keyLength);
+            SecretKey thisKey = thisFactory.generateSecret(specification);
+            byte[] hash = thisKey.getEncoded();
+            return hash;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static String byteArrayToString(byte[] byteArray) {
+        StringBuilder result = new StringBuilder();
+
+        for (byte thisByte : byteArray) {
+            result.append(String.format("%02x", thisByte));
+        }
+
+        return result.toString();
+    }
+    
+    public static String getHashedPasswordString(String password) {
+
+        thisPassCharArray = password.toCharArray();
+        thisSalt = new byte[32];
+        random.nextBytes(thisSalt);
+
+        hash = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
+
+        System.out.println("Salt: " + byteArrayToString(thisSalt));
+        return byteArrayToString(hash);
+        
     }
 
     // Executes read operation on the database, takes a mySQL command as input
@@ -112,33 +166,46 @@ public class Database {
 
     }
 
-    public static void getFromTableWhere(String tableName, String attributes, String where, String is) {
+    public static int getUserID(String username, String password) throws SQLException {
         String queryString;
-        String table = "";
-        String fieldString = "";
-        String valueString = "";
-        String updateString = "";
-        String idString = "";
         connect();
-        queryString = "INSERT INTO " + table + " (" + fieldString + ") VALUES(" + valueString + ") ON DUPLICATE KEY UPDATE " + updateString;
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT * FROM ids_usernames_and_passwords"
+                + " WHERE username='" + username + "' AND password='" + password + "'";
 
         System.out.println(queryString);
-        try {
-            getStatement().executeUpdate(queryString);
-        } catch (SQLException e) {
-            System.out.println(e);
-            System.err.println("Error writing object to database");
-        } finally {
-            closeConnection();
+        ResultSet rs = executeQuery(queryString);
+        rs.next();
+
+        return rs.getInt(1);
+    }
+
+    public static ArrayList<String> getPasswords() throws SQLException {
+        String queryString;
+        ArrayList<String> output = new ArrayList();
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT password FROM ids_usernames_and_passwords";
+
+        System.out.println(queryString);
+        ResultSet rs = executeQuery(queryString);
+        while (rs.next()) {
+            String thisPass = rs.getString(1);
+
+            if (!thisPass.isEmpty()) {
+                output.add(rs.getString(1));
+            }
         }
 
+        return output;
     }
 
     public static void getUserWhere(String username, String password) throws SQLException {
         String queryString;
         connect();
 
-        
         PreparedStatement statement = connection.prepareStatement(password);
 
     }

@@ -10,26 +10,32 @@ DROP TABLE admins;
 DROP TABLE doctors;
 DROP TABLE nurses;
 DROP TABLE patients;
-DROP TABLE usernames_and_passwords;
-DROP TABLE employees;
 
+# Delete all views
+DROP VIEW ids_usernames_and_password;
+
+DROP TABLE admins;
 # Recreate and populate tables with test data
 create table admins (
-        admin_id INT PRIMARY KEY AUTO_INCREMENT,
+	admin_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
-	password VARCHAR(50),
+#    password VARCHAR(50),
+	password VARBINARY(129),
+	salt VARBINARY(65),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
         is_full_time boolean
 );
 ALTER TABLE admins AUTO_INCREMENT=10000; 
 
-insert into admins (username, password, first_name, sur_name, is_full_time) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', true);
+insert into admins (username, password, salt, first_name, sur_name, is_full_time) values ('testadmin', '694cf96e7f2f09d0ff343071e7dad2b08ecafe60f4e117150a8c0bef43602d297540e42161549627a578e1538a28f2409be7d94830d2bfb9894259bcd72675f3', '606c10b5f1f9ec91e82308f21b7ba822955b28d3329b6478ea975edb16764d1a', 'Test', 'Admin', true);
+insert into admins (username, password, salt, first_name, sur_name, is_full_time) values ('kmurrigans0', '04268d015a81471ba0419347010e48e4ca31f2b2b97da2a8d6ef723693d8d0b00b729b2ff56f5e378fe8d4419ee630382becf2712a36390583aab9a0cf18b1b7', 'a89a36f6d373e8e130b16e01dd95e94e7dcedf63df04f13d4bd1c92cca215028', 'Kiele', 'Murrigans', true);
 
-
+#insert into admins (username, password, first_name, sur_name, is_full_time) values ('testadmin', 'password', 'Test', 'Admin', true);
+#insert into admins (username, password, first_name, sur_name, is_full_time) values ('kmurrigans0', 'mivCdxMTCb', 'Kiele', 'Murrigans', true);
 
 create table doctors (
-        doctor_id INT PRIMARY KEY AUTO_INCREMENT,
+	doctor_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
@@ -39,12 +45,13 @@ create table doctors (
 ALTER TABLE doctors AUTO_INCREMENT=20000;
 
 insert into doctors (username, password, first_name, sur_name, is_full_time) values ('', '', '', '', false);
+insert into doctors (username, password, first_name, sur_name, is_full_time) values ('testdoctor', 'password', 'Test', 'Doctor', false);
 insert into doctors (username, password, first_name, sur_name, is_full_time) values ('gbuckoke0', 'qiqNfXuJ', 'Gustaf', 'Buckoke', true);
 insert into doctors (username, password, first_name, sur_name, is_full_time) values ('dpilkinton1', 'SOkdV4f8', 'Dal', 'Pilkinton', false);
 
 
 create table nurses (
-        nurse_id INT PRIMARY KEY AUTO_INCREMENT,
+	nurse_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
@@ -54,11 +61,12 @@ create table nurses (
 ALTER TABLE nurses AUTO_INCREMENT=30000;
 
 insert into nurses (username, password, first_name, sur_name, is_full_time) values ('', '', '', '', false);
+insert into nurses (username, password, first_name, sur_name, is_full_time) values ('testnurse', 'password', 'Test', 'Nurse', false);
 insert into nurses (username, password, first_name, sur_name, is_full_time) values ('mbleasdale0', 'T2PkF0', 'Mollie', 'Bleasdale', false);
 
 
 create table patients (
-        patient_id INT PRIMARY KEY AUTO_INCREMENT,
+	patient_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
@@ -68,6 +76,7 @@ create table patients (
 );
 ALTER TABLE patients AUTO_INCREMENT=40000;
 
+insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('testpatient', 'password', 'Test', 'Patient', '1992-03-14', '1 Test Avenue--BE16 3LO-testCounty-TestTown-999999999999');
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('rglendinning0', 'kYiKqjh82Grf', 'Ray', 'Glendinning', '1992-03-14', '1 Melby Parkway--BE16 3LO-county-Bristol-958297970322');
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('aconstantinou1', 'i4g3gpIN5e', 'Amby', 'Constantinou', '1934-01-17', '773 Bowman Lane--BE16 3LO-county-Bristol-958297970322');
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('adeathridge2', 'hTC0HBw5vby9', 'Albina', 'Deathridge', '1931-02-09', '54 Prairie Rose Terrace--BE16 3LO-county-Bristol-958297970322');
@@ -192,23 +201,11 @@ insert into invoices (price, date_of_invoice, consultation_id) values (6653.48, 
 
 
 
-CREATE VIEW usernames_and_passwords AS
-SELECT username, password FROM admins
+CREATE VIEW ids_usernames_and_password AS
+SELECT admin_id, username, password FROM admins
 UNION
-SELECT username, password FROM doctors
+SELECT doctor_id, username, password FROM doctors
 UNION
-SELECT username, password FROM nurses
+SELECT nurse_id, username, password FROM nurses
 UNION
-SELECT username, password FROM patients;
-
-
-CREATE VIEW employees AS
-SELECT * FROM admins
-UNION
-SELECT * FROM doctors
-UNION
-SELECT * FROM nurses;
-
-
-CREATE VIEW ids AS
-SELECT 
+SELECT patient_id, username, password FROM patients;
