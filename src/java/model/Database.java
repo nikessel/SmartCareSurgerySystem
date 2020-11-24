@@ -7,6 +7,8 @@ package model;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -110,6 +112,37 @@ public class Database {
 
     }
 
+    public static void getFromTableWhere(String tableName, String attributes, String where, String is) {
+        String queryString;
+        String table = "";
+        String fieldString = "";
+        String valueString = "";
+        String updateString = "";
+        String idString = "";
+        connect();
+        queryString = "INSERT INTO " + table + " (" + fieldString + ") VALUES(" + valueString + ") ON DUPLICATE KEY UPDATE " + updateString;
+
+        System.out.println(queryString);
+        try {
+            getStatement().executeUpdate(queryString);
+        } catch (SQLException e) {
+            System.out.println(e);
+            System.err.println("Error writing object to database");
+        } finally {
+            closeConnection();
+        }
+
+    }
+
+    public static void getUserWhere(String username, String password) throws SQLException {
+        String queryString;
+        connect();
+
+        
+        PreparedStatement statement = connection.prepareStatement(password);
+
+    }
+
     /*
     The object initialisation methods below query the database for object attributes.
     The method will loop through every object in the repective database tables 
@@ -140,7 +173,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting admin");
 
@@ -169,7 +204,9 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
 
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting doctor");
 
@@ -196,7 +233,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting nurse");
 
@@ -223,7 +262,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting patient");
 
@@ -253,7 +294,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting consultation");
 
@@ -301,7 +344,9 @@ public class Database {
 
             System.out.println(e);
 
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         return outputList;
     }
@@ -328,7 +373,7 @@ public class Database {
         }
     }
 
- /*
+    /*
     The method saves any valid SmartCareSurgery database object in the 
     A mySQL INSERT command will be generated based on the 
     attributes in the object.
@@ -457,7 +502,7 @@ public class Database {
 
             if (parsed.getConsulationID() != -1) {
                 idString = ", " + String.valueOf(parsed.getConsulationID());
-                 fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
+                fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
             }
 
             valueString = "" + parsed.getPatient().getPatientID()
@@ -485,7 +530,9 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Error writing object to database");
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
     }
 
     /*
@@ -531,7 +578,7 @@ public class Database {
             idString = "patient_id";
             idValue = String.valueOf(parsed.getPatientID());
 
-        }  else if (object instanceof Consultation) {
+        } else if (object instanceof Consultation) {
             Consultation parsed = (Consultation) object;
 
             table = "consultations";
@@ -552,7 +599,9 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Error deleting object from database (ID not found?)");
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
     }
 
 }

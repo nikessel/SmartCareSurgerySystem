@@ -10,15 +10,17 @@ DROP TABLE admins;
 DROP TABLE doctors;
 DROP TABLE nurses;
 DROP TABLE patients;
+DROP TABLE usernames_and_passwords;
+DROP TABLE employees;
 
 # Recreate and populate tables with test data
 create table admins (
+        admin_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
-        is_full_time boolean,
-	admin_id INT PRIMARY KEY AUTO_INCREMENT
+        is_full_time boolean
 );
 ALTER TABLE admins AUTO_INCREMENT=10000; 
 
@@ -27,12 +29,12 @@ insert into admins (username, password, first_name, sur_name, is_full_time) valu
 
 
 create table doctors (
+        doctor_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
-        is_full_time boolean,
-	doctor_id INT PRIMARY KEY AUTO_INCREMENT
+        is_full_time boolean
 );
 ALTER TABLE doctors AUTO_INCREMENT=20000;
 
@@ -42,12 +44,12 @@ insert into doctors (username, password, first_name, sur_name, is_full_time) val
 
 
 create table nurses (
+        nurse_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
-        is_full_time boolean,
-	nurse_id INT PRIMARY KEY AUTO_INCREMENT
+        is_full_time boolean
 );
 ALTER TABLE nurses AUTO_INCREMENT=30000;
 
@@ -56,11 +58,11 @@ insert into nurses (username, password, first_name, sur_name, is_full_time) valu
 
 
 create table patients (
+        patient_id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(50),
 	password VARCHAR(50),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
-	patient_id INT PRIMARY KEY AUTO_INCREMENT,
 	date_of_birth DATE,
 	address VARCHAR(100)
 );
@@ -117,13 +119,12 @@ insert into patients (username, password, first_name, sur_name, date_of_birth, a
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('dbuckler1c', 'OOaTdpHYgVS', 'Dorelle', 'Buckler', '1933-03-07', '4 Washington Parkway--BE16 3LO-county-Bristol-958297970322');
 insert into patients (username, password, first_name, sur_name, date_of_birth, address) values ('econrad1d', '5fCpMDuKljN', 'Emalia', 'Conrad', '1979-09-22', '30564 Riverside Place--BE16 3LO-county-Bristol-958297970322');
 
-
 create table consultations (
+	consultation_id INT PRIMARY KEY AUTO_INCREMENT,
 	patient_id INT UNIQUE,
 	doctor_id INT,
         nurse_id INT,
 	consultation_date DATE,
-	consultation_id INT PRIMARY KEY AUTO_INCREMENT,
         CONSTRAINT fk_doctor
         FOREIGN KEY (doctor_id) 
         REFERENCES doctors(doctor_id)
@@ -150,7 +151,7 @@ insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) v
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40039, 20002, 30001, '2020-02-18');
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40023, 20000, 30001, '2021-02-23');
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20002, 30001, '2020-01-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40000, 20001, 30000, '2021-01-16');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40037, 20001, 30000, '2021-01-16');
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20001, 30001, '2020-04-16');
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20000, 30001, '2021-03-14');
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40027, 20002, 30001, '2020-02-22');
@@ -175,37 +176,39 @@ create table invoices (
             ON UPDATE CASCADE
             ON DELETE CASCADE
 );
-insert into invoices (price, date_of_invoice, consultation_id) values (5291.92, '5/18/2020', 50020);
-insert into invoices (price, date_of_invoice, consultation_id) values (7747.29, '2/7/2020', 50019);
-insert into invoices (price, date_of_invoice, consultation_id) values (736.51, '10/13/2020', 50004);
-insert into invoices (price, date_of_invoice, consultation_id) values (8428.91, '11/13/2020', 50004);
-insert into invoices (price, date_of_invoice, consultation_id) values (8631.31, '12/25/2019', 50003);
-insert into invoices (price, date_of_invoice, consultation_id) values (2133.37, '3/30/2020', 50005);
-insert into invoices (price, date_of_invoice, consultation_id) values (9120.76, '11/9/2020', 50015);
-insert into invoices (price, date_of_invoice, consultation_id) values (8614.25, '12/9/2020', 50013);
-insert into invoices (price, date_of_invoice, consultation_id) values (1090.61, '11/13/2020', 50010);
-insert into invoices (price, date_of_invoice, consultation_id) values (6653.48, '3/7/2020', 50000);
-ALTER TABLE consultations AUTO_INCREMENT=60000;
-
-create table invoices (
-	price DECIMAL(6,2),
-	date_of_invoice DATE,
-        consultation_id INT,
-        CONSTRAINT fk_consultation
-        FOREIGN KEY (consultation_id) 
-        REFERENCES consultations(consultation_id)
-            ON UPDATE CASCADE
-            ON DELETE CASCADE
-);
+ALTER TABLE invoices AUTO_INCREMENT=60000;
 
 
-insert into invoices (consultation_id, price, date_of_invoice) values (1, 1773.57, '2020-03-27');
-insert into invoices (consultation_id, price, date_of_invoice) values (2, 764.92, '2019-12-26');
-insert into invoices (consultation_id, price, date_of_invoice) values (3, 1124.27, '2019-11-24');
-insert into invoices (consultation_id, price, date_of_invoice) values (4, 853.33, '2020-01-29');
-insert into invoices (consultation_id, price, date_of_invoice) values (5, 1228.03, '2020-04-23');
-insert into invoices (consultation_id, price, date_of_invoice) values (6, 987.84, '2020-09-26');
-insert into invoices (consultation_id, price, date_of_invoice) values (7, 1702.53, '2020-03-26');
-insert into invoices (consultation_id, price, date_of_invoice) values (8, 568.18, '2020-01-02');
-insert into invoices (consultation_id, price, date_of_invoice) values (9, 683.97, '2020-05-29');
-insert into invoices (consultation_id, price, date_of_invoice) values (10, 1274.24, '2020-09-04');
+insert into invoices (price, date_of_invoice, consultation_id) values (5291.92, '2020-5-18', 50007);
+insert into invoices (price, date_of_invoice, consultation_id) values (7747.29, '2020-2-7', 50019);
+insert into invoices (price, date_of_invoice, consultation_id) values (736.51, '2020-10-13', 50004);
+insert into invoices (price, date_of_invoice, consultation_id) values (8428.91, '2020-11-13', 50004);
+insert into invoices (price, date_of_invoice, consultation_id) values (8631.31, '2019-12-25', 50003);
+insert into invoices (price, date_of_invoice, consultation_id) values (2133.37, '2020-3-30', 50005);
+insert into invoices (price, date_of_invoice, consultation_id) values (9120.76, '2020-11-9', 50015);
+insert into invoices (price, date_of_invoice, consultation_id) values (8614.25, '2020-12-9', 50013);
+insert into invoices (price, date_of_invoice, consultation_id) values (1090.61, '2020-11-13', 50010);
+insert into invoices (price, date_of_invoice, consultation_id) values (6653.48, '2020-3-7', 50000);
+
+
+
+CREATE VIEW usernames_and_passwords AS
+SELECT username, password FROM admins
+UNION
+SELECT username, password FROM doctors
+UNION
+SELECT username, password FROM nurses
+UNION
+SELECT username, password FROM patients;
+
+
+CREATE VIEW employees AS
+SELECT * FROM admins
+UNION
+SELECT * FROM doctors
+UNION
+SELECT * FROM nurses;
+
+
+CREATE VIEW ids AS
+SELECT 
