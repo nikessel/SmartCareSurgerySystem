@@ -11,8 +11,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -51,7 +49,6 @@ public class Database {
     static int keyLength = 512;
     static KeySpec spec;
     static SecureRandom random = new SecureRandom();
-    
 
     // This method connects to the database
     // IP, username and password are hardcoded
@@ -106,18 +103,22 @@ public class Database {
 
         return result.toString();
     }
-    
-    public static String getHashedPasswordString(String password) {
 
+    public static ArrayList<String> getHashedPasswordString(String password) {
+
+        ArrayList<String> arr = new ArrayList();
         thisPassCharArray = password.toCharArray();
         thisSalt = new byte[32];
         random.nextBytes(thisSalt);
 
         hash = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
 
-        System.out.println("Salt: " + byteArrayToString(thisSalt));
-        return byteArrayToString(hash);
-        
+        arr.add(byteArrayToString(thisSalt));
+
+        arr.add(byteArrayToString(hash));
+
+        return arr;
+
     }
 
     // Executes read operation on the database, takes a mySQL command as input
@@ -194,9 +195,48 @@ public class Database {
         while (rs.next()) {
             String thisPass = rs.getString(1);
 
+            output.add(rs.getString(1));
+
+        }
+
+        return output;
+    }
+
+    public static ArrayList<String> getUsernames() throws SQLException {
+        String queryString;
+        ArrayList<String> output = new ArrayList();
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT username FROM ids_usernames_and_passwords";
+
+        System.out.println(queryString);
+        ResultSet rs = executeQuery(queryString);
+        while (rs.next()) {
+            String thisPass = rs.getString(1);
+
             if (!thisPass.isEmpty()) {
                 output.add(rs.getString(1));
             }
+        }
+
+        return output;
+    }
+
+    public static ArrayList<Integer> getIDs() throws SQLException {
+        String queryString;
+        ArrayList<Integer> output = new ArrayList();
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT * FROM ids_usernames_and_passwords";
+
+        System.out.println(queryString);
+        ResultSet rs = executeQuery(queryString);
+        while (rs.next()) {
+            int thisPass = rs.getInt(1);
+
+            output.add(thisPass);
         }
 
         return output;

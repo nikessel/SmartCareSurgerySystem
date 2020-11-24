@@ -5,18 +5,10 @@
  */
 package model;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import static model.Database.thisPassCharArray;
 
 /**
  *
@@ -28,17 +20,40 @@ public class TestMain {
 
         ArrayList<String> arr = new ArrayList();
         ArrayList<String> arr2 = new ArrayList();
-        
+        ArrayList<Integer> arr3 = new ArrayList();
+        ArrayList<String> arr4 = new ArrayList();
+
         try {
             arr = Database.getPasswords();
         } catch (SQLException ex) {
             Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        try {
+            arr2 = Database.getUsernames();
+        } catch (SQLException ex) {
+            Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            arr3 = Database.getIDs();
+        } catch (SQLException ex) {
+            Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         for (int i = 0; i < arr.size(); i++) {
-            System.out.println("Password: " + arr.get(i));
-            System.out.println("Hash: " + Database.getHashedPasswordString(arr.get(i)));
             
+            arr4.clear();
+            
+            arr4 = Database.getHashedPasswordString(arr.get(i));
+            
+            System.out.println("ID: " + arr3.get(i));
+            System.out.println("Username: " + arr2.get(i));
+            System.out.println("Password: " + arr.get(i));
+            System.out.println("Salt (hex): " + arr4.get(0));
+            System.out.println("Hash: " + arr4.get(1));
+            System.out.println("\n");
+
         }
 
         System.exit(0);
