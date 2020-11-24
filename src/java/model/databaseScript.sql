@@ -31,11 +31,10 @@ create table doctors (
 );
 ALTER TABLE doctors AUTO_INCREMENT=20000;
 
-insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('', UNHEX(''), UNHEX(''), '', '', false);
+insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('none', UNHEX('0000'), UNHEX('0000'), 'none', 'none', false);
 insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('testdoctor', UNHEX('e230a55006d1d9ed28dc7bcc1b663da840f4e4ebfad0849f7e0f949a3cec7947489afc0f4c57083f0f066bd554194acbe2c7a2871c519bb586a9330c2292e687'), UNHEX('11a96fec755995884a4671e7b731cd137c3feb0315cfc59637c74eeae3aa03e4'), 'Test', 'Doctor', false);
 insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('gbuckoke0', UNHEX('5f8ce858e7556d9d83bc959cd9adcf312f04077319d4442dcdff5f7f46d2d1c3e7b9354b16b83b7a2ea3404d03859f6a76e4bd11447c82c5c4a2016b95c23e4c'), UNHEX('6e84653e4d316083180d95b617af8f07eaadc87bfb160d209ccdc15024633640'), 'Bob', 'Buckoke', true);
 insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('dpilkinton1', UNHEX('1b7444301edf5dfafdb7466bcba2526503f345ddb523bb07357fef3ff8678c9d01bc4efb606d69feb4802ed7dbc57f71cf0f99d4c88b471b2d324886d36f1277'), UNHEX('e2b7ccdd1dc428a982b32c9b130dbf18126b36f0c178bd061e4eef118547426a'), 'James', 'Pilkinton', false);
-
 
 create table nurses (
 	nurse_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -48,7 +47,7 @@ create table nurses (
 );
 ALTER TABLE nurses AUTO_INCREMENT=30000;
 
-insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('', UNHEX(''), UNHEX(''), '', '', false);
+insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('none', UNHEX('0000'), UNHEX('0000'), 'none', 'none', false);
 insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('testnurse', UNHEX('040379d3e272b64c6b1325a3324191c8bf18bf911e2231f9ef7ab81f9c4464a4fffebbc2dfc64fa8188ed5016a313b00b7c0b3bd6c99015a13ea498a5faa3f8b'), UNHEX('745d3647c2afa9fa385819e572b5bc42c5a5978624e98602324611442a25cbc4'), 'Test', 'Nurse', false);
 insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('mbleasdale0', UNHEX('55b50e12ba227aa387396e50814aebce445ce0125b54f4994bbb84737b625147e708cec9217724346a33a37cf1fd365975a69e5de55ab57a027f8588afafe738'), UNHEX('3afdff3726e0b9e8b56940c23c9190bca924db3474ae4abaeba317da51f0ffdd'), 'Mollie', 'Bleasdale', false);
 
@@ -128,11 +127,11 @@ insert into invoices (price, date_of_invoice, consultation_id) values (5291.92, 
 insert into invoices (price, date_of_invoice, consultation_id) values (7747.29, '2020-2-7', 50003);
 
 
-CREATE VIEW ids_usernames_and_password_hashes AS
-SELECT admin_id, username, password_hash FROM admins
+CREATE VIEW ids_usernames_password_hashes_and_salts AS
+SELECT admin_id, username, password_hash, salt FROM admins
 UNION
-SELECT doctor_id, username, password_hash FROM doctors
+SELECT doctor_id, username, password_hash, salt FROM doctors
 UNION
-SELECT nurse_id, username, password_hash FROM nurses
+SELECT nurse_id, username, password_hash, salt FROM nurses
 UNION
-SELECT patient_id, username, password_hash FROM patients;
+SELECT patient_id, username, password_hash, salt FROM patients;

@@ -11,6 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -42,13 +43,17 @@ public class Database {
     private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
 
     // Hashing variables for PBKDF2
-    static byte[] hash;
+    static byte[] hash_candidate = new byte[64];
+    static byte[] check_hash = new byte[64];
     static char[] thisPassCharArray;
-    static byte[] thisSalt;
+    static byte[] thisSalt = new byte[32];
     static int iterations = 65536;
     static int keyLength = 512;
     static KeySpec spec;
     static SecureRandom random = new SecureRandom();
+    
+    // Display more infomation
+    static int verbosity = 0;
 
     // This method connects to the database
     // IP, username and password are hardcoded
@@ -104,21 +109,10 @@ public class Database {
         return result.toString();
     }
 
-    public static ArrayList<String> getHashedPasswordString(String password) {
-
-        ArrayList<String> arr = new ArrayList();
-        thisPassCharArray = password.toCharArray();
-        thisSalt = new byte[32];
+    public static byte[] getRandomSalt() {
         random.nextBytes(thisSalt);
 
-        hash = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
-
-        arr.add(byteArrayToString(thisSalt));
-
-        arr.add(byteArrayToString(hash));
-
-        return arr;
-
+        return thisSalt;
     }
 
     // Executes read operation on the database, takes a mySQL command as input
@@ -168,18 +162,43 @@ public class Database {
     }
 
     public static int getUserID(String username, String password) throws SQLException {
+
+        thisPassCharArray = password.toCharArray();
         String queryString;
+        int thisID;
+        boolean userNameFound = false;
+        
         connect();
         executeQuery("USE " + DATABASENAME);
 
-        queryString = "SELECT * FROM ids_usernames_and_passwords"
-                + " WHERE username='" + username + "' AND password='" + password + "'";
+        queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
 
-        System.out.println(queryString);
         ResultSet rs = executeQuery(queryString);
-        rs.next();
+        
+        while (rs.next()) {
+            userNameFound = true;
+            thisID = rs.getInt(1);
+            thisSalt = rs.getBytes("salt");
+            check_hash = rs.getBytes("password_hash");
+            hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
 
-        return rs.getInt(1);
+            if (Arrays.equals(check_hash, hash_candidate)) {
+                return thisID;
+            }
+            
+            if (verbosity > 2) {
+                System.out.println("getUserID:");
+                System.out.println("ID: " + thisID + ", salt: " + byteArrayToString(thisSalt)
+                        + ", check_hash: " + byteArrayToString(check_hash)
+                        + ", hash_candidate: " + byteArrayToString(hash_candidate));
+            }
+
+        }
+        if (! userNameFound) {
+            return -2;
+        }
+
+        return -1;
     }
 
     public static ArrayList<String> getPasswords() throws SQLException {

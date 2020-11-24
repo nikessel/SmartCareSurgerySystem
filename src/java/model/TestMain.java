@@ -18,44 +18,13 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        ArrayList<String> arr = new ArrayList();
-        ArrayList<String> arr2 = new ArrayList();
-        ArrayList<Integer> arr3 = new ArrayList();
-        ArrayList<String> arr4 = new ArrayList();
-
+        
         try {
-            arr = Database.getPasswords();
+            System.out.println(Database.getUserID("ccorpe8", "OkGrFR0j"));
         } catch (SQLException ex) {
-            Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
         }
-
-        try {
-            arr2 = Database.getUsernames();
-        } catch (SQLException ex) {
-            Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            arr3 = Database.getIDs();
-        } catch (SQLException ex) {
-            Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        for (int i = 0; i < arr.size(); i++) {
-            
-            arr4.clear();
-            
-            arr4 = Database.getHashedPasswordString(arr.get(i));
-            
-            System.out.println("ID: " + arr3.get(i));
-            System.out.println("Username: " + arr2.get(i));
-            System.out.println("Password: " + arr.get(i));
-            System.out.println("Salt (hex): " + arr4.get(0));
-            System.out.println("Hash: " + arr4.get(1));
-            System.out.println("\n");
-
-        }
-
+        
         System.exit(0);
         Admin admin = Database.getAdmin(1001);
 
