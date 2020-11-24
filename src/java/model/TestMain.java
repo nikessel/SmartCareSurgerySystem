@@ -14,10 +14,14 @@ public class TestMain {
     public static void main(String[] args) {
         
         
+        Admin admin  = Database.getAdmin(1001);
+        
+        admin.getUsername();
+        
         Database.printDatabaseTable("all");
         
         System.exit(0);
-        Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true);
+       // Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true);
         Database.writeObjectToDatabase(admin);
 
         Doctor doctor = new Doctor("dds", "dsd", "dsd", "dsds", true);
