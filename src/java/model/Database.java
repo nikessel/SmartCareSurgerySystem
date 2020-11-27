@@ -5,8 +5,16 @@
  */
 package model;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /**
  *
@@ -33,6 +41,19 @@ public class Database {
     private static final String PASSWORD = "1qRqabnPy8FZQh1NsWmhZ";
     private static final String DATABASENAME = "sql_smart_care_surgery_database";
     private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
+
+    // Hashing variables for PBKDF2
+    static byte[] hash_candidate = new byte[64];
+    static byte[] check_hash = new byte[64];
+    static char[] thisPassCharArray;
+    static byte[] thisSalt = new byte[32];
+    static int iterations = 65536;
+    static int keyLength = 512;
+    static KeySpec spec;
+    static SecureRandom random = new SecureRandom();
+    
+    // Display more infomation
+    static int verbosity = 0;
 
     // This method connects to the database
     // IP, username and password are hardcoded
@@ -62,6 +83,36 @@ public class Database {
     // from other classes
     public static Statement getStatement() {
         return statement;
+    }
+
+    public static byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
+
+        try {
+            SecretKeyFactory thisFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+            PBEKeySpec specification = new PBEKeySpec(password, salt, iterations, keyLength);
+            SecretKey thisKey = thisFactory.generateSecret(specification);
+            byte[] hash = thisKey.getEncoded();
+            return hash;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static String byteArrayToString(byte[] byteArray) {
+        StringBuilder result = new StringBuilder();
+
+        for (byte thisByte : byteArray) {
+            result.append(String.format("%02x", thisByte));
+        }
+
+        return result.toString();
+    }
+
+    public static byte[] getRandomSalt() {
+        random.nextBytes(thisSalt);
+
+        return thisSalt;
     }
 
     // Executes read operation on the database, takes a mySQL command as input
@@ -110,6 +161,114 @@ public class Database {
 
     }
 
+    public static int getUserID(String username, String password) throws SQLException {
+
+        thisPassCharArray = password.toCharArray();
+        String queryString;
+        int thisID;
+        boolean userNameFound = false;
+        
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
+
+        ResultSet rs = executeQuery(queryString);
+        
+        while (rs.next()) {
+            userNameFound = true;
+            thisID = rs.getInt(1);
+            thisSalt = rs.getBytes("salt");
+            check_hash = rs.getBytes("password_hash");
+            hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
+
+            if (Arrays.equals(check_hash, hash_candidate)) {
+                return thisID;
+            }
+            
+            if (verbosity > 2) {
+                System.out.println("getUserID:");
+                System.out.println("ID: " + thisID + ", salt: " + byteArrayToString(thisSalt)
+                        + ", check_hash: " + byteArrayToString(check_hash)
+                        + ", hash_candidate: " + byteArrayToString(hash_candidate));
+            }
+
+        }
+        if (! userNameFound) {
+            return -2;
+        }
+
+        return -1;
+    }
+
+    public static ArrayList<String> getPasswords() throws SQLException {
+        String queryString;
+        ArrayList<String> output = new ArrayList();
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT password FROM ids_usernames_and_passwords";
+
+        System.out.println(queryString);
+        ResultSet rs = executeQuery(queryString);
+        while (rs.next()) {
+            String thisPass = rs.getString(1);
+
+            output.add(rs.getString(1));
+
+        }
+
+        return output;
+    }
+
+    public static ArrayList<String> getUsernames() throws SQLException {
+        String queryString;
+        ArrayList<String> output = new ArrayList();
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT username FROM ids_usernames_and_passwords";
+
+        System.out.println(queryString);
+        ResultSet rs = executeQuery(queryString);
+        while (rs.next()) {
+            String thisPass = rs.getString(1);
+
+            if (!thisPass.isEmpty()) {
+                output.add(rs.getString(1));
+            }
+        }
+
+        return output;
+    }
+
+    public static ArrayList<Integer> getIDs() throws SQLException {
+        String queryString;
+        ArrayList<Integer> output = new ArrayList();
+        connect();
+        executeQuery("USE " + DATABASENAME);
+
+        queryString = "SELECT * FROM ids_usernames_and_passwords";
+
+        System.out.println(queryString);
+        ResultSet rs = executeQuery(queryString);
+        while (rs.next()) {
+            int thisPass = rs.getInt(1);
+
+            output.add(thisPass);
+        }
+
+        return output;
+    }
+
+    public static void getUserWhere(String username, String password) throws SQLException {
+        String queryString;
+        connect();
+
+        PreparedStatement statement = connection.prepareStatement(password);
+
+    }
+
     /*
     The object initialisation methods below query the database for object attributes.
     The method will loop through every object in the repective database tables 
@@ -140,7 +299,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting admin");
 
@@ -169,7 +330,9 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
 
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting doctor");
 
@@ -196,7 +359,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting nurse");
 
@@ -223,7 +388,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting patient");
 
@@ -253,7 +420,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e);
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         System.err.println("Database error getting consultation");
 
@@ -301,7 +470,9 @@ public class Database {
 
             System.out.println(e);
 
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
 
         return outputList;
     }
@@ -328,7 +499,7 @@ public class Database {
         }
     }
 
- /*
+    /*
     The method saves any valid SmartCareSurgery database object in the 
     A mySQL INSERT command will be generated based on the 
     attributes in the object.
@@ -457,7 +628,7 @@ public class Database {
 
             if (parsed.getConsulationID() != -1) {
                 idString = ", " + String.valueOf(parsed.getConsulationID());
-                 fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
+                fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
             }
 
             valueString = "" + parsed.getPatient().getPatientID()
@@ -485,7 +656,9 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Error writing object to database");
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
     }
 
     /*
@@ -531,7 +704,7 @@ public class Database {
             idString = "patient_id";
             idValue = String.valueOf(parsed.getPatientID());
 
-        }  else if (object instanceof Consultation) {
+        } else if (object instanceof Consultation) {
             Consultation parsed = (Consultation) object;
 
             table = "consultations";
@@ -552,7 +725,9 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Error deleting object from database (ID not found?)");
-        } finally {closeConnection();}
+        } finally {
+            closeConnection();
+        }
     }
 
 }
