@@ -17,14 +17,25 @@ import java.util.logging.Logger;
 public class TestMain {
 
     public static void main(String[] args) {
-
+        User currentUser;
+        int currentUserID = -2;
+        
         
         try {
-            System.out.println(Database.getUserID("ccorpe8", "OkGrFR0j"));
+            currentUserID = Database.getUserID("testadmin", "password");
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.out.println(ex);   
+        }
+        System.out.println(currentUserID);
+            
+        if (10000 <= currentUserID && currentUserID <= 19999){
+                currentUser = Database.getAdmin(currentUserID);
+                System.out.println("Is an admin");
         }
         
+        
+                
+
         System.exit(0);
         Admin admin = Database.getAdmin(1001);
 

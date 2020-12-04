@@ -51,7 +51,7 @@ public class Database {
     static int keyLength = 512;
     static KeySpec spec;
     static SecureRandom random = new SecureRandom();
-    
+
     // Display more infomation
     static int verbosity = 0;
 
@@ -167,14 +167,14 @@ public class Database {
         String queryString;
         int thisID;
         boolean userNameFound = false;
-        
+
         connect();
         executeQuery("USE " + DATABASENAME);
 
         queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
 
         ResultSet rs = executeQuery(queryString);
-        
+
         while (rs.next()) {
             userNameFound = true;
             thisID = rs.getInt(1);
@@ -185,7 +185,7 @@ public class Database {
             if (Arrays.equals(check_hash, hash_candidate)) {
                 return thisID;
             }
-            
+
             if (verbosity > 2) {
                 System.out.println("getUserID:");
                 System.out.println("ID: " + thisID + ", salt: " + byteArrayToString(thisSalt)
@@ -194,7 +194,7 @@ public class Database {
             }
 
         }
-        if (! userNameFound) {
+        if (!userNameFound) {
             return -2;
         }
 
@@ -288,14 +288,17 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
-                String password = rs.getString("password");
+
+                // Skip saving password hash and salt
+                rs.getString("password_hash");
+                rs.getString("salt");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
                 int id = rs.getInt("admin_id");
 
                 // Return the object
-                return new Admin(username, password, firstName, surName, isFullTime, id);
+                return new Admin(username, "", firstName, surName, isFullTime, id);
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -318,14 +321,16 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
-                String password = rs.getString("password");
+                // Skip saving password hash and salt
+                rs.getString("password_hash");
+                rs.getString("salt");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
                 int id = rs.getInt("doctor_id");
 
                 // Return the object
-                return new Doctor(username, password, firstName, surName, isFullTime, id);
+                return new Doctor(username, "", firstName, surName, isFullTime, id);
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -348,14 +353,16 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
-                String password = rs.getString("password");
+                // Skip saving password hash and salt
+                rs.getString("password_hash");
+                rs.getString("salt");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
                 int id = rs.getInt("nurse_id");
 
                 // Return the object
-                return new Nurse(username, password, firstName, surName, isFullTime, nurseID);
+                return new Nurse(username, "", firstName, surName, isFullTime, nurseID);
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -376,7 +383,9 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
-                String password = rs.getString("password");
+                // Skip saving password hash and salt
+                rs.getString("password_hash");
+                rs.getString("salt");
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 int id = rs.getInt("patient_id");
@@ -384,7 +393,7 @@ public class Database {
                 java.sql.Date dateOfBirth = rs.getDate("date_of_birth");
 
                 // Return the object
-                return new Patient(username, password, firstName, surName, patientID, dateOfBirth, address);
+                return new Patient(username, "", firstName, surName, patientID, dateOfBirth, address);
             }
         } catch (SQLException e) {
             System.out.println(e);
