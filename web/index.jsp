@@ -1,59 +1,47 @@
-package com;
+<%-- 
+    Document   : index
+    Created on : 30-Nov-2020, 12:32:20
+    Author     : patdizon
+--%>
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-/**
- *
- * @author niklas
- */
-@WebServlet(name= "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
-
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-           
-            String _username = request.getParameter("username");
-            String _password = request.getParameter("password");
-            if (_username != null && _password != null) {
-                if (_username.equals("Patrick") && _password.equals("password1")) {
-                response.sendRedirect("welcome.jsp");
-                }else{
-                    out.println("Invalid user or password");
-                }
-            }else{
-                out.println("Empty Username or password");
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Login</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            td{
+            padding: 10px;
             }
-        }
-    }
-
-    /**
-     *
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
-    try (PrintWriter out = response.getWriter()){
-}
-}
-  
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
-    }
-
-}
+            div{
+                width: 50%;
+                border: 1px solid black;
+                border-radius: 5px;
+                background-color: lightcoral;
+            }
+            </style>
+    </head>
+    <body>
+    <center><h1><u>Login Here</u></h1></center>
+    <center>
+        <div>
+            <table>
+                <tr>
+                    <td>User name</td>
+                    <td><input type="text" class="form-control" name="username" placeholder="User name"></td>
+                </tr>
+                
+                <tr>
+                    <td>Password</td>
+                    <td><input type="password"  class="form-control" name="password" placeholder="Password"></td>
+                </tr>
+                   <tr>
+                       <td colspan="2" style="text-align: center"><input class="btn btn-success" type="submit" value="Submit"></td>   
+                      </tr> 
+            </table>
+        </div>
+    </center>
+    </body>
+</html>
