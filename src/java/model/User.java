@@ -47,7 +47,7 @@ public abstract class User {
     public void setSurName(String surName) {
         this.surName = surName;
     }
-
+    
     @Override
     public String toString() {
         return "User{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + '}';

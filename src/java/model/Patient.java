@@ -20,6 +20,7 @@ public class Patient extends User {
     public Patient(){
         
     }
+    
     public Patient(String username, String password, String firstName,
             String surName, java.sql.Date dateOfBirth, Address address) {
         this.username = username;
