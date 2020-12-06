@@ -111,9 +111,9 @@ public class Database {
 
     public static byte[] hexStringToByteArray(String string) {
         int length = string.length();
-        
+
         byte[] output = new byte[length / 2];
-        
+
         for (int i = 0; i < length; i += 2) {
             output[i / 2] = (byte) ((Character.digit(string.charAt(i), 16) << 4)
                     + Character.digit(string.charAt(i + 1), 16));
@@ -173,6 +173,20 @@ public class Database {
 
     }
 
+    private static String getCredentialsSQLString(String tableName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String idString = "";
+
+        stringBuilder.append("SELECT ");
+
+        idString = tableName.substring(0, tableName.length() - 1) + "_id";
+
+        stringBuilder.append(idString + ", username, password_hash, salt FROM " + tableName);
+
+        return stringBuilder.toString();
+
+    }
+
     public static int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
@@ -182,10 +196,16 @@ public class Database {
 
         try {
             connect();
+            ResultSet rs = executeQuery("SELECT * FROM admins");
 
-            queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
+            for (String tableName : USERTABLENAMES) {
+                queryString = getCredentialsSQLString(tableName) + " WHERE username='" + username + "'";
+                rs = executeQuery(queryString);
 
-            ResultSet rs = executeQuery(queryString);
+                if (rs.first()) {
+                    break;
+                }
+            }
 
             while (rs.next()) {
                 userNameFound = true;

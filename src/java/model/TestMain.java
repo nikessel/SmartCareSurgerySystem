@@ -20,6 +20,8 @@ public class TestMain {
         
         
         Database.connect();
+        
+        Database.getUserID("testadmin", "password");
         System.exit(0);
         User currentUser;
         int currentUserID = -2;

@@ -1,5 +1,5 @@
 
-
+DROP VIEW ids_usernames_password_hashes_and_salts;
 DROP TABLE invoices;
 DROP TABLE consultations;
 DROP TABLE admins;
