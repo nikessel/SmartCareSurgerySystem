@@ -89,18 +89,18 @@ create table consultations (
         CONSTRAINT fk_doctor
         FOREIGN KEY (doctor_id) 
         REFERENCES doctors(doctor_id)
-            ON UPDATE RESTRICT
-            ON DELETE RESTRICT,
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
         CONSTRAINT fk_nurse
         FOREIGN KEY (nurse_id) 
         REFERENCES nurses(nurse_id)
-            ON UPDATE RESTRICT
-            ON DELETE RESTRICT,
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
         CONSTRAINT fk_patient
         FOREIGN KEY (patient_id) 
         REFERENCES patients(patient_id)
-            ON UPDATE RESTRICT
-            ON DELETE RESTRICT
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
 );
 ALTER TABLE consultations AUTO_INCREMENT=50000;
 

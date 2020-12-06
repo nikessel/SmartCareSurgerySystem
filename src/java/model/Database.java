@@ -41,6 +41,7 @@ public class Database {
     private static final String PASSWORD = "1qRqabnPy8FZQh1NsWmhZ";
     private static final String DATABASENAME = "sql_smart_care_surgery_database";
     private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
+    private static final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
     static byte[] hash_candidate = new byte[64];
@@ -161,38 +162,44 @@ public class Database {
 
     }
 
-    public static int getUserID(String username, String password) throws SQLException {
+    public static int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
         String queryString;
         int thisID;
         boolean userNameFound = false;
 
-        connect();
-        executeQuery("USE " + DATABASENAME);
+        try {
+            connect();
+            executeQuery("USE " + DATABASENAME);
 
-        queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
+            queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
 
-        ResultSet rs = executeQuery(queryString);
+            ResultSet rs = executeQuery(queryString);
 
-        while (rs.next()) {
-            userNameFound = true;
-            thisID = rs.getInt(1);
-            thisSalt = rs.getBytes("salt");
-            check_hash = rs.getBytes("password_hash");
-            hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
+            while (rs.next()) {
+                userNameFound = true;
+                thisID = rs.getInt(1);
+                thisSalt = rs.getBytes("salt");
+                check_hash = rs.getBytes("password_hash");
+                hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
 
-            if (Arrays.equals(check_hash, hash_candidate)) {
-                return thisID;
+                if (Arrays.equals(check_hash, hash_candidate)) {
+                    return thisID;
+                }
+
+                if (verbosity > 2) {
+                    System.out.println("getUserID:");
+                    System.out.println("ID: " + thisID + ", salt: " + byteArrayToString(thisSalt)
+                            + ", check_hash: " + byteArrayToString(check_hash)
+                            + ", hash_candidate: " + byteArrayToString(hash_candidate));
+                }
+
             }
-
-            if (verbosity > 2) {
-                System.out.println("getUserID:");
-                System.out.println("ID: " + thisID + ", salt: " + byteArrayToString(thisSalt)
-                        + ", check_hash: " + byteArrayToString(check_hash)
-                        + ", hash_candidate: " + byteArrayToString(hash_candidate));
-            }
-
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            closeConnection();
         }
         if (!userNameFound) {
             return -2;
@@ -201,26 +208,7 @@ public class Database {
         return -1;
     }
 
-    public static ArrayList<String> getPasswords() throws SQLException {
-        String queryString;
-        ArrayList<String> output = new ArrayList();
-        connect();
-        executeQuery("USE " + DATABASENAME);
-
-        queryString = "SELECT password FROM ids_usernames_and_passwords";
-
-        System.out.println(queryString);
-        ResultSet rs = executeQuery(queryString);
-        while (rs.next()) {
-            String thisPass = rs.getString(1);
-
-            output.add(rs.getString(1));
-
-        }
-
-        return output;
-    }
-
+    /*
     public static ArrayList<String> getUsernames() throws SQLException {
         String queryString;
         ArrayList<String> output = new ArrayList();
@@ -241,33 +229,26 @@ public class Database {
 
         return output;
     }
-
+     */
     public static ArrayList<Integer> getIDs() throws SQLException {
         String queryString;
         ArrayList<Integer> output = new ArrayList();
         connect();
         executeQuery("USE " + DATABASENAME);
 
-        queryString = "SELECT * FROM ids_usernames_and_passwords";
+        queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts";
 
         System.out.println(queryString);
         ResultSet rs = executeQuery(queryString);
         while (rs.next()) {
-            int thisPass = rs.getInt(1);
+            int thisID = rs.getInt(1);
 
-            output.add(thisPass);
+            output.add(thisID);
         }
 
         return output;
     }
 
-    public static void getUserWhere(String username, String password) throws SQLException {
-        String queryString;
-        connect();
-
-        PreparedStatement statement = connection.prepareStatement(password);
-
-    }
 
     /*
     The object initialisation methods below query the database for object attributes.
@@ -529,22 +510,20 @@ public class Database {
             Admin parsed = (Admin) object;
 
             table = "admins";
-            fieldString = "username, password, first_name, sur_name, is_full_time";
+            fieldString = "username, first_name, sur_name, is_full_time";
 
             if (parsed.getAdminID() != -1) {
                 idString = ", " + String.valueOf(parsed.getAdminID());
-                fieldString = "username, password, first_name, sur_name, admin_id, is_full_time";
+                fieldString = "username, first_name, sur_name, admin_id, is_full_time";
             }
 
             valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getPassword() + "'"
                     + ", '" + parsed.getFirstName() + "'"
                     + ", '" + parsed.getSurName() + "'"
                     + idString
                     + ", " + parsed.isFullTime();
 
             updateString = "username='" + parsed.getUsername() + "', "
-                    + "password='" + parsed.getPassword() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
                     + "is_full_time=" + parsed.isFullTime();
@@ -553,22 +532,20 @@ public class Database {
             Doctor parsed = (Doctor) object;
 
             table = "doctors";
-            fieldString = "username, password, first_name, sur_name, is_full_time";
+            fieldString = "username, first_name, sur_name, is_full_time";
 
             if (parsed.getDoctorID() != -1) {
                 idString = ", " + String.valueOf(parsed.getDoctorID());
-                fieldString = "username, password, first_name, sur_name, doctor_id, is_full_time";
+                fieldString = "username, first_name, sur_name, doctor_id, is_full_time";
             }
 
             valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getPassword() + "'"
                     + ", '" + parsed.getFirstName() + "'"
                     + ", '" + parsed.getSurName() + "'"
                     + idString
                     + ", " + parsed.isFullTime();
 
             updateString = "username='" + parsed.getUsername() + "', "
-                    + "password='" + parsed.getPassword() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
                     + "is_full_time=" + parsed.isFullTime();
@@ -577,22 +554,20 @@ public class Database {
             Nurse parsed = (Nurse) object;
 
             table = "nurses";
-            fieldString = "username, password, first_name, sur_name, is_full_time";
+            fieldString = "username, first_name, sur_name, is_full_time";
 
             if (parsed.getNurseID() != -1) {
                 idString = ", " + String.valueOf(parsed.getNurseID());
-                fieldString = "username, password, first_name, sur_name, nurse_id, is_full_time";
+                fieldString = "username, first_name, sur_name, nurse_id, is_full_time";
             }
 
             valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getPassword() + "'"
                     + ", '" + parsed.getFirstName() + "'"
                     + ", '" + parsed.getSurName() + "'"
                     + idString
                     + ", " + parsed.isFullTime();
 
             updateString = "username='" + parsed.getUsername() + "', "
-                    + "password='" + parsed.getPassword() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
                     + "is_full_time=" + parsed.isFullTime();
@@ -605,15 +580,14 @@ public class Database {
 
             table = "patients";
 
-            fieldString = "username, password, first_name, sur_name, date_of_birth, address";
+            fieldString = "username, first_name, sur_name, date_of_birth, address";
 
             if (parsed.getPatientID() != -1) {
                 idString = ", " + String.valueOf(parsed.getPatientID());
-                fieldString = "username, password, first_name, sur_name, patient_id, date_of_birth, address";
+                fieldString = "username, first_name, sur_name, patient_id, date_of_birth, address";
             }
 
             valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getPassword() + "'"
                     + ", '" + parsed.getFirstName() + "'"
                     + ", '" + parsed.getSurName() + "'"
                     + idString
@@ -621,7 +595,6 @@ public class Database {
                     + ", '" + address + "'";
 
             updateString = "username='" + parsed.getFirstName() + "', "
-                    + "password='" + parsed.getSurName() + "', "
                     + "first_name='" + parsed.getFirstName() + "', "
                     + "sur_name='" + parsed.getSurName() + "', "
                     + "date_of_birth='" + parsed.getDateOfBirth() + "', "
@@ -668,6 +641,53 @@ public class Database {
         } finally {
             closeConnection();
         }
+    }
+
+    public static String setPassword(int userID, String password) {
+        String idString = "";
+        String tableName = "";
+        int lowerBound;
+        int upperBound;
+
+        if (!(10000 <= userID && userID <= 49999)) {
+            return "Invalid userID";
+        }
+
+        for (int i = 0; i < USERTABLENAMES.length; i++) {
+            lowerBound = (i + 1) * 10000;
+            upperBound = (i + 2) * 10000 - 1;
+
+            if (lowerBound <= userID && userID <= upperBound) {
+                tableName = USERTABLENAMES[i];
+                idString = tableName.substring(0, tableName.length() - 1) + "_id";
+            }
+        }
+
+        byte[] salt = getRandomSalt();
+        thisPassCharArray = password.toCharArray();
+        byte[] passwordHash = hashPassword(thisPassCharArray, salt, iterations, keyLength);
+        
+        try {
+            connect();
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE " + tableName + " SET password_hash = ?, salt = ? WHERE " + idString + " = ?");
+
+            // set the preparedstatement parameters
+            ps.setBytes(1, passwordHash);
+            ps.setBytes(2, salt);
+            ps.setInt(3, userID);
+
+            // call executeUpdate to execute our sql update statement
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            closeConnection();
+        }
+
+        return "";
     }
 
     /*
