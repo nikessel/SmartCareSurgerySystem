@@ -8,7 +8,7 @@ DROP TABLE patients;
 
 create table admins (
 	admin_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 10000, INCREMENT BY 1) primary key,
-	username VARCHAR(50),
+	username VARCHAR(50) UNIQUE,
 	password_hash VARCHAR(128),
 	salt VARCHAR(64),
 	first_name VARCHAR(50),
@@ -22,7 +22,7 @@ insert into admins (username, password_hash, salt, first_name, sur_name, is_full
 
 create table doctors (
 	doctor_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 20000, INCREMENT BY 1) primary key,
-	username VARCHAR(50),
+	username VARCHAR(50) UNIQUE,
 	password_hash VARCHAR(128),
 	salt VARCHAR(64),
 	first_name VARCHAR(50),
@@ -38,7 +38,7 @@ insert into doctors (username, password_hash, salt, first_name, sur_name, is_ful
 
 create table nurses (
 	nurse_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 30000, INCREMENT BY 1) primary key,
-	username VARCHAR(50),
+	username VARCHAR(50) UNIQUE,
 	password_hash VARCHAR(128),
 	salt VARCHAR(64),
 	first_name VARCHAR(50),
@@ -53,7 +53,7 @@ insert into nurses (username, password_hash, salt, first_name, sur_name, is_full
 
 create table patients (
 	patient_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 40000, INCREMENT BY 1) primary key,
-	username VARCHAR(50),
+	username VARCHAR(50) UNIQUE,
 	password_hash VARCHAR(128),
 	salt VARCHAR(64),
 	first_name VARCHAR(50),

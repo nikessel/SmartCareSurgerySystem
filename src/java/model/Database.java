@@ -12,6 +12,8 @@ import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -218,7 +220,7 @@ public class Database {
                 closeConnection();
             }
         }
-        
+
         if (!userNameFound) {
             return -2;
         }
@@ -652,13 +654,16 @@ public class Database {
 
         queryString = "INSERT INTO " + table + " (" + fieldString + ") VALUES(" + valueString + ")";
 
-        // UPDATE " + updateString
         System.out.println(queryString);
         try {
             getStatement().executeUpdate(queryString);
         } catch (SQLException e) {
-            System.out.println(e);
-            System.err.println("Error writing object to database");
+            try {
+                getStatement().executeUpdate("UPDATE " + updateString);
+            } catch (SQLException ex) {
+                System.out.println(e);
+                System.err.println("Error writing object to database");
+            }
         } finally {
             closeConnection();
         }
