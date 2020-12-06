@@ -1,5 +1,3 @@
-
-DROP VIEW ids_usernames_password_hashes_and_salts;
 DROP TABLE invoices;
 DROP TABLE consultations;
 DROP TABLE admins;
@@ -112,6 +110,7 @@ insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) v
 
 
 create table invoices (
+        invoice_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 60000, INCREMENT BY 1) primary key,
 	price DECIMAL(7,2),
 	date_of_invoice DATE,
 	consultation_id INT,

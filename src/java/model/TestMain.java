@@ -17,42 +17,33 @@ import java.util.logging.Logger;
 public class TestMain {
 
     public static void main(String[] args) {
-        
-        
-        Database.connect();
-        
-        Database.getUserID("testadmin", "password");
-        System.exit(0);
+
+        System.out.println(Database.getUserID("kmurrigans0", "DdDJ392jd2n"));
+
         User currentUser;
         int currentUserID = -2;
 
-        currentUserID = Database.getUserID("testdoctor", "password");
-        
-        System.out.println(currentUserID);
-        
-        Database.setPassword(currentUserID, "password2");
-        
-        currentUserID = Database.getUserID("testdoctor", "password");
-        
-        System.out.println(currentUserID);
-        
-        currentUserID = Database.getUserID("testdoctor", "password2");
-        
-        System.out.println(currentUserID);
-
         ArrayList<Integer> int_arr = new ArrayList();
 
-        try {
-            int_arr = Database.getIDs();
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
+        int_arr = Database.getIDs();
 
         System.out.println(int_arr);
 
-//        System.exit(0);
+        currentUserID = Database.getUserID("testdoctor", "password");
+
+        System.out.println(currentUserID);
+
+        Database.setPassword(currentUserID, "password2");
 
         currentUserID = Database.getUserID("testdoctor", "password");
+
+        System.out.println(currentUserID);
+
+        currentUserID = Database.getUserID("testdoctor", "password2");
+
+        System.out.println(currentUserID);
+
+        //currentUserID = Database.getUserID("testdoctor", "password");
 
         System.out.println(currentUserID);
 

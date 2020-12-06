@@ -39,7 +39,6 @@ public class Database {
     private static final String DATABASESTRING = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private static final String USERNAME = "databaseUser";
     private static final String PASSWORD = "password";
-    private static final String DATABASENAME = "sql_smart_care_surgery_database";
     private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
     private static final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
@@ -194,43 +193,32 @@ public class Database {
         int thisID;
         boolean userNameFound = false;
 
-        try {
+        for (String tableName : USERTABLENAMES) {
             connect();
-            ResultSet rs = executeQuery("SELECT * FROM admins");
+            queryString = getCredentialsSQLString(tableName) + " WHERE username='" + username + "'";
+            ResultSet rs = executeQuery(queryString);
 
-            for (String tableName : USERTABLENAMES) {
-                queryString = getCredentialsSQLString(tableName) + " WHERE username='" + username + "'";
-                rs = executeQuery(queryString);
+            try {
+                while (rs.next()) {
+                    userNameFound = true;
+                    thisID = rs.getInt(1);
+                    thisSalt = hexStringToByteArray(rs.getString("salt"));
+                    check_hash = hexStringToByteArray(rs.getString("password_hash"));
+                    hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
 
-                if (rs.first()) {
-                    break;
+                    if (Arrays.equals(check_hash, hash_candidate)) {
+                        return thisID;
+                    }
+
                 }
+
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            } finally {
+                closeConnection();
             }
-
-            while (rs.next()) {
-                userNameFound = true;
-                thisID = rs.getInt(1);
-                thisSalt = rs.getBytes("salt");
-                check_hash = rs.getBytes("password_hash");
-                hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
-
-                if (Arrays.equals(check_hash, hash_candidate)) {
-                    return thisID;
-                }
-
-                if (verbosity > 2) {
-                    System.out.println("getUserID:");
-                    System.out.println("ID: " + thisID + ", salt: " + byteArrayToString(thisSalt)
-                            + ", check_hash: " + byteArrayToString(check_hash)
-                            + ", hash_candidate: " + byteArrayToString(hash_candidate));
-                }
-
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        } finally {
-            closeConnection();
         }
+        
         if (!userNameFound) {
             return -2;
         }
@@ -260,25 +248,30 @@ public class Database {
         return output;
     }
      */
-    public static ArrayList<Integer> getIDs() throws SQLException {
+    public static ArrayList<Integer> getIDs() {
         String queryString;
+        String idString;
         ArrayList<Integer> output = new ArrayList();
         connect();
-        executeQuery("USE " + DATABASENAME);
 
-        queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts";
+        try {
+            for (String tableName : USERTABLENAMES) {
+                idString = tableName.substring(0, tableName.length() - 1) + "_id";
+                queryString = "SELECT " + idString + " FROM " + tableName;
+                ResultSet rs = executeQuery(queryString);
 
-        System.out.println(queryString);
-        ResultSet rs = executeQuery(queryString);
-        while (rs.next()) {
-            int thisID = rs.getInt(1);
+                while (rs.next()) {
+                    int thisID = rs.getInt(idString);
 
-            output.add(thisID);
+                    output.add(thisID);
+                }
+            }
+        } catch (SQLException ex) {
+
         }
 
         return output;
     }
-
 
     /*
     The object initialisation methods below query the database for object attributes.
@@ -293,8 +286,7 @@ public class Database {
         try {
 
             connect();
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID + ";");
+            ResultSet rs = executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -326,8 +318,7 @@ public class Database {
     public static Doctor getDoctor(int doctorID) {
         connect();
         try {
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM doctors WHERE doctor_id=" + doctorID + ";");
+            ResultSet rs = Database.executeQuery("SELECT * FROM doctors WHERE doctor_id=" + doctorID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -358,8 +349,7 @@ public class Database {
     public static Nurse getNurse(int nurseID) {
         connect();
         try {
-            executeQuery("USE " + DATABASENAME);
-            ResultSet rs = Database.executeQuery("SELECT * FROM nurses WHERE nurse_id=" + nurseID + ";");
+            ResultSet rs = Database.executeQuery("SELECT * FROM nurses WHERE nurse_id=" + nurseID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -389,7 +379,7 @@ public class Database {
     public static Patient getPatient(int patientID) {
         connect();
         try {
-            ResultSet rs = executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID + ";");
+            ResultSet rs = executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -426,7 +416,7 @@ public class Database {
         java.sql.Date consultationDate = java.sql.Date.valueOf("1970-01-01");
 
         try {
-            ResultSet rs = executeQuery("SELECT * FROM consultations WHERE consultation_id=" + consultationID + ";");
+            ResultSet rs = executeQuery("SELECT * FROM consultations WHERE consultation_id=" + consultationID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -457,7 +447,7 @@ public class Database {
             String idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
 
             String queryString = "SELECT " + idString
-                    + " FROM " + tableToGet + ";";
+                    + " FROM " + tableToGet;
 
             connect();
             ResultSet rs = Database.executeQuery(queryString);
@@ -660,12 +650,13 @@ public class Database {
             return;
         }
 
-        queryString = "INSERT INTO " + table + " (" + fieldString + ") VALUES(" + valueString + ") ON DUPLICATE KEY UPDATE " + updateString;
+        queryString = "INSERT INTO " + table + " (" + fieldString + ") VALUES(" + valueString + ")";
 
+        // UPDATE " + updateString
         System.out.println(queryString);
         try {
             getStatement().executeUpdate(queryString);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
             System.err.println("Error writing object to database");
         } finally {
@@ -703,8 +694,8 @@ public class Database {
                     "UPDATE " + tableName + " SET password_hash = ?, salt = ? WHERE " + idString + " = ?");
 
             // set the preparedstatement parameters
-            ps.setBytes(1, passwordHash);
-            ps.setBytes(2, salt);
+            ps.setString(1, byteArrayToString(passwordHash));
+            ps.setString(2, byteArrayToString(salt));
             ps.setInt(3, userID);
 
             // call executeUpdate to execute our sql update statement
@@ -728,7 +719,6 @@ public class Database {
     public static void deleteObjectFromDatabase(Object object) {
 
         connect();
-        executeQuery("USE " + DATABASENAME);
 
         String queryString;
         String table = "";
@@ -776,7 +766,7 @@ public class Database {
             return;
         }
 
-        queryString = "DELETE FROM " + table + " WHERE " + idString + " = " + idValue + ";";
+        queryString = "DELETE FROM " + table + " WHERE " + idString + " = " + idValue;
 
         System.out.println(queryString);
         try {
