@@ -17,6 +17,10 @@ import java.util.logging.Logger;
 public class TestMain {
 
     public static void main(String[] args) {
+        
+        
+        Database.connect();
+        System.exit(0);
         User currentUser;
         int currentUserID = -2;
 

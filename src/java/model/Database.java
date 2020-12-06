@@ -36,11 +36,11 @@ public class Database {
 
     private static Connection connection;
     private static Statement statement;
-    private static final String DATABASESTRING = "jdbc:mysql://95.179.206.75:3306";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "1qRqabnPy8FZQh1NsWmhZ";
+    private static final String DATABASESTRING = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
+    private static final String USERNAME = "databaseUser";
+    private static final String PASSWORD = "password";
     private static final String DATABASENAME = "sql_smart_care_surgery_database";
-    private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations"};
+    private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
     private static final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
@@ -63,7 +63,6 @@ public class Database {
         try {
             connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
             statement = connection.createStatement();
-            executeQuery("USE " + DATABASENAME + ";");
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -108,6 +107,18 @@ public class Database {
         }
 
         return result.toString();
+    }
+
+    public static byte[] hexStringToByteArray(String string) {
+        int length = string.length();
+        
+        byte[] output = new byte[length / 2];
+        
+        for (int i = 0; i < length; i += 2) {
+            output[i / 2] = (byte) ((Character.digit(string.charAt(i), 16) << 4)
+                    + Character.digit(string.charAt(i + 1), 16));
+        }
+        return output;
     }
 
     public static byte[] getRandomSalt() {
@@ -171,7 +182,6 @@ public class Database {
 
         try {
             connect();
-            executeQuery("USE " + DATABASENAME);
 
             queryString = "SELECT * FROM ids_usernames_password_hashes_and_salts WHERE username='" + username + "'";
 
@@ -666,7 +676,7 @@ public class Database {
         byte[] salt = getRandomSalt();
         thisPassCharArray = password.toCharArray();
         byte[] passwordHash = hashPassword(thisPassCharArray, salt, iterations, keyLength);
-        
+
         try {
             connect();
             PreparedStatement ps = connection.prepareStatement(
