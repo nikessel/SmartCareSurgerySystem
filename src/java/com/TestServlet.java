@@ -21,6 +21,7 @@ public class TestServlet extends HttpServlet {
    private String message;
    private User currentUser;
    private Patient currentPatient;
+   private Nurse currentNurse;
    private int currentUserID;
 
     /**
@@ -39,12 +40,18 @@ public class TestServlet extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         
-        currentUserID = Database.getUserID("aconstantinou1", "i4g3gpIN5e");
+        currentUserID = Database.getUserID("testnurse", "password");
         
         System.out.println(currentUserID);
         
         // Check if user is a patient
-        if (40000 <= currentUserID && currentUserID <= 49999) {
+        if (30000 <= currentUserID && currentUserID <= 39999) {
+            currentNurse = Database.getNurse(currentUserID);
+            
+            message = "ID: " + currentUserID + ", first name: " + currentNurse.getFirstName() + ", sur name: " + currentNurse.getSurName();
+        }
+        
+        else if (40000 <= currentUserID && currentUserID <= 49999) {
             currentPatient = Database.getPatient(currentUserID);
             
             message = "ID: " + currentUserID + ", first name: " + currentPatient.getFirstName() + ", sur name: " + currentPatient.getSurName();
