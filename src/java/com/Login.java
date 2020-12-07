@@ -62,7 +62,7 @@ public class Login extends HttpServlet {
                     
 			if (loginDao.validate(loginBean)) {
 
-                            currentUserID = Database.getUserID("testnurse", "password");
+                            currentUserID = Database.getUserID(username, password);
 
 
                                 // Check user
