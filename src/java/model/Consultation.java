@@ -18,6 +18,10 @@ public class Consultation {
     private Nurse nurse;
     private Date consulationDate;
     private int consulationID;
+    
+    public Consultation() {
+        
+    }
 
     public Consultation(Patient patient, Doctor doctor, Nurse nurse, Date bookingDate, int consulationID) {
         this.patient = patient;

@@ -5,10 +5,8 @@
  */
 package model;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -78,7 +76,7 @@ public class TestMain {
 
         System.out.println(currentUserID);
 
-        Database.deleteObjectFromDatabase(Database.getNurse(currentUserID));
+        //Database.deleteObjectFromDatabase(Database.getNurse(currentUserID));
 
         currentUserID = Database.getUserID("testnurse", "password");
 

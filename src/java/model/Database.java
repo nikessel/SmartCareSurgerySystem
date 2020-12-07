@@ -12,8 +12,6 @@ import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -24,14 +22,6 @@ import javax.crypto.spec.PBEKeySpec;
  *
  */
 /*
-
-The Database class contains lists of all the objects in the system.
-
-When the system starts all objects in all classes will be initialised with
-data from the 
-
-The Database class also contains methods for writing objects back to the database
-for permanent storage.
 
  */
 public class Database {
@@ -53,12 +43,20 @@ public class Database {
     static int keyLength = 512;
     static KeySpec spec;
     static SecureRandom random = new SecureRandom();
+    static String queryString = "";
+    static String idString = "";
+    static String updateString = "";
+    static int thisID = -2;
+    static boolean userNameFound = false;
+    static String tableName = "";
+    static String fieldString = "";
+    static String valueString = "";
+    static String idValue = "";
 
     // Display more infomation
     static int verbosity = 0;
 
     // This method connects to the database
-    // IP, username and password are hardcoded
     public static void connect() {
 
         try {
@@ -175,25 +173,16 @@ public class Database {
     }
 
     private static String getCredentialsSQLString(String tableName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String idString = "";
-
-        stringBuilder.append("SELECT ");
-
         idString = tableName.substring(0, tableName.length() - 1) + "_id";
 
-        stringBuilder.append(idString + ", username, password_hash, salt FROM " + tableName);
-
-        return stringBuilder.toString();
+        return "SELECT " + idString + ", username, password_hash, salt FROM " + tableName;
 
     }
 
     public static int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
-        String queryString;
-        int thisID;
-        boolean userNameFound = false;
+        userNameFound = false;
 
         for (String tableName : USERTABLENAMES) {
             connect();
@@ -227,35 +216,8 @@ public class Database {
 
         return -1;
     }
-    
-    
-    
 
-    /*
-    public static ArrayList<String> getUsernames() throws SQLException {
-        String queryString;
-        ArrayList<String> output = new ArrayList();
-        connect();
-        executeQuery("USE " + DATABASENAME);
-
-        queryString = "SELECT username FROM ids_usernames_and_passwords";
-
-        System.out.println(queryString);
-        ResultSet rs = executeQuery(queryString);
-        while (rs.next()) {
-            String thisPass = rs.getString(1);
-
-            if (!thisPass.isEmpty()) {
-                output.add(rs.getString(1));
-            }
-        }
-
-        return output;
-    }
-     */
     public static ArrayList<Integer> getIDs() {
-        String queryString;
-        String idString;
         ArrayList<Integer> output = new ArrayList();
         connect();
 
@@ -266,7 +228,7 @@ public class Database {
                 ResultSet rs = executeQuery(queryString);
 
                 while (rs.next()) {
-                    int thisID = rs.getInt(idString);
+                    thisID = rs.getInt(idString);
 
                     output.add(thisID);
                 }
@@ -278,14 +240,6 @@ public class Database {
         return output;
     }
 
-    /*
-    The object initialisation methods below query the database for object attributes.
-    The method will loop through every object in the repective database tables 
-    and construct objects of the respective classes.
-    All objects will be added to the lists declared above, to be accessed from
-    all other classes.
-     */
-    // Get specific user
     public static Admin getAdmin(int adminID) {
 
         try {
@@ -300,6 +254,7 @@ public class Database {
                 // Skip saving password hash and salt
                 rs.getString("password_hash");
                 rs.getString("salt");
+
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
@@ -319,7 +274,6 @@ public class Database {
         return new Admin("", "", "", "", false, -1);
     }
 
-    // Single user get methods
     public static Doctor getDoctor(int doctorID) {
         connect();
         try {
@@ -328,9 +282,11 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
+
                 // Skip saving password hash and salt
                 rs.getString("password_hash");
                 rs.getString("salt");
+
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 boolean isFullTime = rs.getBoolean("is_full_time");
@@ -359,6 +315,7 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
+
                 // Skip saving password hash and salt
                 rs.getString("password_hash");
                 rs.getString("salt");
@@ -389,9 +346,11 @@ public class Database {
             // iterate through the sql resultset
             while (rs.next()) {
                 String username = rs.getString("username");
+
                 // Skip saving password hash and salt
                 rs.getString("password_hash");
                 rs.getString("salt");
+
                 String firstName = rs.getString("first_name");
                 String surName = rs.getString("sur_name");
                 int id = rs.getInt("patient_id");
@@ -439,19 +398,52 @@ public class Database {
             closeConnection();
         }
 
-        System.err.println("Database error getting consultation");
+        System.err.println("Database error getting consultation with ID: " + consultationID);
 
-        return new Consultation(patient, doctor, nurse, consultationDate, consultationID);
+        return new Consultation(patient, doctor, nurse, consultationDate, -1);
     }
+    
+        public static Invoice getInvoice(int invoiceID) {
+        connect();
+        
+        java.sql.Date invoiceDate = java.sql.Date.valueOf("1970-01-01");
+        Consultation consultation = new Consultation();
+
+        try {
+            ResultSet rs = executeQuery("SELECT * FROM invoices WHERE invoice_id=" + invoiceID);
+
+            // iterate through the sql resultset
+            while (rs.next()) {
+                int invoice_id = rs.getInt("invoice_id");
+                double price = rs.getDouble("price");
+                invoiceDate = rs.getDate("date_of_invoice");
+                consultation = getConsultation(rs.getInt("consultation_id"));
+                boolean paid = rs.getBoolean("paid");
+                boolean insured = rs.getBoolean("insured");
+
+                // Return the object
+                return new Invoice(consultation, price, invoiceDate, paid, insured);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            closeConnection();
+        }
+
+        System.err.println("Database error getting invoice with ID: " + invoiceID);
+
+        return new Invoice(consultation, -1.0, invoiceDate, false, false);
+    }
+
 
     public static ArrayList<Object> getAllFromDatabase(String tableToGet) {
 
         ArrayList<Object> outputList = new ArrayList();
 
         try {
-            String idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
+            idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
 
-            String queryString = "SELECT " + idString
+            queryString = "SELECT " + idString
                     + " FROM " + tableToGet;
 
             connect();
@@ -476,6 +468,9 @@ public class Database {
                         break;
                     case "consultations":
                         outputList.add(getConsultation(id));
+                        break;
+                    case "invoices":
+                        outputList.add(getInvoice(id));
                         break;
 
                 }
@@ -514,27 +509,16 @@ public class Database {
         }
     }
 
-    /*
-    The method saves any valid SmartCareSurgery database object in the 
-    A mySQL INSERT command will be generated based on the 
-    attributes in the object.
-    An ON DUBLICATE restriction will also be added, so the database will update
-    exiting entries, instead of adding dublicate rows.
-     */
+    
     public static void writeObjectToDatabase(Object object) {
 
-        String queryString;
-        String table = "";
-        String fieldString = "";
-        String valueString = "";
-        String updateString = "";
-        String idString = "";
+        idString = "";
         connect();
 
         if (object instanceof Admin) {
             Admin parsed = (Admin) object;
 
-            table = "admins";
+            tableName = "admins";
             fieldString = "username, first_name, sur_name, is_full_time";
 
             if (parsed.getAdminID() != -1) {
@@ -556,7 +540,7 @@ public class Database {
         } else if (object instanceof Doctor) {
             Doctor parsed = (Doctor) object;
 
-            table = "doctors";
+            tableName = "doctors";
             fieldString = "username, first_name, sur_name, is_full_time";
 
             if (parsed.getDoctorID() != -1) {
@@ -578,7 +562,7 @@ public class Database {
         } else if (object instanceof Nurse) {
             Nurse parsed = (Nurse) object;
 
-            table = "nurses";
+            tableName = "nurses";
             fieldString = "username, first_name, sur_name, is_full_time";
 
             if (parsed.getNurseID() != -1) {
@@ -603,7 +587,7 @@ public class Database {
 
             String address = convertAddressToString(parsed.getAddress());
 
-            table = "patients";
+            tableName = "patients";
 
             fieldString = "username, first_name, sur_name, date_of_birth, address";
 
@@ -629,7 +613,7 @@ public class Database {
 
             Consultation parsed = (Consultation) object;
 
-            table = "consultations";
+            tableName = "consultations";
 
             fieldString = "patient_id, doctor_id, nurse_id, consultation_date";
 
@@ -655,7 +639,7 @@ public class Database {
             return;
         }
 
-        queryString = "INSERT INTO " + table + " (" + fieldString + ") VALUES(" + valueString + ")";
+        queryString = "INSERT INTO " + tableName + " (" + fieldString + ") VALUES(" + valueString + ")";
 
         System.out.println(queryString);
         try {
@@ -673,8 +657,6 @@ public class Database {
     }
 
     public static String setPassword(int userID, String password) {
-        String idString = "";
-        String tableName = "";
         int lowerBound;
         int upperBound;
 
@@ -727,44 +709,39 @@ public class Database {
     public static void deleteObjectFromDatabase(Object object) {
 
         connect();
-
-        String queryString;
-        String table = "";
-        String idString = "";
-        String idValue = "";
-
+        
         if (object instanceof Admin) {
             Admin parsed = (Admin) object;
 
-            table = "admins";
+            tableName = "admins";
             idString = "admin_id";
             idValue = String.valueOf(parsed.getAdminID());
 
         } else if (object instanceof Doctor) {
             Doctor parsed = (Doctor) object;
 
-            table = "doctors";
+            tableName = "doctors";
             idString = "doctor_id";
             idValue = String.valueOf(parsed.getDoctorID());
 
         } else if (object instanceof Nurse) {
             Nurse parsed = (Nurse) object;
 
-            table = "nurses";
+            tableName = "nurses";
             idString = "nurse_id";
             idValue = String.valueOf(parsed.getNurseID());
 
         } else if (object instanceof Patient) {
             Patient parsed = (Patient) object;
 
-            table = "patients";
+            tableName = "patients";
             idString = "patient_id";
             idValue = String.valueOf(parsed.getPatientID());
 
         } else if (object instanceof Consultation) {
             Consultation parsed = (Consultation) object;
 
-            table = "consultations";
+            tableName = "consultations";
             idString = "consultation_id";
             idValue = String.valueOf(parsed.getConsulationID());
 
@@ -774,7 +751,7 @@ public class Database {
             return;
         }
 
-        queryString = "DELETE FROM " + table + " WHERE " + idString + " = " + idValue;
+        queryString = "DELETE FROM " + tableName + " WHERE " + idString + " = " + idValue;
 
         System.out.println(queryString);
         try {

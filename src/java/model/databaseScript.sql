@@ -114,6 +114,8 @@ create table invoices (
 	price DECIMAL(7,2),
 	date_of_invoice DATE,
 	consultation_id INT,
+        paid boolean,
+        insured boolean,
         CONSTRAINT fk_consultation
         FOREIGN KEY (consultation_id) 
         REFERENCES consultations(consultation_id)
@@ -122,5 +124,5 @@ create table invoices (
 );
 
 
-insert into invoices (price, date_of_invoice, consultation_id) values (5291.92, '2020-5-18', 50001);
-insert into invoices (price, date_of_invoice, consultation_id) values (7747.29, '2020-2-7', 50003);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (5291.92, '2020-5-18', 50001, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (7747.29, '2020-2-7', 50003, false, true);
