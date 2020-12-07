@@ -4,32 +4,8 @@
         <servlet-name>Login</servlet-name>
         <servlet-class>com.Login</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>LoginServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>TestServlet</servlet-name>
-        <servlet-class>com.TestServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/Login</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet.do</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/TestServlet</url-pattern>
-    </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
-    <welcome-file-list>
-        <welcome-file>Login</welcome-file>
-    </welcome-file-list>
 </web-app>
