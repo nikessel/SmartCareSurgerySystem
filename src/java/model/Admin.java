@@ -5,6 +5,7 @@
  */
 package model;
 
+
 /**
  *
  * @author niklas
@@ -12,7 +13,11 @@ package model;
 public class Admin extends Employee {
 
     private int adminID;
-
+    
+    public Admin() {
+        
+    }
+    
     public Admin(String username, String password, String firstName, String surName, boolean isFullTime) {
         this.username = username;
         this.password = password;
