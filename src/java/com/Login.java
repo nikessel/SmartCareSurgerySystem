@@ -20,23 +20,18 @@ import model.*;
  */
 @WebServlet("/login")
 public class Login extends HttpServlet {
-    
-   private String message;
-   private User currentUser;
-   private Patient currentPatient;
-   private Admin currentAdmin;
-   private Nurse currentNurse;
-   private Doctor currentDoctor;
-   
-   private int currentUserID;
 
-   private static final long serialVersionUID = 1L;
-	private LoginDao loginDao;
+    private String message;
+    private User currentUser;
+    private Patient currentPatient;
+    private Admin currentAdmin;
+    private Nurse currentNurse;
+    private Doctor currentDoctor;
 
-	public void init() {
-		loginDao = new LoginDao();
-	}
-        
+    private int currentUserID;
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -46,97 +41,84 @@ public class Login extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
- 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-                      
-	LoginBean loginBean = new LoginBean();
-	loginBean.setUsername(username);
-        
-        // username  password validation 
+
         try {
-                    
-                    
-			if (loginDao.validate(loginBean)) {
+            currentUserID = Database.getUserID(username, password);
+            // username  password validation 
+            if (currentUserID > 0) {
 
-                            currentUserID = Database.getUserID(username, password);
+                // Check user
+                // admin
+                if (10000 <= currentUserID && currentUserID <= 19999) {
+                    currentUser = Database.getAdmin(currentUserID);
 
+                    message = "ID: " + currentUserID + ", first name: "
+                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
+                    System.out.println("admin");
 
-                                // Check user
-                                // admin
-                                if (10000 <= currentUserID && currentUserID <= 19999) {
-                                    currentUser  = new Admin();
-                                    currentUser = Database.getAdmin(currentUserID);
+                    // show logged in user
+                    request.setAttribute("name", message);
+                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
 
-                                    message = "ID: " + currentUserID + ", first name: " + 
-                                            currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                                    System.out.println("admin");
-                                    
-                                    // show logged in user
-                                    request.setAttribute("name", message);
-                                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
-                                    
-                                } 
-                                //doctor
-                                else if (20000 <= currentUserID && currentUserID <= 29999) {
-                                    currentUser  = new Doctor();
-                                    currentUser = Database.getDoctor(currentUserID);
+                } //doctor
+                else if (20000 <= currentUserID && currentUserID <= 29999) {
+                    currentUser = new Doctor();
+                    currentUser = Database.getDoctor(currentUserID);
 
-                                    message = "ID: " + currentUserID + ", first name: " + 
-                                            currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                                    System.out.println("doctor");
-                                    
-                                    // show logged in user
-                                    request.setAttribute("name", message);
-                                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
-                                }
-                                //nurse
-                                //@ - bug in getNurse method needs fix
-                                else if (30000 <= currentUserID && currentUserID <= 39999) {
-                                    currentUser  = new Nurse();
-                                    currentUser = Database.getNurse(currentUserID);
+                    message = "ID: " + currentUserID + ", first name: "
+                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
+                    System.out.println("doctor");
 
-                                    message = "ID: " + currentUserID + ", first name: " + 
-                                            currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                                    System.out.println("nurse");
-                                    
-                                    // show logged in user
-                                    request.setAttribute("name", message);
-                                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
-                                }
-                                //patient
-                                else if (40000 <= currentUserID && currentUserID <= 49999) {
-                                    currentUser  = new Patient();
-                                    currentUser = Database.getPatient(currentUserID);
+                    // show logged in user
+                    request.setAttribute("name", message);
+                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
+                } //nurse
+                //@ - bug in getNurse method needs fix
+                else if (30000 <= currentUserID && currentUserID <= 39999) {
+                    currentUser = new Nurse();
+                    currentUser = Database.getNurse(currentUserID);
 
-                                    message = "ID: " + currentUserID + ", first name: " + 
-                                            currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                                    System.out.println("patient");
-                                    
-                                    // show logged in user
-                                    request.setAttribute("name", message);
-                                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
-                                }
-        
-                                
-                            } else {
-                                    //HttpSession session = request.getSession();
-                                    //session.setAttribute("user", username);
-                                    response.sendRedirect("login.jsp");
+                    message = "ID: " + currentUserID + ", first name: "
+                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
+                    System.out.println("nurse");
 
-                            }
-    
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-        
-        
-        
+                    // show logged in user
+                    request.setAttribute("name", message);
+                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
+                } //patient
+                else if (40000 <= currentUserID && currentUserID <= 49999) {
+                    currentUser = new Patient();
+                    currentUser = Database.getPatient(currentUserID);
+
+                    message = "ID: " + currentUserID + ", first name: "
+                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
+                    System.out.println("patient");
+
+                    // show logged in user
+                    request.setAttribute("name", message);
+                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
+                }
+                else if (currentUserID == -2) {
+                    System.out.println("User not found");
+                }
+                else if (currentUserID == -1) {
+                    System.out.println("User found but password incorrect");
+                }
+
+            }
+        } catch (Exception e) {
+            //HttpSession session = request.getSession();
+            //session.setAttribute("user", username);
+            response.sendRedirect("login.jsp");
+
+        }
+
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
