@@ -1,12 +1,11 @@
 @import "compass/css3";
-
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
 * {
   font-family: 'Open Sans Condensed', sans-serif;
   color:#464646;
   transition: all 1.5s linear;
-  overflow:hidden !important; box-sizing:border-box; }
-
+  overflow:hidden !important; box-sizing:border-box; 
+}
 .container {
   width:100%;
   height:100%;
@@ -31,25 +30,22 @@
     }
   }
 }
-
-
 .main {
   position:absolute;
   width:100%;
   height:100%;
-  .login, {
-    position:absolute;
+  .login {
+    position: absolute;
     background:#fff;
     height:260px; 
     width:300px;
     bottom:-520px;
     left:50%;
     margin-left:-150px;
-    box-shadow: 0 0 20px 2px #464646;
+    box-shadow: 20px 20px 20px 2px #464646;
     z-index:2;
   }
 }
-
 .form-toggle {
   float:right;
   color:#00B3A0;
@@ -59,8 +55,6 @@
 .form-toggle:hover {
   cursor:pointer;
 }
-
-
 .container.loaded {
   .loading {
     display:none;
@@ -73,15 +67,14 @@
 
   .main {
     .login {
-      // Create an overlap on the footer
       bottom: -webkit-calc(25% - 50px); 
       bottom: calc(25% - 50px); 
     }
   }
 }
-
 form {
   padding:12px 24px 24px;
+  position: absolute;
 }
 
 
