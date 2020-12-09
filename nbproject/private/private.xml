@@ -4,8 +4,15 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/file</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/WEB-INF/web.xml</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/databaseScript.sql</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/login.jsp</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/EmployeeDashboard.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/TestMain.java</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/Login.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Database.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/employeeDashboard.jsp</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/loginsuccess.jsp</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/index.html</file>
         </group>
     </open-files>

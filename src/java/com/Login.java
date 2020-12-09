@@ -6,7 +6,6 @@
 package com;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -49,6 +48,16 @@ public class Login extends HttpServlet {
 
         try {
             currentUserID = Database.getUserID(username, password);
+
+            if (currentUserID == -2 || currentUserID == -1) {
+                message = "Incorrect username or password";
+                
+                request.setAttribute("error", message);
+                
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                response.sendRedirect("login.jsp");
+            }
+
             // username  password validation 
             if (currentUserID > 0) {
 
@@ -61,10 +70,6 @@ public class Login extends HttpServlet {
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
                     System.out.println("admin");
 
-                    // show logged in user
-                    request.setAttribute("name", message);
-                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
-
                 } //doctor
                 else if (20000 <= currentUserID && currentUserID <= 29999) {
                     currentUser = new Doctor();
@@ -73,10 +78,6 @@ public class Login extends HttpServlet {
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
                     System.out.println("doctor");
-
-                    // show logged in user
-                    request.setAttribute("name", message);
-                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
                 } //nurse
                 //@ - bug in getNurse method needs fix
                 else if (30000 <= currentUserID && currentUserID <= 39999) {
@@ -86,10 +87,6 @@ public class Login extends HttpServlet {
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
                     System.out.println("nurse");
-
-                    // show logged in user
-                    request.setAttribute("name", message);
-                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
                 } //patient
                 else if (40000 <= currentUserID && currentUserID <= 49999) {
                     currentUser = new Patient();
@@ -98,19 +95,13 @@ public class Login extends HttpServlet {
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
                     System.out.println("patient");
-
-                    // show logged in user
-                    request.setAttribute("name", message);
-                    request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
                 }
-                else if (currentUserID == -2) {
-                    System.out.println("User not found");
-                }
-                else if (currentUserID == -1) {
-                    System.out.println("User found but password incorrect");
-                }
+                // show logged in user
+                request.setAttribute("name", message);
+                request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
 
             }
+
         } catch (Exception e) {
             //HttpSession session = request.getSession();
             //session.setAttribute("user", username);

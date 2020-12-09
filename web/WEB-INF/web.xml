@@ -4,8 +4,16 @@
         <servlet-name>Login</servlet-name>
         <servlet-class>com.Login</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EmployeeDashboard</servlet-name>
+        <servlet-class>com.EmployeeDashboard</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeDashboard</servlet-name>
+        <url-pattern>/EmployeeDashboard</url-pattern>
     </servlet-mapping>
 </web-app>
