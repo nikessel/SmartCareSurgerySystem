@@ -7,7 +7,6 @@ package model;
 
 import java.util.ArrayList;
 
-
 /**
  *
  * @author niklas
@@ -16,7 +15,10 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        System.out.println(Database.getUserID("kmurrigans0", "DdDJ392jd2n"));
+        System.out.println(Database.getUserID("doctor", "doctor"));
+        System.out.println(Database.getUserID("admin", "admin"));
+        System.out.println(Database.getUserID("nurse", "nurse"));
+        System.out.println(Database.getUserID("patient", "patient"));
 
         User currentUser;
         int currentUserID = -2;
@@ -25,24 +27,7 @@ public class TestMain {
 
         int_arr = Database.getIDs();
 
-        System.out.println(int_arr);
-
-        currentUserID = Database.getUserID("testdoctor", "password");
-
-        System.out.println(currentUserID);
-
-        Database.setPassword(currentUserID, "password2");
-
-        currentUserID = Database.getUserID("testdoctor", "password");
-
-        System.out.println(currentUserID);
-
-        currentUserID = Database.getUserID("testdoctor", "password2");
-
-        System.out.println(currentUserID);
-
         //currentUserID = Database.getUserID("testdoctor", "password");
-
         System.out.println(currentUserID);
 
         if (10000 <= currentUserID && currentUserID <= 19999) {
@@ -72,13 +57,12 @@ public class TestMain {
         Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", "sad", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
         Database.writeObjectToDatabase(patient);
 
-        currentUserID = Database.getUserID("testnurse", "password");
+        currentUserID = Database.getUserID("nurse", "nurse");
 
         System.out.println(currentUserID);
 
         //Database.deleteObjectFromDatabase(Database.getNurse(currentUserID));
-
-        currentUserID = Database.getUserID("testnurse", "password");
+        currentUserID = Database.getUserID("nurse", "nurse");
 
         System.out.println(Database.getConsultation(50002));
 
