@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+         pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="ISO-8859-1">
         <title>SmartCareSurgerySystem</title>
-        <style><%@include file="/WEB-INF/css/loginstyle.css"%></style>
+        <style>
+            <%@include file="/WEB-INF/css/loginstyle.css"%>
+        </style>
     </head>
     <body>
         <div class="container">
