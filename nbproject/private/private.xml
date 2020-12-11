@@ -5,6 +5,7 @@
         <group>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/WEB-INF/web.xml</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/login.jsp</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/databaseScript.sql</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/EmployeeDashboard.java</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/Login.java</file>
             <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/nbproject/build-impl.xml</file>

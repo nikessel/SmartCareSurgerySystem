@@ -28,9 +28,7 @@ public class Login extends HttpServlet {
     private Doctor currentDoctor;
 
     private int currentUserID;
-
-    private static final long serialVersionUID = 1L;
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -97,8 +95,8 @@ public class Login extends HttpServlet {
                     System.out.println("patient");
                 }
                 // show logged in user
-                request.setAttribute("name", message);
-                request.getRequestDispatcher("/loginsuccess.jsp").forward(request, response);
+                request.setAttribute("user_id", currentUserID);
+                request.getRequestDispatcher("employeeDashboard.jsp").forward(request, response);
 
             }
 
