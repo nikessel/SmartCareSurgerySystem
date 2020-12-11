@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <welcome-file-list>
+        <welcome-file>/login.jsp</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>com.Login</servlet-class>
@@ -10,10 +13,10 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/login.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmployeeDashboard</servlet-name>
-        <url-pattern>/EmployeeDashboard</url-pattern>
+        <url-pattern>/employee-dashboard.do</url-pattern>
     </servlet-mapping>
 </web-app>

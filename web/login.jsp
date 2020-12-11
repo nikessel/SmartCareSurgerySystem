@@ -21,7 +21,7 @@
             </div>
             <div class="main">
                 <div class="login">
-                    <form action="<%=request.getContextPath()%>/login" method="post">
+                    <form action="/login" method="post">
                         <input id="username" name="username" required="required" type="text" placeholder="Username" />
                         <input id="password" name="password" required="required" type="password" placeholder="Password" />
                         <input type="submit" value="Submit" />

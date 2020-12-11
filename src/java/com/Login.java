@@ -98,7 +98,7 @@ public class Login extends HttpServlet {
                 }
                 // show logged in user
                 request.setAttribute("name", message);
-                request.getRequestDispatcher("loginsuccess.jsp").forward(request, response);
+                request.getRequestDispatcher("/loginsuccess.jsp").forward(request, response);
 
             }
 
