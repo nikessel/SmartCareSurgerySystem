@@ -46,16 +46,18 @@ public class Login extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        
+        Database database = new Database();
 
         try {
-            currentUserID = Database.getUserID(username, password);
+            currentUserID = database.getUserID(username, password);
             // username  password validation 
             if (currentUserID > 0) {
 
                 // Check user
                 // admin
                 if (10000 <= currentUserID && currentUserID <= 19999) {
-                    currentUser = Database.getAdmin(currentUserID);
+                    currentUser = database.getAdmin(currentUserID);
 
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
@@ -68,7 +70,7 @@ public class Login extends HttpServlet {
                 } //doctor
                 else if (20000 <= currentUserID && currentUserID <= 29999) {
                     currentUser = new Doctor();
-                    currentUser = Database.getDoctor(currentUserID);
+                    currentUser = database.getDoctor(currentUserID);
 
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
@@ -81,7 +83,7 @@ public class Login extends HttpServlet {
                 //@ - bug in getNurse method needs fix
                 else if (30000 <= currentUserID && currentUserID <= 39999) {
                     currentUser = new Nurse();
-                    currentUser = Database.getNurse(currentUserID);
+                    currentUser = database.getNurse(currentUserID);
 
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
@@ -93,7 +95,7 @@ public class Login extends HttpServlet {
                 } //patient
                 else if (40000 <= currentUserID && currentUserID <= 49999) {
                     currentUser = new Patient();
-                    currentUser = Database.getPatient(currentUserID);
+                    currentUser = database.getPatient(currentUserID);
 
                     message = "ID: " + currentUserID + ", first name: "
                             + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
