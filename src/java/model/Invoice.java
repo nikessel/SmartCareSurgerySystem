@@ -87,7 +87,7 @@ public class Invoice {
 
     @Override
     public String toString() {
-        return "Invoice{" + "invoiceID=" + invoiceID + ", consultationID=" + consultation.getConsulationID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
+        return "Invoice{" + "invoiceID=" + invoiceID + ", consultationID=" + consultation.getConsultationID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
     }
 
 }

@@ -17,7 +17,7 @@ public class Consultation {
     private Doctor doctor;
     private Nurse nurse;
     private Date consulationDate;
-    private int consulationID;
+    private int consultationID;
     
     public Consultation() {
         
@@ -28,7 +28,7 @@ public class Consultation {
         this.doctor = doctor;
         this.nurse = nurse;
         this.consulationDate = bookingDate;
-        this.consulationID = consulationID;
+        this.consultationID = consulationID;
     }
 
     public Consultation(Patient patient, Doctor doctor, Nurse nurse, Date bookingDate) {
@@ -36,11 +36,11 @@ public class Consultation {
         this.doctor = doctor;
         this.nurse = nurse;
         this.consulationDate = bookingDate;
-        this.consulationID = -1;
+        this.consultationID = -1;
     }
 
-    public int getConsulationID() {
-        return consulationID;
+    public int getConsultationID() {
+        return consultationID;
     }
 
     public Patient getPatient() {
@@ -77,7 +77,7 @@ public class Consultation {
 
     @Override
     public String toString() {
-        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consulationDate=" + consulationDate + ", consulationID=" + consulationID + '}';
+        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consulationDate=" + consulationDate + ", consulationID=" + consultationID + '}';
     }
 
 

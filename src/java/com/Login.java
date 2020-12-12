@@ -43,8 +43,8 @@ public class Login extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        
-        Database database = new Database();
+
+        Database database = (Database) getServletContext().getAttribute("database");
 
         try {
 
@@ -89,7 +89,7 @@ public class Login extends HttpServlet {
                     System.out.println("patient");
                 }
                 // show logged in user
-                request.setAttribute("user_id", currentUserID);
+                request.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("employeeDashboard.jsp").forward(request, response);
 
             }

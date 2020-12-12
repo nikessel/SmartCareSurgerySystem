@@ -664,8 +664,8 @@ public class Database {
 
             fieldString = "patient_id, doctor_id, nurse_id, consultation_date";
 
-            if (parsed.getConsulationID() != -1) {
-                idString = ", " + String.valueOf(parsed.getConsulationID());
+            if (parsed.getConsultationID() != -1) {
+                idString = ", " + String.valueOf(parsed.getConsultationID());
                 fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
             }
 
@@ -788,7 +788,7 @@ public class Database {
 
             tableName = "consultations";
             idString = "consultation_id";
-            idValue = String.valueOf(parsed.getConsulationID());
+            idValue = String.valueOf(parsed.getConsultationID());
 
         } else {
             System.out.println("Error writing object to database, "

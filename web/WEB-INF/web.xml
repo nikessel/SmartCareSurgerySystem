@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>ServletContextListener</servlet-name>
+        <servlet-class>com.ServletContextListener</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextInitializer</servlet-name>
         <url-pattern>/ServletContextInitializer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletContextListener</servlet-name>
+        <url-pattern>/servlet-context-listener</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/login.jsp</welcome-file>
@@ -25,6 +33,9 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmployeeDashboard</servlet-name>
-        <url-pattern>/employee-dashboard.do</url-pattern>
+        <url-pattern>/employeeDashboard.do</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>com.myServletContextListener</listener-class>
+    </listener>
 </web-app>
