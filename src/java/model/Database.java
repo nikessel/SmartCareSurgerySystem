@@ -26,38 +26,40 @@ import javax.crypto.spec.PBEKeySpec;
  */
 public class Database {
 
-    private static Connection connection;
-    private static Statement statement;
-    private static final String DATABASESTRING = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
-    private static final String USERNAME = "databaseUser";
-    private static final String PASSWORD = "password";
-    private static final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
-    private static final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
+    private Connection connection;
+    private Statement statement;
+    private ResultSet rs = null;
+    private final String DATABASESTRING = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
+    private final String USERNAME = "databaseUser";
+    private final String PASSWORD = "password";
+    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
+    private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
+    private boolean closeStatement = true;
 
     // Hashing variables for PBKDF2
-    static byte[] hash_candidate = new byte[64];
-    static byte[] check_hash = new byte[64];
-    static char[] thisPassCharArray;
-    static byte[] thisSalt = new byte[32];
-    static int iterations = 65536;
-    static int keyLength = 512;
-    static KeySpec spec;
-    static SecureRandom random = new SecureRandom();
-    static String queryString = "";
-    static String idString = "";
-    static String updateString = "";
-    static int thisID = -2;
-    static boolean userNameFound = false;
-    static String tableName = "";
-    static String fieldString = "";
-    static String valueString = "";
-    static String idValue = "";
+    byte[] hash_candidate = new byte[64];
+    byte[] check_hash = new byte[64];
+    char[] thisPassCharArray;
+    byte[] thisSalt = new byte[32];
+    int iterations = 65536;
+    int keyLength = 512;
+    KeySpec spec;
+    SecureRandom random = new SecureRandom();
+    String queryString = "";
+    String idString = "";
+    String updateString = "";
+    int thisID = -2;
+    boolean userNameFound = false;
+    String tableName = "";
+    String fieldString = "";
+    String valueString = "";
+    String idValue = "";
 
     // Display more infomation
-    static int verbosity = 0;
+    int verbosity = 0;
 
     // This method connects to the database
-    public static void connect() {
+    public void connect() {
 
         try {
             connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
@@ -68,7 +70,7 @@ public class Database {
 
     }
 
-    private static void closeConnection() {
+    private void closeConnection() {
         try {
             if (connection != null) {
                 connection.close();
@@ -80,11 +82,41 @@ public class Database {
 
     // Getter for statement required for writing back to the Database directly
     // from other classes
-    public static Statement getStatement() {
+    public Statement getStatement() {
         return statement;
     }
 
-    public static byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
+    private void closeRSAndStatement() {
+        if (closeStatement) {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+    }
+
+    private void closeRSAndStatement(ResultSet thisRS, Statement thisStatement) {
+        if (closeStatement) {
+            try {
+                if (thisRS != null) {
+                    thisRS.close();
+                }
+                if (thisStatement != null) {
+                    thisStatement.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+    }
+
+    public byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
 
         try {
             SecretKeyFactory thisFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
@@ -98,7 +130,7 @@ public class Database {
 
     }
 
-    public static String byteArrayToString(byte[] byteArray) {
+    public String byteArrayToString(byte[] byteArray) {
         StringBuilder result = new StringBuilder();
 
         for (byte thisByte : byteArray) {
@@ -108,7 +140,7 @@ public class Database {
         return result.toString();
     }
 
-    public static byte[] hexStringToByteArray(String string) {
+    public byte[] hexStringToByteArray(String string) {
         int length = string.length();
 
         byte[] output = new byte[length / 2];
@@ -120,17 +152,18 @@ public class Database {
         return output;
     }
 
-    public static byte[] getRandomSalt() {
+    public byte[] getRandomSalt() {
         random.nextBytes(thisSalt);
 
         return thisSalt;
     }
 
     // Executes read operation on the database, takes a mySQL command as input
-    public static ResultSet executeQuery(String query) {
+    public ResultSet executeQuery(String query) {
         if (!"".equals(query)) {
             try {
-                ResultSet rs = statement.executeQuery(query);
+                statement = connection.createStatement();
+                rs = statement.executeQuery(query);
                 return rs;
             } catch (Exception e) {
                 System.out.println(e);
@@ -141,7 +174,14 @@ public class Database {
         return null;
     }
 
-    private static Address convertStringToAddress(String thisAddressString) {
+    public void executeUpdate(String query) throws SQLException {
+
+        statement = connection.createStatement();
+        statement.executeUpdate(query);
+
+    }
+
+    private Address convertStringToAddress(String thisAddressString) {
 
         String[] stringArray = thisAddressString.split("-");
 
@@ -161,7 +201,7 @@ public class Database {
         return new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
     }
 
-    private static String convertAddressToString(Address thisAddress) {
+    private String convertAddressToString(Address thisAddress) {
 
         return thisAddress.getAddressLine1() + "-"
                 + thisAddress.getAddressLine2() + "-"
@@ -172,22 +212,22 @@ public class Database {
 
     }
 
-    private static String getCredentialsSQLString(String tableName) {
+    private String getCredentialsSQLString(String tableName) {
         idString = tableName.substring(0, tableName.length() - 1) + "_id";
 
         return "SELECT " + idString + ", username, password_hash, salt FROM " + tableName;
 
     }
 
-    public static int getUserID(String username, String password) {
+    public int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
         userNameFound = false;
 
         for (String tableName : USERTABLENAMES) {
-            connect();
+
             queryString = getCredentialsSQLString(tableName) + " WHERE username='" + username + "'";
-            ResultSet rs = executeQuery(queryString);
+            this.executeQuery(queryString);
 
             try {
                 while (rs.next()) {
@@ -206,7 +246,7 @@ public class Database {
             } catch (SQLException ex) {
                 System.out.println(ex);
             } finally {
-                closeConnection();
+                closeRSAndStatement();
             }
         }
 
@@ -217,15 +257,14 @@ public class Database {
         return -1;
     }
 
-    public static ArrayList<Integer> getIDs() {
+    public ArrayList<Integer> getIDs() {
         ArrayList<Integer> output = new ArrayList();
-        connect();
 
         try {
             for (String tableName : USERTABLENAMES) {
                 idString = tableName.substring(0, tableName.length() - 1) + "_id";
                 queryString = "SELECT " + idString + " FROM " + tableName;
-                ResultSet rs = executeQuery(queryString);
+                this.executeQuery(queryString);
 
                 while (rs.next()) {
                     thisID = rs.getInt(idString);
@@ -240,12 +279,11 @@ public class Database {
         return output;
     }
 
-    public static Admin getAdmin(int adminID) {
+    public Admin getAdmin(int adminID) {
 
         try {
 
-            connect();
-            ResultSet rs = executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID);
+            executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -266,7 +304,8 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
-            closeConnection();
+            closeRSAndStatement();
+
         }
 
         System.err.println("Database error getting admin");
@@ -274,10 +313,10 @@ public class Database {
         return new Admin("", "", "", "", false, -1);
     }
 
-    public static Doctor getDoctor(int doctorID) {
-        connect();
+    public Doctor getDoctor(int doctorID) {
+
         try {
-            ResultSet rs = Database.executeQuery("SELECT * FROM doctors WHERE doctor_id=" + doctorID);
+            this.executeQuery("SELECT * FROM doctors WHERE doctor_id=" + doctorID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -299,7 +338,8 @@ public class Database {
             System.out.println(e);
 
         } finally {
-            closeConnection();
+            closeRSAndStatement();
+
         }
 
         System.err.println("Database error getting doctor");
@@ -307,10 +347,10 @@ public class Database {
         return new Doctor("", "", "", "", false, -1);
     }
 
-    public static Nurse getNurse(int nurseID) {
-        connect();
+    public Nurse getNurse(int nurseID) {
+
         try {
-            ResultSet rs = Database.executeQuery("SELECT * FROM nurses WHERE nurse_id=" + nurseID);
+            this.executeQuery("SELECT * FROM nurses WHERE nurse_id=" + nurseID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -330,7 +370,8 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
-            closeConnection();
+            closeRSAndStatement();
+
         }
 
         System.err.println("Database error getting nurse");
@@ -338,10 +379,10 @@ public class Database {
         return new Nurse("", "", "", "", false, -1);
     }
 
-    public static Patient getPatient(int patientID) {
-        connect();
+    public Patient getPatient(int patientID) {
+
         try {
-            ResultSet rs = executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID);
+            this.executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID);
 
             // iterate through the sql resultset
             while (rs.next()) {
@@ -363,7 +404,8 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
-            closeConnection();
+            closeRSAndStatement();
+
         }
 
         System.err.println("Database error getting patient");
@@ -371,23 +413,25 @@ public class Database {
         return new Patient("", "", "", "", -1, new java.sql.Date(0000 - 00 - 00), new Address("", "", "", "", "", ""));
     }
 
-    public static Consultation getConsultation(int consultationID) {
-        connect();
+    public Consultation getConsultation(int consultationID) {
 
         Patient patient = new Patient();
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
         java.sql.Date consultationDate = java.sql.Date.valueOf("1970-01-01");
+        ResultSet consultationRS = null;
+        Statement consultationStatement = null;
 
         try {
-            ResultSet rs = executeQuery("SELECT * FROM consultations WHERE consultation_id=" + consultationID);
+            consultationStatement = connection.createStatement();
+            consultationRS = consultationStatement.executeQuery("SELECT * FROM consultations WHERE consultation_id=" + consultationID);
 
             // iterate through the sql resultset
-            while (rs.next()) {
-                patient = getPatient(rs.getInt("patient_id"));
-                doctor = getDoctor(rs.getInt("doctor_id"));
-                nurse = getNurse(rs.getInt("nurse_id"));
-                consultationDate = rs.getDate("consultation_date");
+            while (consultationRS.next()) {
+                patient = getPatient(consultationRS.getInt("patient_id"));
+                doctor = getDoctor(consultationRS.getInt("doctor_id"));
+                nurse = getNurse(consultationRS.getInt("nurse_id"));
+                consultationDate = consultationRS.getDate("consultation_date");
 
                 // Return the object
                 return new Consultation(patient, doctor, nurse, consultationDate, consultationID);
@@ -395,31 +439,34 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
-            closeConnection();
+            closeRSAndStatement(consultationRS, consultationStatement);
+
         }
 
         System.err.println("Database error getting consultation with ID: " + consultationID);
 
         return new Consultation(patient, doctor, nurse, consultationDate, -1);
     }
-    
-        public static Invoice getInvoice(int invoiceID) {
-        connect();
-        
+
+    public Invoice getInvoice(int invoiceID) {
+
         java.sql.Date invoiceDate = java.sql.Date.valueOf("1970-01-01");
         Consultation consultation = new Consultation();
+        ResultSet invoiceRS = null;
+        Statement invoiceStatement = null;
 
         try {
-            ResultSet rs = executeQuery("SELECT * FROM invoices WHERE invoice_id=" + invoiceID);
+            invoiceStatement = connection.createStatement();
+            invoiceRS = invoiceStatement.executeQuery("SELECT * FROM invoices WHERE invoice_id=" + invoiceID);
 
             // iterate through the sql resultset
-            while (rs.next()) {
-                int invoice_id = rs.getInt("invoice_id");
-                double price = rs.getDouble("price");
-                invoiceDate = rs.getDate("date_of_invoice");
-                consultation = getConsultation(rs.getInt("consultation_id"));
-                boolean paid = rs.getBoolean("paid");
-                boolean insured = rs.getBoolean("insured");
+            while (invoiceRS.next()) {
+                int invoice_id = invoiceRS.getInt("invoice_id");
+                double price = invoiceRS.getDouble("price");
+                invoiceDate = invoiceRS.getDate("date_of_invoice");
+                consultation = getConsultation(invoiceRS.getInt("consultation_id"));
+                boolean paid = invoiceRS.getBoolean("paid");
+                boolean insured = invoiceRS.getBoolean("insured");
 
                 // Return the object
                 return new Invoice(consultation, price, invoiceDate, paid, insured);
@@ -427,7 +474,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
-            closeConnection();
+            closeRSAndStatement(invoiceRS, invoiceStatement);
         }
 
         System.err.println("Database error getting invoice with ID: " + invoiceID);
@@ -435,23 +482,25 @@ public class Database {
         return new Invoice(consultation, -1.0, invoiceDate, false, false);
     }
 
-
-    public static ArrayList<Object> getAllFromDatabase(String tableToGet) {
+    public ArrayList<Object> getAllFromDatabase(String tableToGet) {
 
         ArrayList<Object> outputList = new ArrayList();
 
+        ResultSet idRS = null;
+        Statement idStatement = null;
+
         try {
+            idStatement = connection.createStatement();
             idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
 
             queryString = "SELECT " + idString
                     + " FROM " + tableToGet;
 
-            connect();
-            ResultSet rs = Database.executeQuery(queryString);
+            idRS = executeQuery(queryString);
 
             // iterate through the sql resultset
-            while (rs.next()) {
-                int id = rs.getInt(idString);
+            while (idRS.next()) {
+                int id = idRS.getInt(idString);
 
                 switch (tableToGet) {
                     case "admins":
@@ -481,13 +530,13 @@ public class Database {
             System.out.println(e);
 
         } finally {
-            closeConnection();
+            closeRSAndStatement(idRS, idStatement);
         }
 
         return outputList;
     }
 
-    public static void printDatabaseTable(String tableToPrint) {
+    public void printDatabaseTable(String tableToPrint) {
         ArrayList<Object> thisTable = new ArrayList();
 
         if ("all".equals(tableToPrint)) {
@@ -509,11 +558,9 @@ public class Database {
         }
     }
 
-    
-    public static void writeObjectToDatabase(Object object) {
+    public void writeObjectToDatabase(Object object) {
 
         idString = "";
-        connect();
 
         if (object instanceof Admin) {
             Admin parsed = (Admin) object;
@@ -643,20 +690,20 @@ public class Database {
 
         System.out.println(queryString);
         try {
-            getStatement().executeUpdate(queryString);
+            executeUpdate(queryString);
         } catch (SQLException e) {
             try {
-                getStatement().executeUpdate("UPDATE " + updateString);
+                executeUpdate("UPDATE " + updateString);
             } catch (SQLException ex) {
                 System.out.println(e);
                 System.err.println("Error writing object to database");
             }
         } finally {
-            closeConnection();
+            closeRSAndStatement();
         }
     }
 
-    public static String setPassword(int userID, String password) {
+    public String setPassword(int userID, String password) {
         int lowerBound;
         int upperBound;
 
@@ -679,7 +726,7 @@ public class Database {
         byte[] passwordHash = hashPassword(thisPassCharArray, salt, iterations, keyLength);
 
         try {
-            connect();
+
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE " + tableName + " SET password_hash = ?, salt = ? WHERE " + idString + " = ?");
 
@@ -695,7 +742,7 @@ public class Database {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            closeConnection();
+            closeRSAndStatement();
         }
 
         return "";
@@ -706,10 +753,8 @@ public class Database {
     the database
     
      */
-    public static void deleteObjectFromDatabase(Object object) {
+    public void deleteObjectFromDatabase(Object object) {
 
-        connect();
-        
         if (object instanceof Admin) {
             Admin parsed = (Admin) object;
 
@@ -755,12 +800,12 @@ public class Database {
 
         System.out.println(queryString);
         try {
-            statement.executeUpdate(queryString);
+            executeUpdate(queryString);
         } catch (Exception e) {
             System.out.println(e);
             System.err.println("Error deleting object from database (ID not found?)");
         } finally {
-            closeConnection();
+            closeRSAndStatement();
         }
     }
 
