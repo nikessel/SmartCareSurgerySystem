@@ -19,13 +19,6 @@ public class TestMain {
 
         database.connect();
 
-        Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
-        database.addObjectToDatabase(nurse);
-        database.addObjectToDatabase(database.getNurse(30001));
-        database.addObjectToDatabase(database.getConsultation(50002));
-
-
-
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
         //database.printDatabaseTable("consultations");
@@ -36,6 +29,16 @@ public class TestMain {
         }
         
         System.exit(0);
+        
+        
+        Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
+        database.addObjectToDatabase(nurse);
+        database.addObjectToDatabase(database.getNurse(30001));
+        database.addObjectToDatabase(database.getConsultation(50002));
+
+
+
+
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
         System.out.println(database.getUserID("nurse", "nurse"));

@@ -476,25 +476,26 @@ public class Database {
             rs.beforeFirst();
             while (rs.next()) {
                 int thisID = rs.getInt(1);
+                System.out.println(thisID);
 
                 switch (name) {
                     case "admins":
-                        outputList.add(getAdmin(id));
+                        outputList.add(getAdmin(thisID));
                         break;
                     case "doctors":
-                        outputList.add(getDoctor(id));
+                        outputList.add(getDoctor(thisID));
                         break;
                     case "nurses":
-                        outputList.add(getNurse(id));
+                        outputList.add(getNurse(thisID));
                         break;
                     case "patients":
-                        outputList.add(getPatient(id));
+                        outputList.add(getPatient(thisID));
                         break;
                     case "consultations":
-                        outputList.add(getConsultation(id));
+                        outputList.add(getConsultation(thisID));
                         break;
                     case "invoices":
-                        outputList.add(getInvoice(id));
+                        outputList.add(getInvoice(thisID));
                         break;
 
                 }
@@ -624,7 +625,7 @@ public class Database {
             System.err.println("Error getting list from database (Invalid where or is?)");
         }
 
-        return new ArrayList<Object>();
+        return new ArrayList<>();
 
     }
 
