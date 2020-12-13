@@ -53,6 +53,7 @@ public class Invoice extends DatabaseObject {
         this.dateOfInvoice = dateOfInvoice;
         this.paid = paid;
         this.insured = insured;
+        this.invoiceID = -1;
     }
 
     public int getInvoiceID() {

@@ -16,23 +16,23 @@ public class TestMain {
     public static void main(String[] args) {
 
         Database database = new Database();
-
+        
         database.connect();
-
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
         //database.printDatabaseTable("consultations");
-        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(30001);
+        //ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(30001);
 
-        for (Consultation co : cons) {
-            System.out.println(co);
-        }
+        database.deleteObjectFromDatabase(database.getDoctor(20001));
+        Consultation cons = database.getConsultation(50001);
         
-        database.closeConnection();
+        System.out.println(cons);
         
         System.exit(0);
-        
-        
+       // for (Consultation co : cons) {
+        //    System.out.println(co);
+        //}
+
         Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
         database.addObjectToDatabase(nurse);
         database.addObjectToDatabase(database.getNurse(30001));
@@ -78,7 +78,7 @@ public class TestMain {
         System.out.println(database.getConsultation(50002));
 
         database.printDatabaseTable("all");
-
+        
     }
 
 }
