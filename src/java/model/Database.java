@@ -617,7 +617,7 @@ public class Database {
 
     public ArrayList<Object> getAllFromDatabaseWhereIs(String tableToGet, String where, String is) {
         ResultSet rs1 = selectFromWhere("*", tableToGet, where, is);
-
+        
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -628,8 +628,11 @@ public class Database {
 
     }
 
-    public ArrayList<Consultation> getAllConsultationsWhereIs(String where, String is) {
-        ArrayList<Object> objects = getAllFromDatabaseWhereIs("consultations", where, is);
+    public ArrayList<Consultation> getAllConsultationsWhereIDIs(int id) {
+        
+        idString = getIDString(id);
+        
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("consultations", idString, String.valueOf(id));
         ArrayList<Consultation> output = new ArrayList();
 
         objects.forEach((obj) -> {
@@ -639,8 +642,11 @@ public class Database {
         return output;
     }
 
-    public ArrayList<Invoice> getAllInvoicesWhereIs(String where, String is) {
-        ArrayList<Object> objects = getAllFromDatabaseWhereIs("invoices", where, is);
+    public ArrayList<Invoice> getAllInvoicesWhereIDIs(int id) {
+                
+        idString = getIDString(id);
+        
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("invoices", idString, String.valueOf(id));
         ArrayList<Invoice> output = new ArrayList();
 
         objects.forEach((obj) -> {
