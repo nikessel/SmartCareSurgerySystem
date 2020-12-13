@@ -17,18 +17,16 @@ public class Nurse extends Employee {
         
     }
     
-    public Nurse(String username, String password, String firstName, String surName, boolean isFullTime) {
+    public Nurse(String username, String firstName, String surName, boolean isFullTime) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.fullTime = isFullTime;
         this.nurseID = -1;
     }
 
-    public Nurse(String username, String password, String firstName, String surName, boolean isFullTime, int nurseID) {
+    public Nurse(String username, String firstName, String surName, boolean isFullTime, int nurseID) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.fullTime = isFullTime;
@@ -41,7 +39,7 @@ public class Nurse extends Employee {
 
     @Override
     public String toString() {
-        return "Nurse{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", nurseID=" + nurseID + '}';
+        return "Nurse{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", nurseID=" + nurseID + '}';
     }
 
 }

@@ -17,18 +17,16 @@ public class Doctor extends Employee {
         
     }
     
-    public Doctor(String username, String password, String firstName, String surName, boolean isFullTime) {
+    public Doctor(String username,String firstName, String surName, boolean isFullTime) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.fullTime = isFullTime;
         this.doctorID = -1;
     }
 
-    public Doctor(String username, String password, String firstName, String surName, boolean isFullTime, int doctorID) {
+    public Doctor(String username, String firstName, String surName, boolean isFullTime, int doctorID) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.fullTime = isFullTime;
@@ -41,7 +39,7 @@ public class Doctor extends Employee {
 
     @Override
     public String toString() {
-        return "Doctor{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", doctorID=" + doctorID + '}';
+        return "Doctor{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", doctorID=" + doctorID + '}';
     }
 
 }

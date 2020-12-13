@@ -162,10 +162,10 @@ public class Database {
     public ResultSet executeQuery(String query) {
         if (!"".equals(query)) {
             try {
-                statement = connection.createStatement();
-                rs = statement.executeQuery(query);
-                return rs;
-            } catch (Exception e) {
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY);
+                return statement.executeQuery(query);
+            } catch (SQLException e) {
                 System.out.println(e);
             }
         } else {
@@ -179,6 +179,18 @@ public class Database {
         statement = connection.createStatement();
         statement.executeUpdate(query);
 
+    }
+
+    private String getIDString(int id) {
+        tableName = "";
+
+        tableName = TABLENAMES[(int) id / 10000 + 1];
+
+        return tableName.substring(0, tableName.length() - 1) + "_id";
+    }
+
+    private String getIDString(String tableName) {
+        return tableName.substring(0, tableName.length() - 1) + "_id";
     }
 
     private Address convertStringToAddress(String thisAddressString) {
@@ -279,230 +291,195 @@ public class Database {
         return output;
     }
 
-    public Admin getAdmin(int adminID) {
+    private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
 
-        try {
+        boolean isUser, isEmployee, isAdmin, isDoctor, isNurse, isPatient,
+                isConsultation, isInvoice, paid, insured, isFullTime;
+        isUser = isEmployee = isAdmin = isDoctor = isNurse = isPatient
+                = isConsultation = isInvoice = paid = insured = isFullTime = false;
 
-            executeQuery("SELECT * FROM admins WHERE admin_id=" + adminID);
+        int id = -1;
 
-            // iterate through the sql resultset
-            while (rs.next()) {
-                String username = rs.getString("username");
+        double price = -1.0;
 
-                // Skip saving password hash and salt
-                rs.getString("password_hash");
-                rs.getString("salt");
+        String username, firstName, surName;
+        username = firstName = surName = "";
 
-                String firstName = rs.getString("first_name");
-                String surName = rs.getString("sur_name");
-                boolean isFullTime = rs.getBoolean("is_full_time");
-                int id = rs.getInt("admin_id");
+        java.sql.Date dateOfBirth, consultationDate, invoiceDate;
+        dateOfBirth = consultationDate = invoiceDate = java.sql.Date.valueOf("1000-01-01");
 
-                // Return the object
-                return new Admin(username, "", firstName, surName, isFullTime, id);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        } finally {
-            closeRSAndStatement();
-
-        }
-
-        System.err.println("Database error getting admin");
-
-        return new Admin("", "", "", "", false, -1);
-    }
-
-    public Doctor getDoctor(int doctorID) {
-
-        try {
-            this.executeQuery("SELECT * FROM doctors WHERE doctor_id=" + doctorID);
-
-            // iterate through the sql resultset
-            while (rs.next()) {
-                String username = rs.getString("username");
-
-                // Skip saving password hash and salt
-                rs.getString("password_hash");
-                rs.getString("salt");
-
-                String firstName = rs.getString("first_name");
-                String surName = rs.getString("sur_name");
-                boolean isFullTime = rs.getBoolean("is_full_time");
-                int id = rs.getInt("doctor_id");
-
-                // Return the object
-                return new Doctor(username, "", firstName, surName, isFullTime, id);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-
-        } finally {
-            closeRSAndStatement();
-
-        }
-
-        System.err.println("Database error getting doctor");
-
-        return new Doctor("", "", "", "", false, -1);
-    }
-
-    public Nurse getNurse(int nurseID) {
-
-        try {
-            this.executeQuery("SELECT * FROM nurses WHERE nurse_id=" + nurseID);
-
-            // iterate through the sql resultset
-            while (rs.next()) {
-                String username = rs.getString("username");
-
-                // Skip saving password hash and salt
-                rs.getString("password_hash");
-                rs.getString("salt");
-                String firstName = rs.getString("first_name");
-                String surName = rs.getString("sur_name");
-                boolean isFullTime = rs.getBoolean("is_full_time");
-                int id = rs.getInt("nurse_id");
-
-                // Return the object
-                return new Nurse(username, "", firstName, surName, isFullTime, nurseID);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        } finally {
-            closeRSAndStatement();
-
-        }
-
-        System.err.println("Database error getting nurse");
-
-        return new Nurse("", "", "", "", false, -1);
-    }
-
-    public Patient getPatient(int patientID) {
-
-        try {
-            this.executeQuery("SELECT * FROM patients WHERE patient_id=" + patientID);
-
-            // iterate through the sql resultset
-            while (rs.next()) {
-                String username = rs.getString("username");
-
-                // Skip saving password hash and salt
-                rs.getString("password_hash");
-                rs.getString("salt");
-
-                String firstName = rs.getString("first_name");
-                String surName = rs.getString("sur_name");
-                int id = rs.getInt("patient_id");
-                Address address = convertStringToAddress(rs.getString("address"));
-                java.sql.Date dateOfBirth = rs.getDate("date_of_birth");
-
-                // Return the object
-                return new Patient(username, "", firstName, surName, patientID, dateOfBirth, address);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        } finally {
-            closeRSAndStatement();
-
-        }
-
-        System.err.println("Database error getting patient");
-
-        return new Patient("", "", "", "", -1, new java.sql.Date(0000 - 00 - 00), new Address("", "", "", "", "", ""));
-    }
-
-    public Consultation getConsultation(int consultationID) {
-
+        Invoice invoice = new Invoice();
+        Address address = new Address();
         Patient patient = new Patient();
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
-        java.sql.Date consultationDate = java.sql.Date.valueOf("1970-01-01");
-        ResultSet consultationRS = null;
-        Statement consultationStatement = null;
-
-        try {
-            consultationStatement = connection.createStatement();
-            consultationRS = consultationStatement.executeQuery("SELECT * FROM consultations WHERE consultation_id=" + consultationID);
-
-            // iterate through the sql resultset
-            while (consultationRS.next()) {
-                patient = getPatient(consultationRS.getInt("patient_id"));
-                doctor = getDoctor(consultationRS.getInt("doctor_id"));
-                nurse = getNurse(consultationRS.getInt("nurse_id"));
-                consultationDate = consultationRS.getDate("consultation_date");
-
-                // Return the object
-                return new Consultation(patient, doctor, nurse, consultationDate, consultationID);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        } finally {
-            closeRSAndStatement(consultationRS, consultationStatement);
-
-        }
-
-        System.err.println("Database error getting consultation with ID: " + consultationID);
-
-        return new Consultation(patient, doctor, nurse, consultationDate, -1);
-    }
-
-    public Invoice getInvoice(int invoiceID) {
-
-        java.sql.Date invoiceDate = java.sql.Date.valueOf("1970-01-01");
         Consultation consultation = new Consultation();
-        ResultSet invoiceRS = null;
-        Statement invoiceStatement = null;
 
+        // Get ID
         try {
-            invoiceStatement = connection.createStatement();
-            invoiceRS = invoiceStatement.executeQuery("SELECT * FROM invoices WHERE invoice_id=" + invoiceID);
-
-            // iterate through the sql resultset
-            while (invoiceRS.next()) {
-                int invoice_id = invoiceRS.getInt("invoice_id");
-                double price = invoiceRS.getDouble("price");
-                invoiceDate = invoiceRS.getDate("date_of_invoice");
-                consultation = getConsultation(invoiceRS.getInt("consultation_id"));
-                boolean paid = invoiceRS.getBoolean("paid");
-                boolean insured = invoiceRS.getBoolean("insured");
-
-                // Return the object
-                return new Invoice(consultation, price, invoiceDate, paid, insured);
+            if (rs.next()) {
+                id = rs.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println(e);
-        } finally {
-            closeRSAndStatement(invoiceRS, invoiceStatement);
+            try {
+                rs.beforeFirst();
+
+            } catch (SQLException ex) {
+
+            }
         }
 
-        System.err.println("Database error getting invoice with ID: " + invoiceID);
+        if (10000 <= id && id <= 49999) {
+            isUser = true;
 
-        return new Invoice(consultation, -1.0, invoiceDate, false, false);
+            if (10000 <= id && id <= 39999) {
+                isEmployee = true;
+
+                if (10000 <= id && id <= 19999) {
+                    isAdmin = true;
+                } else if (20000 <= id && id <= 29999) {
+                    isDoctor = true;
+                } else if (30000 <= id && id <= 39999) {
+                    isNurse = true;
+                }
+            } else if (40000 <= id && id <= 49999) {
+                isPatient = true;
+            }
+        } else if (50000 <= id && id <= 59999) {
+            isConsultation = true;
+        } else if (60000 <= id && id <= 69999) {
+            isInvoice = true;
+        }
+
+        if (isUser) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    username = rs.getString("username");
+
+                    // Skip saving password hash and salt
+                    rs.getString("password_hash");
+                    rs.getString("salt");
+
+                    firstName = rs.getString("first_name");
+                    surName = rs.getString("sur_name");
+                }
+
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+
+        if (isEmployee) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    isFullTime = rs.getBoolean("is_full_time");
+                }
+
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+
+        if (isPatient) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    address = convertStringToAddress(rs.getString("address"));
+                    dateOfBirth = rs.getDate("date_of_birth");
+                }
+
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+
+        if (isConsultation) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    patient = getPatient(rs.getInt("patient_id"));
+                    doctor = getDoctor(rs.getInt("doctor_id"));
+                    nurse = getNurse(rs.getInt("nurse_id"));
+                    consultationDate = rs.getDate("consultation_date");
+                }
+
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+
+        if (isInvoice) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    price = rs.getDouble("price");
+                    invoiceDate = rs.getDate("date_of_invoice");
+                    consultation = getConsultation(rs.getInt("consultation_id"));
+                    paid = rs.getBoolean("paid");
+                    insured = rs.getBoolean("insured");
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+
+        if (isUser) {
+            if (isEmployee) {
+                if (isAdmin) {
+                    return new Admin(username, firstName, surName, isFullTime, id);
+                } else if (isDoctor) {
+                    return new Doctor(username, firstName, surName, isFullTime, id);
+                } else if (isNurse) {
+                    return new Nurse(username, firstName, surName, isFullTime, id);
+                }
+            } else if (isPatient) {
+                return new Patient(username, firstName, surName, id, dateOfBirth, address);
+            }
+        } else if (isConsultation) {
+            return new Consultation(patient, doctor, nurse, consultationDate, id);
+        } else if (isInvoice) {
+            return new Invoice(consultation, price, dateOfBirth, paid, insured, id);
+        }
+
+        return new DatabaseObject();
     }
 
-    public ArrayList<Object> getAllFromDatabase(String tableToGet) {
+    public ArrayList<Object> getListFromDatabase(ResultSet rs) throws ArrayIndexOutOfBoundsException {
 
         ArrayList<Object> outputList = new ArrayList();
+        int id = -1;
 
-        ResultSet idRS = null;
-        Statement idStatement = null;
-
+        // Get ID
         try {
-            idStatement = connection.createStatement();
-            idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
 
-            queryString = "SELECT " + idString
-                    + " FROM " + tableToGet;
+        } catch (SQLException e) {
+            try {
+                rs.beforeFirst();
 
-            idRS = executeQuery(queryString);
+            } catch (SQLException ex) {
 
-            // iterate through the sql resultset
-            while (idRS.next()) {
-                int id = idRS.getInt(idString);
+            }
+        }
 
-                switch (tableToGet) {
+        String name = TABLENAMES[(int) id / 10000 - 1];
+
+        // iterate through the sql resultset
+        try {
+            rs.beforeFirst();
+            while (rs.next()) {
+                int thisID = rs.getInt(1);
+
+                switch (name) {
                     case "admins":
                         outputList.add(getAdmin(id));
                         break;
@@ -523,22 +500,159 @@ public class Database {
                         break;
 
                 }
-
             }
-        } catch (SQLException e) {
-
-            System.out.println(e);
-
-        } finally {
-            closeRSAndStatement(idRS, idStatement);
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
 
         return outputList;
     }
 
-    public void printDatabaseTable(String tableToPrint) {
-        ArrayList<Object> thisTable = new ArrayList();
+    private ResultSet selectFromWhere(String whatToSelect, String fromTable, String where, String is) {
+        String isString = "='" + is + "'";
 
+        try {
+            Double.parseDouble(is);
+            isString = "=" + is;
+        } catch (NumberFormatException ex) {
+
+        }
+
+        return executeQuery("SELECT " + whatToSelect + " FROM " + fromTable + " WHERE " + where + isString);
+    }
+
+    public Admin getAdmin(int adminID) {
+
+        ResultSet rs1 = selectFromWhere("*", "admins", "admin_id", String.valueOf(adminID));
+
+        try {
+            return (Admin) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println("Error getting admin from database (Invalid id?)");
+        }
+
+        return new Admin();
+    }
+
+    public Doctor getDoctor(int doctorID) {
+        ResultSet rs1 = selectFromWhere("*", "doctors", "doctor_id", String.valueOf(doctorID));
+
+        try {
+            return (Doctor) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println("Error getting doctor from database (Invalid id?)");
+        }
+
+        return new Doctor();
+    }
+
+    public Nurse getNurse(int nurseID) {
+
+        ResultSet rs1 = selectFromWhere("*", "nurses", "nurse_id", String.valueOf(nurseID));
+
+        try {
+            return (Nurse) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println("Error getting nurse from database (Invalid id?)");
+        }
+
+        return new Nurse();
+    }
+
+    public Patient getPatient(int patientID) {
+
+        ResultSet rs1 = selectFromWhere("*", "patients", "patient_id", String.valueOf(patientID));
+
+        try {
+            return (Patient) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println("Error getting patient from database (Invalid id?)");
+        }
+
+        return new Patient();
+    }
+
+    public Consultation getConsultation(int consultationID) {
+
+        ResultSet rs1 = selectFromWhere("*", "consultations", "consultation_id", String.valueOf(consultationID));
+
+        try {
+            return (Consultation) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println("Error getting consultation from database (Invalid id?)");
+        }
+
+        return new Consultation();
+    }
+
+    public Invoice getInvoice(int invoiceID) {
+
+        ResultSet rs1 = selectFromWhere("*", "invoices", "invoice_id", String.valueOf(invoiceID));
+
+        try {
+            return (Invoice) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println("Error getting invoice from database (Invalid id?)");
+        }
+
+        return new Invoice();
+    }
+
+    public ArrayList<Object> getAllFromDatabase(String tableToGet) {
+
+        idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
+
+        queryString = "SELECT " + idString
+                + " FROM " + tableToGet;
+
+        ResultSet rs1 = executeQuery(queryString);
+
+        try {
+            return getListFromDatabase(rs1);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.out.println("Error getting list from database (Invalid where or is?)");
+        }
+
+        return new ArrayList<Object>();
+
+    }
+
+    public ArrayList<Object> getAllFromDatabaseWhereIs(String tableToGet, String where, String is) {
+        ResultSet rs1 = selectFromWhere("*", tableToGet, where, is);
+
+        try {
+            return getListFromDatabase(rs1);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.out.println("Error getting list from database (Invalid where or is?)");
+        }
+
+        return new ArrayList<Object>();
+
+    }
+
+    public ArrayList<Consultation> getAllConsultationsWhereIs(String where, String is) {
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("consultations", where, is);
+        ArrayList<Consultation> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            output.add((Consultation) obj);
+        });
+
+        return output;
+    }
+
+    public ArrayList<Invoice> getAllInvoicesWhereIs(String where, String is) {
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("invoices", where, is);
+        ArrayList<Invoice> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            output.add((Invoice) obj);
+        });
+
+        return output;
+    }
+
+    public void printDatabaseTable(String tableToPrint) {
         if ("all".equals(tableToPrint)) {
             for (String TABLENAMES1 : TABLENAMES) {
                 System.out.println("");
@@ -550,7 +664,7 @@ public class Database {
             return;
         }
 
-        thisTable = getAllFromDatabase(tableToPrint);
+        ArrayList<Object> thisTable = getAllFromDatabase(tableToPrint);
 
         // Print the table
         for (int i = 0; i < thisTable.size(); i++) {

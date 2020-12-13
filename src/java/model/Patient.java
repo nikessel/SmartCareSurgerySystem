@@ -21,10 +21,9 @@ public class Patient extends User {
         
     }
     
-    public Patient(String username, String password, String firstName,
+    public Patient(String username, String firstName,
             String surName, java.sql.Date dateOfBirth, Address address) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.patientID = -1;
@@ -32,10 +31,9 @@ public class Patient extends User {
         this.address = address;
     }
 
-    public Patient(String username, String password, String firstName,
+    public Patient(String username, String firstName,
             String surName, int patientID, java.sql.Date dateOfBirth, Address address) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.patientID = patientID;
@@ -66,7 +64,7 @@ public class Patient extends User {
 
     @Override
     public String toString() {
-        return "Patient{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", patientID=" + patientID + ", dateOfBirth=" + dateOfBirth + ", address=" + address + '}';
+        return "Patient{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", patientID=" + patientID + ", dateOfBirth=" + dateOfBirth + ", address=" + address + '}';
     }
 
 }

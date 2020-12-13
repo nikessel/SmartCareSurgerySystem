@@ -18,18 +18,16 @@ public class Admin extends Employee {
         
     }
     
-    public Admin(String username, String password, String firstName, String surName, boolean isFullTime) {
+    public Admin(String username, String firstName, String surName, boolean isFullTime) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.fullTime = isFullTime;
         this.adminID = -1;
     }
 
-    public Admin(String username, String password, String firstName, String surName, boolean isFullTime, int adminID) {
+    public Admin(String username, String firstName, String surName, boolean isFullTime, int adminID) {
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.surName = surName;
         this.fullTime = isFullTime;
@@ -42,7 +40,7 @@ public class Admin extends Employee {
 
     @Override
     public String toString() {
-        return "Admin{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", adminID=" + adminID + '}';
+        return "Admin{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", adminID=" + adminID + '}';
     }
 
 }
