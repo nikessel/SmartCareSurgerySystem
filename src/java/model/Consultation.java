@@ -17,7 +17,7 @@ public class Consultation extends DatabaseObject {
     private Doctor doctor;
     private Nurse nurse;
     private Date consulationDate;
-    private int consulationID;
+    private int consultationID;
 
     public Consultation() {
 
@@ -39,7 +39,7 @@ public class Consultation extends DatabaseObject {
             this.doctor = doctor;
             this.nurse = nurse;
             this.consulationDate = bookingDate;
-            this.consulationID = consulationID;
+            this.consultationID = consulationID;
         } else {
             System.out.println("Constructor with ID can only be called by the Database class");
         }

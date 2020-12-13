@@ -740,7 +740,7 @@ public class Database {
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
             valuesString.append(consultation.getConsulationDate() + "', ");
 
-            thisID = consultation.getConsulationID();
+            thisID = consultation.getConsultationID();
             idString = getIDString(thisID);
 
         } else if (object instanceof Invoice) {
@@ -748,7 +748,7 @@ public class Database {
             tableName = TABLENAMES[5];
 
             namesString.append("consultation_id, price, date_of_invoice, paid, insured, ");
-            valuesString.append(invoice.getConsultation().getConsulationID() + ", ");
+            valuesString.append(invoice.getConsultation().getConsultationID() + ", ");
             valuesString.append(invoice.getPrice() + ", ");
             valuesString.append("'" + invoice.getDateOfInvoice() + "', ");
             valuesString.append(invoice.isPaid() + ", ");
@@ -872,7 +872,7 @@ public class Database {
             id = ((Patient) object).getPatientID();
 
         } else if (object instanceof Consultation) {
-            id = ((Consultation) object).getConsulationID();
+            id = ((Consultation) object).getConsultationID();
 
         } else if (object instanceof Invoice) {
             id = ((Invoice) object).getInvoiceID();
