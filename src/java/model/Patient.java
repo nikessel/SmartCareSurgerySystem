@@ -14,31 +14,49 @@ import java.sql.Date;
 public class Patient extends User {
 
     private int patientID;
-    java.sql.Date dateOfBirth;
-    Address address;
+    private java.sql.Date dateOfBirth;
+    private Address address;
+    private boolean insured;
 
-    public Patient(){
-        
+    public Patient() {
+
     }
-    
+
     public Patient(String username, String firstName,
-            String surName, java.sql.Date dateOfBirth, Address address) {
+            String surName, java.sql.Date dateOfBirth, Address address, boolean insured) {
         this.username = username;
         this.firstName = firstName;
         this.surName = surName;
         this.patientID = -1;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+        this.insured = insured;
     }
 
-    public Patient(String username, String firstName,
-            String surName, int patientID, java.sql.Date dateOfBirth, Address address) {
-        this.username = username;
-        this.firstName = firstName;
-        this.surName = surName;
-        this.patientID = patientID;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
+    protected Patient(String username, String firstName,
+            String surName, int patientID, java.sql.Date dateOfBirth, Address address, boolean insured) {
+
+        boolean isDatabase = false;
+
+        try {
+            if (Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()) == Database.class) {
+                isDatabase = true;
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+
+        if (isDatabase) {
+            this.username = username;
+            this.firstName = firstName;
+            this.surName = surName;
+            this.patientID = patientID;
+            this.dateOfBirth = dateOfBirth;
+            this.address = address;
+            this.insured = insured;
+        } else {
+            System.out.println("Constructor with ID can only be called by the Database class");
+        }
 
     }
 
@@ -60,6 +78,14 @@ public class Patient extends User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public boolean isInsured() {
+        return insured;
+    }
+
+    public void setInsured(boolean insured) {
+        this.insured = insured;
     }
 
     @Override

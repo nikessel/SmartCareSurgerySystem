@@ -11,7 +11,7 @@ package model;
  */
 public abstract class Employee extends User {
     
-    boolean fullTime;
+    protected boolean fullTime;
 
     public boolean isFullTime() {
         return fullTime;

@@ -14,9 +14,9 @@ public class Nurse extends Employee {
     private int nurseID;
 
     public Nurse() {
-        
+
     }
-    
+
     public Nurse(String username, String firstName, String surName, boolean isFullTime) {
         this.username = username;
         this.firstName = firstName;
@@ -25,12 +25,27 @@ public class Nurse extends Employee {
         this.nurseID = -1;
     }
 
-    public Nurse(String username, String firstName, String surName, boolean isFullTime, int nurseID) {
-        this.username = username;
-        this.firstName = firstName;
-        this.surName = surName;
-        this.fullTime = isFullTime;
-        this.nurseID = nurseID;
+    protected Nurse(String username, String firstName, String surName, boolean isFullTime, int nurseID) {
+        boolean isDatabase = false;
+
+        try {
+            if (Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()) == Database.class) {
+                isDatabase = true;
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+
+        if (isDatabase) {
+            this.username = username;
+            this.firstName = firstName;
+            this.surName = surName;
+            this.fullTime = isFullTime;
+            this.nurseID = nurseID;
+        } else {
+            System.out.println("Constructor with ID can only be called by the Database class");
+        }
+
     }
 
     public int getNurseID() {

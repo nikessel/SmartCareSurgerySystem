@@ -5,7 +5,6 @@
  */
 package model;
 
-
 /**
  *
  * @author niklas
@@ -13,11 +12,11 @@ package model;
 public class Admin extends Employee {
 
     private int adminID;
-    
+
     public Admin() {
-        
+
     }
-    
+
     public Admin(String username, String firstName, String surName, boolean isFullTime) {
         this.username = username;
         this.firstName = firstName;
@@ -26,12 +25,26 @@ public class Admin extends Employee {
         this.adminID = -1;
     }
 
-    public Admin(String username, String firstName, String surName, boolean isFullTime, int adminID) {
-        this.username = username;
-        this.firstName = firstName;
-        this.surName = surName;
-        this.fullTime = isFullTime;
-        this.adminID = adminID;
+    protected Admin(String username, String firstName, String surName, boolean isFullTime, int adminID) {
+        boolean isDatabase = false;
+
+        try {
+            if (Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()) == Database.class) {
+                isDatabase = true;
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+
+        if (isDatabase) {
+            this.username = username;
+            this.firstName = firstName;
+            this.surName = surName;
+            this.fullTime = isFullTime;
+            this.adminID = adminID;
+        } else {
+            System.out.println("Constructor with ID can only be called by the Database class");
+        }
     }
 
     public int getAdminID() {

@@ -34,7 +34,6 @@ public class Database {
     private final String PASSWORD = "password";
     private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
-    private boolean closeStatement = true;
 
     // Hashing variables for PBKDF2
     byte[] hash_candidate = new byte[64];
@@ -47,12 +46,9 @@ public class Database {
     SecureRandom random = new SecureRandom();
     String queryString = "";
     String idString = "";
-    String updateString = "";
     int thisID = -2;
     boolean userNameFound = false;
     String tableName = "";
-    String fieldString = "";
-    String valueString = "";
     String idValue = "";
 
     // Display more infomation
@@ -65,7 +61,7 @@ public class Database {
             connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
             statement = connection.createStatement();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
     }
@@ -76,7 +72,7 @@ public class Database {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
     }
 
@@ -87,33 +83,32 @@ public class Database {
     }
 
     private void closeRSAndStatement() {
-        if (closeStatement) {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex);
+
+        try {
+            if (rs != null) {
+                rs.close();
             }
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex);
         }
     }
 
     private void closeRSAndStatement(ResultSet thisRS, Statement thisStatement) {
-        if (closeStatement) {
-            try {
-                if (thisRS != null) {
-                    thisRS.close();
-                }
-                if (thisStatement != null) {
-                    thisStatement.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex);
+
+        try {
+            if (thisRS != null) {
+                thisRS.close();
             }
+            if (thisStatement != null) {
+                thisStatement.close();
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex);
         }
+
     }
 
     public byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
@@ -166,10 +161,10 @@ public class Database {
                         ResultSet.CONCUR_READ_ONLY);
                 return statement.executeQuery(query);
             } catch (SQLException e) {
-                System.out.println(e);
+                System.err.println(e);
             }
         } else {
-            System.out.println("A query must be passed to function executeQuery()");
+            System.err.println("A query must be passed to function executeQuery()");
         }
         return null;
     }
@@ -182,9 +177,11 @@ public class Database {
     }
 
     private String getIDString(int id) {
-        tableName = "";
+        if (id == -1) {
+            return "";
+        }
 
-        tableName = TABLENAMES[(int) id / 10000 + 1];
+        tableName = TABLENAMES[(int) id / 10000 - 1];
 
         return tableName.substring(0, tableName.length() - 1) + "_id";
     }
@@ -256,7 +253,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             } finally {
                 closeRSAndStatement();
             }
@@ -274,7 +271,7 @@ public class Database {
 
         try {
             for (String tableName : USERTABLENAMES) {
-                idString = tableName.substring(0, tableName.length() - 1) + "_id";
+                idString = getIDString(tableName);
                 queryString = "SELECT " + idString + " FROM " + tableName;
                 ResultSet rs = executeQuery(queryString);
 
@@ -285,7 +282,7 @@ public class Database {
                 }
             }
         } catch (SQLException ex) {
-
+            System.err.println(ex);
         }
 
         return output;
@@ -367,7 +364,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -380,7 +377,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -391,10 +388,11 @@ public class Database {
                 if (rs.next()) {
                     address = convertStringToAddress(rs.getString("address"));
                     dateOfBirth = rs.getDate("date_of_birth");
+                    insured = rs.getBoolean("insured");
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -410,7 +408,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -426,7 +424,7 @@ public class Database {
                     insured = rs.getBoolean("insured");
                 }
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -440,12 +438,12 @@ public class Database {
                     return new Nurse(username, firstName, surName, isFullTime, id);
                 }
             } else if (isPatient) {
-                return new Patient(username, firstName, surName, id, dateOfBirth, address);
+                return new Patient(username, firstName, surName, id, dateOfBirth, address, insured);
             }
         } else if (isConsultation) {
             return new Consultation(patient, doctor, nurse, consultationDate, id);
         } else if (isInvoice) {
-            return new Invoice(consultation, price, dateOfBirth, paid, insured, id);
+            return new Invoice(consultation, price, invoiceDate, paid, insured, id);
         }
 
         return new DatabaseObject();
@@ -502,7 +500,7 @@ public class Database {
                 }
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
 
         return outputList;
@@ -528,7 +526,7 @@ public class Database {
         try {
             return (Admin) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting admin from database (Invalid id?)");
+            System.err.println("Error getting admin from database (Invalid id?)");
         }
 
         return new Admin();
@@ -540,7 +538,7 @@ public class Database {
         try {
             return (Doctor) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting doctor from database (Invalid id?)");
+            System.err.println("Error getting doctor from database (Invalid id?)");
         }
 
         return new Doctor();
@@ -553,7 +551,7 @@ public class Database {
         try {
             return (Nurse) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting nurse from database (Invalid id?)");
+            System.err.println("Error getting nurse from database (Invalid id?)");
         }
 
         return new Nurse();
@@ -566,7 +564,7 @@ public class Database {
         try {
             return (Patient) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting patient from database (Invalid id?)");
+            System.err.println("Error getting patient from database (Invalid id?)");
         }
 
         return new Patient();
@@ -579,7 +577,7 @@ public class Database {
         try {
             return (Consultation) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting consultation from database (Invalid id?)");
+            System.err.println("Error getting consultation from database (Invalid id?)");
         }
 
         return new Consultation();
@@ -592,7 +590,7 @@ public class Database {
         try {
             return (Invoice) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting invoice from database (Invalid id?)");
+            System.err.println("Error getting invoice from database (Invalid id?)");
         }
 
         return new Invoice();
@@ -610,10 +608,10 @@ public class Database {
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Error getting list from database (Invalid where or is?)");
+            System.err.println("Error getting list from database (Invalid where or is?)");
         }
 
-        return new ArrayList<Object>();
+        return new ArrayList<>();
 
     }
 
@@ -623,7 +621,7 @@ public class Database {
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Error getting list from database (Invalid where or is?)");
+            System.err.println("Error getting list from database (Invalid where or is?)");
         }
 
         return new ArrayList<Object>();
@@ -672,150 +670,139 @@ public class Database {
         }
     }
 
-    public void writeObjectToDatabase(Object object) {
+    public void addObjectToDatabase(Object object) {
+        StringBuilder namesString = new StringBuilder();
+        StringBuilder valuesString = new StringBuilder();
+        StringBuilder updateString = new StringBuilder();
 
-        idString = "";
+        String insertPrefix = "INSERT INTO ";
+        String valuesPrefix = "VALUES (";
+        String updatePrefix = "UPDATE ";
 
-        if (object instanceof Admin) {
-            Admin parsed = (Admin) object;
+        tableName = "";
 
-            tableName = "admins";
-            fieldString = "username, first_name, sur_name, is_full_time";
+        namesString.append("(");
 
-            if (parsed.getAdminID() != -1) {
-                idString = ", " + String.valueOf(parsed.getAdminID());
-                fieldString = "username, first_name, sur_name, admin_id, is_full_time";
+        if (object instanceof User) {
+            User user = (User) object;
+
+            namesString.append("username, first_name, sur_name, ");
+
+            valuesString.append("'" + user.getUsername() + "', ");
+            valuesString.append("'" + user.getFirstName() + "', ");
+            valuesString.append("'" + user.getSurName() + "', ");
+
+            if (user instanceof Employee) {
+                Employee employee = (Employee) object;
+
+                namesString.append("is_full_time, ");
+
+                valuesString.append(employee.isFullTime() + ", ");
+
+                if (employee instanceof Admin) {
+                    Admin admin = (Admin) object;
+                    tableName = TABLENAMES[0];
+                    thisID = admin.getAdminID();
+                    idString = getIDString(thisID);
+
+                } else if (employee instanceof Doctor) {
+                    Doctor doctor = (Doctor) object;
+                    tableName = TABLENAMES[1];
+
+                    thisID = doctor.getDoctorID();
+                    idString = getIDString(thisID);
+                } else if (employee instanceof Nurse) {
+                    Nurse nurse = (Nurse) object;
+                    tableName = TABLENAMES[2];
+
+                    thisID = nurse.getNurseID();
+                    idString = getIDString(thisID);
+                }
+            } else if (object instanceof Patient) {
+                Patient patient = (Patient) object;
+                tableName = TABLENAMES[3];
+                namesString.append("date_of_birth, address, insured, ");
+
+                valuesString.append("'" + patient.getDateOfBirth() + "', ");
+                valuesString.append("'" + convertAddressToString(patient.getAddress()) + "', ");
+                valuesString.append(patient.isInsured() + ", ");
+
+                thisID = patient.getPatientID();
+                idString = getIDString(thisID);
             }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", " + parsed.isFullTime();
-
-            updateString = "username='" + parsed.getUsername() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "is_full_time=" + parsed.isFullTime();
-
-        } else if (object instanceof Doctor) {
-            Doctor parsed = (Doctor) object;
-
-            tableName = "doctors";
-            fieldString = "username, first_name, sur_name, is_full_time";
-
-            if (parsed.getDoctorID() != -1) {
-                idString = ", " + String.valueOf(parsed.getDoctorID());
-                fieldString = "username, first_name, sur_name, doctor_id, is_full_time";
-            }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", " + parsed.isFullTime();
-
-            updateString = "username='" + parsed.getUsername() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "is_full_time=" + parsed.isFullTime();
-
-        } else if (object instanceof Nurse) {
-            Nurse parsed = (Nurse) object;
-
-            tableName = "nurses";
-            fieldString = "username, first_name, sur_name, is_full_time";
-
-            if (parsed.getNurseID() != -1) {
-                idString = ", " + String.valueOf(parsed.getNurseID());
-                fieldString = "username, first_name, sur_name, nurse_id, is_full_time";
-            }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", " + parsed.isFullTime();
-
-            updateString = "username='" + parsed.getUsername() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "is_full_time=" + parsed.isFullTime();
-
-        } else if (object instanceof Patient) {
-
-            Patient parsed = (Patient) object;
-
-            String address = convertAddressToString(parsed.getAddress());
-
-            tableName = "patients";
-
-            fieldString = "username, first_name, sur_name, date_of_birth, address";
-
-            if (parsed.getPatientID() != -1) {
-                idString = ", " + String.valueOf(parsed.getPatientID());
-                fieldString = "username, first_name, sur_name, patient_id, date_of_birth, address";
-            }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", '" + parsed.getDateOfBirth() + "'"
-                    + ", '" + address + "'";
-
-            updateString = "username='" + parsed.getFirstName() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "date_of_birth='" + parsed.getDateOfBirth() + "', "
-                    + "address='" + address + "'";
-
         } else if (object instanceof Consultation) {
+            Consultation consultation = (Consultation) object;
+            tableName = TABLENAMES[4];
 
-            Consultation parsed = (Consultation) object;
+            namesString.append("patient_id, doctor_id, nurse_id, consultation_date, ");
+            valuesString.append(consultation.getPatient().getPatientID() + ", ");
+            valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
+            valuesString.append(consultation.getNurse().getNurseID() + ", '");
+            valuesString.append(consultation.getConsulationDate() + "', ");
 
-            tableName = "consultations";
+            thisID = consultation.getConsulationID();
+            idString = getIDString(thisID);
 
-            fieldString = "patient_id, doctor_id, nurse_id, consultation_date";
+        } else if (object instanceof Invoice) {
+            Invoice invoice = (Invoice) object;
+            tableName = TABLENAMES[5];
 
-            if (parsed.getConsultationID() != -1) {
-                idString = ", " + String.valueOf(parsed.getConsultationID());
-                fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
-            }
+            namesString.append("consultation_id, price, date_of_invoice, paid, insured, ");
+            valuesString.append(invoice.getConsultation().getConsulationID() + ", ");
+            valuesString.append(invoice.getPrice() + ", ");
+            valuesString.append("'" + invoice.getDateOfInvoice() + "', ");
+            valuesString.append(invoice.isPaid() + ", ");
+            valuesString.append(invoice.isInsured() + ", ");
 
-            valueString = "" + parsed.getPatient().getPatientID()
-                    + ", " + parsed.getDoctor().getDoctorID()
-                    + ", " + parsed.getNurse().getNurseID()
-                    + ", '" + parsed.getConsulationDate() + "'"
-                    + idString;
-
-            updateString = "patient_id=" + parsed.getPatient().getPatientID() + ", "
-                    + "doctor_id=" + parsed.getDoctor().getDoctorID() + ", "
-                    + "nurse_id=" + parsed.getNurse().getNurseID() + ", "
-                    + "consultation_date='" + parsed.getConsulationDate() + "'";
-
-        } else {
-            System.out.println("Error writing object to database, "
-                    + "object type not found.");
-            return;
+            thisID = invoice.getInvoiceID();
+            idString = getIDString(thisID);
         }
 
-        queryString = "INSERT INTO " + tableName + " (" + fieldString + ") VALUES(" + valueString + ")";
+        namesString.delete(namesString.length() - 2, namesString.length());
+        valuesString.delete(valuesString.length() - 2, valuesString.length());
+
+        namesString.append(") ");
+        valuesString.append(")");
+
+        String nameStringAsString = namesString.toString();
+        String valuesStringAsString = valuesString.toString();
+
+        queryString = insertPrefix + tableName + " " + nameStringAsString + valuesPrefix + valuesStringAsString;
 
         System.out.println(queryString);
-        try {
-            executeUpdate(queryString);
-        } catch (SQLException e) {
+        if (thisID == -1) {
             try {
-                System.out.println("UPDATE " + updateString);
-                executeUpdate("UPDATE " + updateString);
+                executeUpdate(queryString);
             } catch (SQLException ex) {
-                System.out.println(e);
-                System.err.println("Error writing object to database");
+                System.err.println(ex);
             }
-        } finally {
-            closeRSAndStatement();
+        } else {
+
+            namesString.deleteCharAt(0);
+            namesString.delete(namesString.length() - 2, namesString.length());
+
+            valuesString.deleteCharAt(valuesString.length() - 1);
+            nameStringAsString = namesString.toString();
+            valuesStringAsString = valuesString.toString();
+
+            String[] splitOne = nameStringAsString.split(", ");
+            String[] splitTwo = valuesStringAsString.split(", ");
+
+            for (int i = 0; i < splitOne.length; i++) {
+                updateString.append(splitOne[i] + "=" + splitTwo[i] + ", ");
+            }
+
+            updateString.delete(updateString.length() - 2, updateString.length());
+
+            queryString = updatePrefix + tableName + " SET " + updateString.toString() + " WHERE " + idString + "=" + thisID;
+
+            try {
+                executeUpdate(queryString);
+            } catch (SQLException ex) {
+                System.err.println(ex);
+            }
         }
+
     }
 
     public String setPassword(int userID, String password) {
@@ -855,7 +842,7 @@ public class Database {
             ps.close();
 
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         } finally {
             closeRSAndStatement();
         }
@@ -870,54 +857,47 @@ public class Database {
      */
     public void deleteObjectFromDatabase(Object object) {
 
-        if (object instanceof Admin) {
-            Admin parsed = (Admin) object;
+        int id = -1;
 
-            tableName = "admins";
-            idString = "admin_id";
-            idValue = String.valueOf(parsed.getAdminID());
+        if (object instanceof Admin) {
+            id = ((Admin) object).getAdminID();
 
         } else if (object instanceof Doctor) {
-            Doctor parsed = (Doctor) object;
-
-            tableName = "doctors";
-            idString = "doctor_id";
-            idValue = String.valueOf(parsed.getDoctorID());
+            id = ((Doctor) object).getDoctorID();
 
         } else if (object instanceof Nurse) {
-            Nurse parsed = (Nurse) object;
-
-            tableName = "nurses";
-            idString = "nurse_id";
-            idValue = String.valueOf(parsed.getNurseID());
+            id = ((Nurse) object).getNurseID();
 
         } else if (object instanceof Patient) {
-            Patient parsed = (Patient) object;
-
-            tableName = "patients";
-            idString = "patient_id";
-            idValue = String.valueOf(parsed.getPatientID());
+            id = ((Patient) object).getPatientID();
 
         } else if (object instanceof Consultation) {
-            Consultation parsed = (Consultation) object;
+            id = ((Consultation) object).getConsulationID();
 
-            tableName = "consultations";
-            idString = "consultation_id";
-            idValue = String.valueOf(parsed.getConsultationID());
-
+        } else if (object instanceof Invoice) {
+            id = ((Invoice) object).getInvoiceID();
         } else {
-            System.out.println("Error writing object to database, "
+            System.err.println("Error writing object to database, "
                     + "object type not found.");
             return;
         }
 
-        queryString = "DELETE FROM " + tableName + " WHERE " + idString + " = " + idValue;
+        try {
+            tableName = TABLENAMES[id / 10000 - 1];
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.err.println("Error deleting object from database (ID not found?)");
+            return;
+        }
+        idString = getIDString(id);
+
+        queryString = "DELETE FROM " + tableName + " WHERE " + idString + " = " + id;
 
         System.out.println(queryString);
         try {
             executeUpdate(queryString);
+
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             System.err.println("Error deleting object from database (ID not found?)");
         } finally {
             closeRSAndStatement();

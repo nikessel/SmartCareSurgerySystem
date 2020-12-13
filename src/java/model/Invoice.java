@@ -13,24 +13,38 @@ import java.sql.Date;
  */
 public class Invoice extends DatabaseObject {
 
-    Consultation consultation;
-    double price;
-    Date dateOfInvoice;
-    boolean paid;
-    boolean insured;
-    int invoiceID;
-    
-    public Invoice () {
-        
+    private Consultation consultation;
+    private double price;
+    private Date dateOfInvoice;
+    private boolean paid;
+    private boolean insured;
+    private int invoiceID;
+
+    public Invoice() {
+
     }
 
-    public Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
-        this.consultation = consultation;
-        this.price = price;
-        this.dateOfInvoice = dateOfInvoice;
-        this.paid = paid;
-        this.insured = insured;
-        this.invoiceID = invoiceID;
+    protected Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
+        boolean isDatabase = false;
+
+        try {
+            if (Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()) == Database.class) {
+                isDatabase = true;
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+
+        if (isDatabase) {
+            this.consultation = consultation;
+            this.price = price;
+            this.dateOfInvoice = dateOfInvoice;
+            this.paid = paid;
+            this.insured = insured;
+            this.invoiceID = invoiceID;
+        } else {
+            System.out.println("Constructor with ID can only be called by the Database class");
+        }
     }
 
     public Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured) {

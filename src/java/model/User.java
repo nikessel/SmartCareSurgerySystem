@@ -11,9 +11,9 @@ package model;
  */
 public abstract class User extends DatabaseObject {
 
-    String username;
-    String firstName;
-    String surName;
+    protected String username;
+    protected String firstName;
+    protected String surName;
 
     public String getUsername() {
         return username;
