@@ -29,7 +29,7 @@ public class TestMain {
         for (Consultation co : cons) {
             System.out.println(co);
         }
-        System.exit(0);
+        
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
         System.out.println(database.getUserID("nurse", "nurse"));
