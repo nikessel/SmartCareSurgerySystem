@@ -239,7 +239,7 @@ public class Database {
         for (String tableName : USERTABLENAMES) {
 
             queryString = getCredentialsSQLString(tableName) + " WHERE username='" + username + "'";
-            this.executeQuery(queryString);
+            ResultSet rs = executeQuery(queryString);
 
             try {
                 while (rs.next()) {
@@ -276,7 +276,7 @@ public class Database {
             for (String tableName : USERTABLENAMES) {
                 idString = tableName.substring(0, tableName.length() - 1) + "_id";
                 queryString = "SELECT " + idString + " FROM " + tableName;
-                this.executeQuery(queryString);
+                ResultSet rs = executeQuery(queryString);
 
                 while (rs.next()) {
                     thisID = rs.getInt(idString);
