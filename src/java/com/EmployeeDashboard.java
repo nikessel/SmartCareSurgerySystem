@@ -37,8 +37,10 @@ public class EmployeeDashboard extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         Database database = (Database) getServletContext().getAttribute("database");
+        
+        String currentUserID = (String)getServletContext().getAttribute("userID");
   
-        ArrayList<Object> objectArray = database.getAllFromDatabase("consultations");
+        ArrayList<Object> objectArray = database.getAllFromDatabaseWhereIs("consultations", "id", currentUserID);
 
         List<Consultation> consultations = new ArrayList<>();
         
