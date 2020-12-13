@@ -807,6 +807,7 @@ public class Database {
             executeUpdate(queryString);
         } catch (SQLException e) {
             try {
+                System.out.println("UPDATE " + updateString);
                 executeUpdate("UPDATE " + updateString);
             } catch (SQLException ex) {
                 System.out.println(e);

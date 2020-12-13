@@ -62,7 +62,7 @@ public class TestMain {
         database.writeObjectToDatabase(admin);
 
         Doctor doctor = new Doctor("dds", "dsd", "dsds", true);
-        database.writeObjectToDatabase(doctor);
+        database.writeObjectToDatabase(database.getDoctor(20001));
 
         Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
         database.writeObjectToDatabase(nurse);
