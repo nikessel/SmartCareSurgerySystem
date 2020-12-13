@@ -29,7 +29,7 @@ public class TestMain {
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
         //database.printDatabaseTable("consultations");
-        ArrayList<Consultation> cons = database.getAllConsultationsWhereID("doctor_id", "20001");
+        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(20001);
 
         for (Consultation co : cons) {
             System.out.println(co);
