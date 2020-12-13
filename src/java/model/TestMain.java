@@ -21,6 +21,11 @@ public class TestMain {
 
         Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
         database.addObjectToDatabase(nurse);
+        database.addObjectToDatabase(database.getNurse(30001));
+        database.addObjectToDatabase(database.getConsultation(50002));
+        
+        System.exit(0);
+
 
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
@@ -66,7 +71,7 @@ public class TestMain {
         database.addObjectToDatabase(doctor);
 
         //Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
-        database.addObjectToDatabase(nurse);
+        
 
         Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"), false);
         database.addObjectToDatabase(patient);
