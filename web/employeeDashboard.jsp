@@ -32,7 +32,7 @@
             <tbody>
                 <c:forEach items="${consultations}" var="consultation">
                     <tr>
-                        <td>${consultation.consultationDate}</td>
+                        <td>${consultation.consultationID}</td>
                         <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
                     </tr>
                 </c:forEach>   

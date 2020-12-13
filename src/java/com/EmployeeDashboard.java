@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author niklas
  */
 import model.*;
-@WebServlet("/employeeDashboard")
 
+@WebServlet("/employeeDashboard")
 
 public class EmployeeDashboard extends HttpServlet {
 
@@ -37,21 +37,22 @@ public class EmployeeDashboard extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         Database database = (Database) getServletContext().getAttribute("database");
-        
-        int currentUserID = (int)request.getAttribute("userID");
-        
-        
+
+        int currentUserID = (int) request.getAttribute("userID");
+
         Doctor currentDoctor = database.getDoctor(currentUserID);
-        
+
         User currentUser = (User) currentDoctor;
         
-        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
         
-        request.setAttribute(
-                "consultations", consultations);
-        request.setAttribute("currentDoctor", currentDoctor);
-        request.setAttribute("currentUser", currentUser);
-       
+        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+
+        request.setAttribute("consultations", consultations);
+        
+        
+            //request.setAttribute("currentDoctor", currentDoctor);
+            //request.setAttribute("currentUser", currentUser);
+
         request.getRequestDispatcher(
                 "employeeDashboard.jsp").forward(request, response);
 

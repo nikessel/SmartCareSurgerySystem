@@ -16,30 +16,22 @@ public class TestMain {
     public static void main(String[] args) {
 
         Database database = new Database();
-        
+
         database.connect();
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
         //database.printDatabaseTable("consultations");
-        //ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(30001);
+        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(database.getUserID("doctor", "doctor"));
 
-        database.deleteObjectFromDatabase(database.getDoctor(20001));
-        Consultation cons = database.getConsultation(50001);
-        
-        System.out.println(cons);
-        
+        for (Consultation co : cons) {
+            System.out.println(co);
+        }
         System.exit(0);
-       // for (Consultation co : cons) {
-        //    System.out.println(co);
-        //}
 
         Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
         database.addObjectToDatabase(nurse);
         database.addObjectToDatabase(database.getNurse(30001));
         database.addObjectToDatabase(database.getConsultation(50002));
-
-
-
 
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
@@ -63,8 +55,6 @@ public class TestMain {
         database.addObjectToDatabase(doctor);
 
         //Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
-        
-
         Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"), false);
         database.addObjectToDatabase(patient);
 
@@ -78,7 +68,7 @@ public class TestMain {
         System.out.println(database.getConsultation(50002));
 
         database.printDatabaseTable("all");
-        
+
     }
 
 }

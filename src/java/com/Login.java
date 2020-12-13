@@ -18,6 +18,7 @@ import model.*;
  * @author niklas
  */
 @WebServlet("/login")
+
 public class Login extends HttpServlet {
 
     private String message;
@@ -90,7 +91,7 @@ public class Login extends HttpServlet {
                 }
                 // show logged in user
                 request.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("employeeDashboard").forward(request, response);
+                request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
 
             }
 
