@@ -14,8 +14,8 @@ import java.sql.Date;
 public class Patient extends User {
 
     private int patientID;
-    java.sql.Date dateOfBirth;
-    Address address;
+    private java.sql.Date dateOfBirth;
+    private Address address;
     private boolean insured;
 
     public Patient() {

@@ -23,8 +23,7 @@ public class TestMain {
         database.addObjectToDatabase(nurse);
         database.addObjectToDatabase(database.getNurse(30001));
         database.addObjectToDatabase(database.getConsultation(50002));
-        
-        System.exit(0);
+
 
 
         //System.out.println(database.getAdmin(10000));
@@ -51,19 +50,6 @@ public class TestMain {
         //currentUserID = database.getUserID("testdoctor", "password");
         System.out.println(currentUserID);
 
-        if (10000 <= currentUserID && currentUserID <= 19999) {
-            currentUser = database.getAdmin(currentUserID);
-            System.out.println("Is an admin");
-        } else if (20000 <= currentUserID && currentUserID <= 29999) {
-            currentUser = database.getDoctor(currentUserID);
-            System.out.println("Is a doctor");
-        } else {
-            currentUser = new Admin("", "", "", true);
-            System.out.println("Error: couldn't get user!");
-        }
-
-        System.out.println(currentUser);
-
         Admin admin = new Admin("AAAAA", "dsd", "dsds", true);
         database.addObjectToDatabase(admin);
 
@@ -80,7 +66,7 @@ public class TestMain {
 
         System.out.println(currentUserID);
 
-        //database.deleteObjectFromDatabase(database.getNurse(currentUserID));
+        database.deleteObjectFromDatabase(database.getNurse(currentUserID));
         currentUserID = database.getUserID("nurse", "nurse");
 
         System.out.println(database.getConsultation(50002));

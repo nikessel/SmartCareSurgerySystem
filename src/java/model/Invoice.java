@@ -13,12 +13,12 @@ import java.sql.Date;
  */
 public class Invoice extends DatabaseObject {
 
-    Consultation consultation;
-    double price;
-    Date dateOfInvoice;
-    boolean paid;
-    boolean insured;
-    int invoiceID;
+    private Consultation consultation;
+    private double price;
+    private Date dateOfInvoice;
+    private boolean paid;
+    private boolean insured;
+    private int invoiceID;
 
     public Invoice() {
 

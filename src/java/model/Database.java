@@ -34,7 +34,6 @@ public class Database {
     private final String PASSWORD = "password";
     private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
-    private boolean closeStatement = true;
 
     // Hashing variables for PBKDF2
     byte[] hash_candidate = new byte[64];
@@ -62,7 +61,7 @@ public class Database {
             connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
             statement = connection.createStatement();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
     }
@@ -73,7 +72,7 @@ public class Database {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
     }
 
@@ -84,33 +83,32 @@ public class Database {
     }
 
     private void closeRSAndStatement() {
-        if (closeStatement) {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex);
+
+        try {
+            if (rs != null) {
+                rs.close();
             }
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex);
         }
     }
 
     private void closeRSAndStatement(ResultSet thisRS, Statement thisStatement) {
-        if (closeStatement) {
-            try {
-                if (thisRS != null) {
-                    thisRS.close();
-                }
-                if (thisStatement != null) {
-                    thisStatement.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex);
+
+        try {
+            if (thisRS != null) {
+                thisRS.close();
             }
+            if (thisStatement != null) {
+                thisStatement.close();
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex);
         }
+
     }
 
     public byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
@@ -163,10 +161,10 @@ public class Database {
                         ResultSet.CONCUR_READ_ONLY);
                 return statement.executeQuery(query);
             } catch (SQLException e) {
-                System.out.println(e);
+                System.err.println(e);
             }
         } else {
-            System.out.println("A query must be passed to function executeQuery()");
+            System.err.println("A query must be passed to function executeQuery()");
         }
         return null;
     }
@@ -182,8 +180,6 @@ public class Database {
         if (id == -1) {
             return "";
         }
-
-        tableName = "";
 
         tableName = TABLENAMES[(int) id / 10000 - 1];
 
@@ -257,7 +253,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             } finally {
                 closeRSAndStatement();
             }
@@ -275,7 +271,7 @@ public class Database {
 
         try {
             for (String tableName : USERTABLENAMES) {
-                idString = tableName.substring(0, tableName.length() - 1) + "_id";
+                idString = getIDString(tableName);
                 queryString = "SELECT " + idString + " FROM " + tableName;
                 ResultSet rs = executeQuery(queryString);
 
@@ -286,7 +282,7 @@ public class Database {
                 }
             }
         } catch (SQLException ex) {
-
+            System.err.println(ex);
         }
 
         return output;
@@ -368,7 +364,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -381,7 +377,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -396,7 +392,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -412,7 +408,7 @@ public class Database {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -428,7 +424,7 @@ public class Database {
                     insured = rs.getBoolean("insured");
                 }
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -447,7 +443,7 @@ public class Database {
         } else if (isConsultation) {
             return new Consultation(patient, doctor, nurse, consultationDate, id);
         } else if (isInvoice) {
-            return new Invoice(consultation, price, dateOfBirth, paid, insured, id);
+            return new Invoice(consultation, price, invoiceDate, paid, insured, id);
         }
 
         return new DatabaseObject();
@@ -504,7 +500,7 @@ public class Database {
                 }
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
 
         return outputList;
@@ -530,7 +526,7 @@ public class Database {
         try {
             return (Admin) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting admin from database (Invalid id?)");
+            System.err.println("Error getting admin from database (Invalid id?)");
         }
 
         return new Admin();
@@ -542,7 +538,7 @@ public class Database {
         try {
             return (Doctor) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting doctor from database (Invalid id?)");
+            System.err.println("Error getting doctor from database (Invalid id?)");
         }
 
         return new Doctor();
@@ -555,7 +551,7 @@ public class Database {
         try {
             return (Nurse) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting nurse from database (Invalid id?)");
+            System.err.println("Error getting nurse from database (Invalid id?)");
         }
 
         return new Nurse();
@@ -568,7 +564,7 @@ public class Database {
         try {
             return (Patient) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting patient from database (Invalid id?)");
+            System.err.println("Error getting patient from database (Invalid id?)");
         }
 
         return new Patient();
@@ -581,7 +577,7 @@ public class Database {
         try {
             return (Consultation) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting consultation from database (Invalid id?)");
+            System.err.println("Error getting consultation from database (Invalid id?)");
         }
 
         return new Consultation();
@@ -594,7 +590,7 @@ public class Database {
         try {
             return (Invoice) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.out.println("Error getting invoice from database (Invalid id?)");
+            System.err.println("Error getting invoice from database (Invalid id?)");
         }
 
         return new Invoice();
@@ -612,10 +608,10 @@ public class Database {
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Error getting list from database (Invalid where or is?)");
+            System.err.println("Error getting list from database (Invalid where or is?)");
         }
 
-        return new ArrayList<Object>();
+        return new ArrayList<>();
 
     }
 
@@ -625,7 +621,7 @@ public class Database {
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Error getting list from database (Invalid where or is?)");
+            System.err.println("Error getting list from database (Invalid where or is?)");
         }
 
         return new ArrayList<Object>();
@@ -778,13 +774,13 @@ public class Database {
             try {
                 executeUpdate(queryString);
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         } else {
-            
+
             namesString.deleteCharAt(0);
             namesString.delete(namesString.length() - 2, namesString.length());
-            
+
             valuesString.deleteCharAt(valuesString.length() - 1);
             nameStringAsString = namesString.toString();
             valuesStringAsString = valuesString.toString();
@@ -797,13 +793,13 @@ public class Database {
             }
 
             updateString.delete(updateString.length() - 2, updateString.length());
- 
+
             queryString = updatePrefix + tableName + " SET " + updateString.toString() + " WHERE " + idString + "=" + thisID;
 
             try {
                 executeUpdate(queryString);
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
 
@@ -846,7 +842,7 @@ public class Database {
             ps.close();
 
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         } finally {
             closeRSAndStatement();
         }
@@ -861,54 +857,47 @@ public class Database {
      */
     public void deleteObjectFromDatabase(Object object) {
 
-        if (object instanceof Admin) {
-            Admin parsed = (Admin) object;
+        int id = -1;
 
-            tableName = "admins";
-            idString = "admin_id";
-            idValue = String.valueOf(parsed.getAdminID());
+        if (object instanceof Admin) {
+            id = ((Admin) object).getAdminID();
 
         } else if (object instanceof Doctor) {
-            Doctor parsed = (Doctor) object;
-
-            tableName = "doctors";
-            idString = "doctor_id";
-            idValue = String.valueOf(parsed.getDoctorID());
+            id = ((Doctor) object).getDoctorID();
 
         } else if (object instanceof Nurse) {
-            Nurse parsed = (Nurse) object;
-
-            tableName = "nurses";
-            idString = "nurse_id";
-            idValue = String.valueOf(parsed.getNurseID());
+            id = ((Nurse) object).getNurseID();
 
         } else if (object instanceof Patient) {
-            Patient parsed = (Patient) object;
-
-            tableName = "patients";
-            idString = "patient_id";
-            idValue = String.valueOf(parsed.getPatientID());
+            id = ((Patient) object).getPatientID();
 
         } else if (object instanceof Consultation) {
-            Consultation parsed = (Consultation) object;
+            id = ((Consultation) object).getConsulationID();
 
-            tableName = "consultations";
-            idString = "consultation_id";
-            idValue = String.valueOf(parsed.getConsulationID());
-
+        } else if (object instanceof Invoice) {
+            id = ((Invoice) object).getInvoiceID();
         } else {
-            System.out.println("Error writing object to database, "
+            System.err.println("Error writing object to database, "
                     + "object type not found.");
             return;
         }
 
-        queryString = "DELETE FROM " + tableName + " WHERE " + idString + " = " + idValue;
+        try {
+            tableName = TABLENAMES[id / 10000 - 1];
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.err.println("Error deleting object from database (ID not found?)");
+            return;
+        }
+        idString = getIDString(id);
+
+        queryString = "DELETE FROM " + tableName + " WHERE " + idString + " = " + id;
 
         System.out.println(queryString);
         try {
             executeUpdate(queryString);
+
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             System.err.println("Error deleting object from database (ID not found?)");
         } finally {
             closeRSAndStatement();
