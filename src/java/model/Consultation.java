@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author niklas
  */
-public class Consultation {
+public class Consultation extends DatabaseObject {
 
     private Patient patient;
     private Doctor doctor;

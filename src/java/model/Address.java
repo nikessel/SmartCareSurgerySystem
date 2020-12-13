@@ -18,6 +18,10 @@ public class Address {
     private String town;
     private String telephoneNumber;
 
+    public Address() {
+        
+    }
+    
     public Address(String addressLine1, String addressLine2, String postcode, String county, String town, String telephoneNumber) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;

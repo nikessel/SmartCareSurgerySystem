@@ -9,10 +9,9 @@ package model;
  *
  * @author niklas
  */
-public abstract class User {
+public abstract class User extends DatabaseObject {
 
     String username;
-    String password;
     String firstName;
     String surName;
 
@@ -22,14 +21,6 @@ public abstract class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -50,7 +41,7 @@ public abstract class User {
     
     @Override
     public String toString() {
-        return "User{" + "username=" + username + ", password=" + password + ", firstName=" + firstName + ", surName=" + surName + '}';
+        return "User{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + '}';
     }
 
     

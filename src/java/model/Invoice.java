@@ -11,7 +11,7 @@ import java.sql.Date;
  *
  * @author niklas
  */
-public class Invoice {
+public class Invoice extends DatabaseObject {
 
     Consultation consultation;
     double price;
@@ -19,6 +19,10 @@ public class Invoice {
     boolean paid;
     boolean insured;
     int invoiceID;
+    
+    public Invoice () {
+        
+    }
 
     public Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
         this.consultation = consultation;

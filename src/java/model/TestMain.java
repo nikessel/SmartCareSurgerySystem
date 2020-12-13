@@ -18,9 +18,18 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
+        
+        //System.out.println(database.getAdmin(10000));
+        //System.out.println(database.getConsultation(50000));
 
-        database.printDatabaseTable("consultations");
+        //database.printDatabaseTable("consultations");
+        
+        ArrayList<Consultation> cons = database.getAllConsultationsWhereIs("doctor_id", "20001");
 
+        for (Consultation co : cons) {
+            System.out.println(co);
+        }
+        System.exit(0);
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
         System.out.println(database.getUserID("nurse", "nurse"));
@@ -43,22 +52,22 @@ public class TestMain {
             currentUser = database.getDoctor(currentUserID);
             System.out.println("Is a doctor");
         } else {
-            currentUser = new Admin("", "", "", "", true);
+            currentUser = new Admin("", "", "", true);
             System.out.println("Error: couldn't get user!");
         }
 
         System.out.println(currentUser);
 
-        Admin admin = new Admin("AAAAA", "dsd", "dsd", "dsds", true);
+        Admin admin = new Admin("AAAAA", "dsd", "dsds", true);
         database.writeObjectToDatabase(admin);
 
-        Doctor doctor = new Doctor("dds", "dsd", "dsd", "dsds", true);
+        Doctor doctor = new Doctor("dds", "dsd", "dsds", true);
         database.writeObjectToDatabase(doctor);
 
-        Nurse nurse = new Nurse("dds", "dsd", "dsd", "dsds", true);
+        Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
         database.writeObjectToDatabase(nurse);
 
-        Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", "sad", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
+        Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
         database.writeObjectToDatabase(patient);
 
         currentUserID = database.getUserID("nurse", "nurse");
