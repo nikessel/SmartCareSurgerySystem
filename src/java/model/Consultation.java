@@ -18,17 +18,31 @@ public class Consultation extends DatabaseObject {
     private Nurse nurse;
     private Date consulationDate;
     private int consulationID;
-    
+
     public Consultation() {
-        
+
     }
 
-    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Date bookingDate, int consulationID) {
-        this.patient = patient;
-        this.doctor = doctor;
-        this.nurse = nurse;
-        this.consulationDate = bookingDate;
-        this.consulationID = consulationID;
+    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Date bookingDate, int consulationID) {
+        boolean isDatabase = false;
+
+        try {
+            if (Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()) == Database.class) {
+                isDatabase = true;
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+
+        if (isDatabase) {
+            this.patient = patient;
+            this.doctor = doctor;
+            this.nurse = nurse;
+            this.consulationDate = bookingDate;
+            this.consulationID = consulationID;
+        } else {
+            System.out.println("Constructor with ID can only be called by the Database class");
+        }
     }
 
     public Consultation(Patient patient, Doctor doctor, Nurse nurse, Date bookingDate) {
@@ -79,6 +93,5 @@ public class Consultation extends DatabaseObject {
     public String toString() {
         return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consulationDate=" + consulationDate + ", consulationID=" + consulationID + '}';
     }
-
 
 }

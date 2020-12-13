@@ -18,18 +18,19 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
-        
+
+        Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
+        database.addObjectToDatabase(nurse);
+
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
-
         //database.printDatabaseTable("consultations");
-        
         ArrayList<Consultation> cons = database.getAllConsultationsWhereIs("doctor_id", "20001");
 
         for (Consultation co : cons) {
             System.out.println(co);
         }
-        
+
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
         System.out.println(database.getUserID("nurse", "nurse"));
@@ -59,16 +60,16 @@ public class TestMain {
         System.out.println(currentUser);
 
         Admin admin = new Admin("AAAAA", "dsd", "dsds", true);
-        database.writeObjectToDatabase(admin);
+        database.addObjectToDatabase(admin);
 
         Doctor doctor = new Doctor("dds", "dsd", "dsds", true);
-        database.writeObjectToDatabase(doctor);
+        database.addObjectToDatabase(doctor);
 
-        Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
-        database.writeObjectToDatabase(nurse);
+        //Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
+        database.addObjectToDatabase(nurse);
 
-        Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"));
-        database.writeObjectToDatabase(patient);
+        Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"), false);
+        database.addObjectToDatabase(patient);
 
         currentUserID = database.getUserID("nurse", "nurse");
 

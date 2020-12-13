@@ -47,12 +47,9 @@ public class Database {
     SecureRandom random = new SecureRandom();
     String queryString = "";
     String idString = "";
-    String updateString = "";
     int thisID = -2;
     boolean userNameFound = false;
     String tableName = "";
-    String fieldString = "";
-    String valueString = "";
     String idValue = "";
 
     // Display more infomation
@@ -391,6 +388,7 @@ public class Database {
                 if (rs.next()) {
                     address = convertStringToAddress(rs.getString("address"));
                     dateOfBirth = rs.getDate("date_of_birth");
+                    insured = rs.getBoolean("insured");
                 }
 
             } catch (SQLException ex) {
@@ -440,7 +438,7 @@ public class Database {
                     return new Nurse(username, firstName, surName, isFullTime, id);
                 }
             } else if (isPatient) {
-                return new Patient(username, firstName, surName, id, dateOfBirth, address);
+                return new Patient(username, firstName, surName, id, dateOfBirth, address, insured);
             }
         } else if (isConsultation) {
             return new Consultation(patient, doctor, nurse, consultationDate, id);
@@ -672,149 +670,113 @@ public class Database {
         }
     }
 
-    public void writeObjectToDatabase(Object object) {
+    public void addObjectToDatabase(Object object) {
+        StringBuilder namesString = new StringBuilder();
+        StringBuilder valuesString = new StringBuilder();
 
-        idString = "";
+        String insertPrefix = "INSERT INTO ";
 
-        if (object instanceof Admin) {
-            Admin parsed = (Admin) object;
+        int attributeCount = 0;
 
-            tableName = "admins";
-            fieldString = "username, first_name, sur_name, is_full_time";
+        int id = -1;
 
-            if (parsed.getAdminID() != -1) {
-                idString = ", " + String.valueOf(parsed.getAdminID());
-                fieldString = "username, first_name, sur_name, admin_id, is_full_time";
+        namesString.append("(");
+        valuesString.append("VALUES (");
+
+        if (object instanceof User) {
+            User user = (User) object;
+
+            namesString.append("username, first_name, sur_name, ");
+
+            valuesString.append("'" + user.getUsername() + "', ");
+            valuesString.append("'" + user.getFirstName() + "', ");
+            valuesString.append("'" + user.getSurName() + "', ");
+
+            if (user instanceof Employee) {
+                Employee employee = (Employee) object;
+
+                namesString.append("is_full_time, ");
+
+                valuesString.append(employee.isFullTime() + ", ");
+
+                if (employee instanceof Admin) {
+                    Admin admin = (Admin) object;
+                    tableName = TABLENAMES[0] + " ";
+
+                    if (admin.getAdminID() != -1) {
+                        namesString.append("admin_id, ");
+                        valuesString.append(admin.getAdminID() + ", ");
+                    }
+                } else if (employee instanceof Doctor) {
+                    Doctor doctor = (Doctor) object;
+                    tableName = TABLENAMES[1] + " ";
+
+                    if (doctor.getDoctorID() != -1) {
+                        namesString.append("doctor_id, ");
+                        valuesString.append(doctor.getDoctorID() + ", ");
+                    }
+                } else if (employee instanceof Nurse) {
+                    Nurse nurse = (Nurse) object;
+                    tableName = TABLENAMES[2] + " ";
+
+                    if (nurse.getNurseID() != -1) {
+                        namesString.append("nurse_id, ");
+                        valuesString.append(nurse.getNurseID() + ", ");
+                    }
+                }
+            } else if (object instanceof Patient) {
+                Patient patient = (Patient) object;
+                tableName = TABLENAMES[3] + " ";
+                namesString.append("date_of_birth, address, insured, ");
+
+                valuesString.append("'" + patient.getDateOfBirth() + "', ");
+                valuesString.append("'" + convertAddressToString(patient.getAddress()) + "', ");
+                valuesString.append(patient.isInsured() + ", ");
+
+                if (patient.getPatientID() != -1) {
+                    namesString.append("patient_id, ");
+                    valuesString.append(patient.getPatientID() + ", ");
+                }
             }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", " + parsed.isFullTime();
-
-            updateString = "username='" + parsed.getUsername() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "is_full_time=" + parsed.isFullTime();
-
-        } else if (object instanceof Doctor) {
-            Doctor parsed = (Doctor) object;
-
-            tableName = "doctors";
-            fieldString = "username, first_name, sur_name, is_full_time";
-
-            if (parsed.getDoctorID() != -1) {
-                idString = ", " + String.valueOf(parsed.getDoctorID());
-                fieldString = "username, first_name, sur_name, doctor_id, is_full_time";
-            }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", " + parsed.isFullTime();
-
-            updateString = "username='" + parsed.getUsername() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "is_full_time=" + parsed.isFullTime();
-
-        } else if (object instanceof Nurse) {
-            Nurse parsed = (Nurse) object;
-
-            tableName = "nurses";
-            fieldString = "username, first_name, sur_name, is_full_time";
-
-            if (parsed.getNurseID() != -1) {
-                idString = ", " + String.valueOf(parsed.getNurseID());
-                fieldString = "username, first_name, sur_name, nurse_id, is_full_time";
-            }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", " + parsed.isFullTime();
-
-            updateString = "username='" + parsed.getUsername() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "is_full_time=" + parsed.isFullTime();
-
-        } else if (object instanceof Patient) {
-
-            Patient parsed = (Patient) object;
-
-            String address = convertAddressToString(parsed.getAddress());
-
-            tableName = "patients";
-
-            fieldString = "username, first_name, sur_name, date_of_birth, address";
-
-            if (parsed.getPatientID() != -1) {
-                idString = ", " + String.valueOf(parsed.getPatientID());
-                fieldString = "username, first_name, sur_name, patient_id, date_of_birth, address";
-            }
-
-            valueString = "'" + parsed.getUsername() + "'"
-                    + ", '" + parsed.getFirstName() + "'"
-                    + ", '" + parsed.getSurName() + "'"
-                    + idString
-                    + ", '" + parsed.getDateOfBirth() + "'"
-                    + ", '" + address + "'";
-
-            updateString = "username='" + parsed.getFirstName() + "', "
-                    + "first_name='" + parsed.getFirstName() + "', "
-                    + "sur_name='" + parsed.getSurName() + "', "
-                    + "date_of_birth='" + parsed.getDateOfBirth() + "', "
-                    + "address='" + address + "'";
-
         } else if (object instanceof Consultation) {
+            Consultation consultation = (Consultation) object;
+            tableName = TABLENAMES[4] + " ";
 
-            Consultation parsed = (Consultation) object;
+            namesString.append("patient_id, doctor_id, nurse_id, consultation_date");
 
-            tableName = "consultations";
-
-            fieldString = "patient_id, doctor_id, nurse_id, consultation_date";
-
-            if (parsed.getConsulationID() != -1) {
-                idString = ", " + String.valueOf(parsed.getConsulationID());
-                fieldString = "patient_id, doctor_id, nurse_id, consultation_date, consultation_id";
+            if (consultation.getConsulationID() != -1) {
+                namesString.append("consultation_id, ");
+                valuesString.append(consultation.getConsulationID() + ", ");
             }
+        } else if (object instanceof Invoice) {
+            Invoice invoice = (Invoice) object;
+            tableName = TABLENAMES[5] + " ";
 
-            valueString = "" + parsed.getPatient().getPatientID()
-                    + ", " + parsed.getDoctor().getDoctorID()
-                    + ", " + parsed.getNurse().getNurseID()
-                    + ", '" + parsed.getConsulationDate() + "'"
-                    + idString;
+            namesString.append("consultation_id, price, date_of_invoice, paid, insured, ");
+            valuesString.append(invoice.getConsultation().getConsulationID() + ", ");
+            valuesString.append(invoice.getPrice() + ", ");
+            valuesString.append("'" + invoice.getDateOfInvoice() + "', ");
+            valuesString.append(invoice.isPaid() + ", ");
+            valuesString.append(invoice.isInsured() + ", ");
 
-            updateString = "patient_id=" + parsed.getPatient().getPatientID() + ", "
-                    + "doctor_id=" + parsed.getDoctor().getDoctorID() + ", "
-                    + "nurse_id=" + parsed.getNurse().getNurseID() + ", "
-                    + "consultation_date='" + parsed.getConsulationDate() + "'";
-
-        } else {
-            System.out.println("Error writing object to database, "
-                    + "object type not found.");
-            return;
+            if (invoice.getInvoiceID() != -1) {
+                namesString.append("invoice_id, ");
+            }
         }
 
-        queryString = "INSERT INTO " + tableName + " (" + fieldString + ") VALUES(" + valueString + ")";
+        namesString.delete(namesString.length() - 2, namesString.length());
+        valuesString.delete(valuesString.length() - 2, valuesString.length());
+        namesString.append(") ");
+        valuesString.append(")");
 
-        System.out.println(queryString);
+        queryString = insertPrefix + tableName + namesString.toString() + valuesString.toString();
+
         try {
             executeUpdate(queryString);
-        } catch (SQLException e) {
-            try {
-                executeUpdate("UPDATE " + updateString);
-            } catch (SQLException ex) {
-                System.out.println(e);
-                System.err.println("Error writing object to database");
-            }
-        } finally {
-            closeRSAndStatement();
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
+
     }
 
     public String setPassword(int userID, String password) {
