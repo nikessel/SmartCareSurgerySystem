@@ -36,6 +36,8 @@
                 <c:forEach items="${consultations}" var="consultation">
                 <tr>
                     <td>${consultation.consultationID}</td>
+                    <td>${consultation.doctor.firstName}</td>
+                    <td>${consultation.nurse.firstName}</td>
                 </tr>
                 </c:forEach>   
             </tbody>

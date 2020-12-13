@@ -6,9 +6,6 @@
 package com;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,20 +35,10 @@ public class EmployeeDashboard extends HttpServlet {
 
         Database database = (Database) getServletContext().getAttribute("database");
         
-        String currentUserID = (String)getServletContext().getAttribute("userID");
-  
-        ArrayList<Object> objectArray = database.getAllFromDatabaseWhereIs("consultations", "id", currentUserID);
-
-        List<Consultation> consultations = new ArrayList<>();
+        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(30000);
         
-        objectArray.forEach((object) -> {
-            consultations.add((Consultation)object);
-        });
-
-
         request.setAttribute(
                 "consultations", consultations);
-        
        
         request.getRequestDispatcher(
                 "employeeDashboard.jsp").forward(request, response);

@@ -22,7 +22,7 @@
             <div class="main">
                 <div class="login">
                     <form action="login.do" method="post">
-                        <input id="username" name="username" required="required" type="text" placeholder="Username" />
+                        <input id="username" name="username" required="required" type="text" placeholder="Username"/>
                         <input id="password" name="password" required="required" type="password" placeholder="Password" />
                         <input type="submit" value="Submit" />
                     </form>

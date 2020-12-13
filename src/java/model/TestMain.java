@@ -29,12 +29,13 @@ public class TestMain {
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
         //database.printDatabaseTable("consultations");
-        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(20001);
+        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(30001);
 
         for (Consultation co : cons) {
             System.out.println(co);
         }
-
+        
+        System.exit(0);
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
         System.out.println(database.getUserID("nurse", "nurse"));
