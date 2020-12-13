@@ -8,6 +8,7 @@ package com;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author niklas
  */
 import model.*;
+@WebServlet("/employeeDashboard")
+
 
 public class EmployeeDashboard extends HttpServlet {
 
@@ -35,10 +38,19 @@ public class EmployeeDashboard extends HttpServlet {
 
         Database database = (Database) getServletContext().getAttribute("database");
         
-        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(30001);
+        int currentUserID = (int)request.getAttribute("userID");
+        
+        
+        Doctor currentDoctor = database.getDoctor(currentUserID);
+        
+        User currentUser = (User) currentDoctor;
+        
+        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
         
         request.setAttribute(
                 "consultations", consultations);
+        request.setAttribute("currentDoctor", currentDoctor);
+        request.setAttribute("currentUser", currentUser);
        
         request.getRequestDispatcher(
                 "employeeDashboard.jsp").forward(request, response);

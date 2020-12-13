@@ -90,7 +90,7 @@ public class Login extends HttpServlet {
                 }
                 // show logged in user
                 request.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("employeeDashboard.jsp").forward(request, response);
+                request.getRequestDispatcher("employeeDashboard").forward(request, response);
 
             }
 

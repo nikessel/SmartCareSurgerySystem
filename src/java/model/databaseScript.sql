@@ -15,7 +15,7 @@ create table admins (
 	sur_name VARCHAR(50),
         is_full_time boolean
 );
-insert into admins (username, password_hash, salt, first_name, sur_name, is_full_time) values ('admin', 'faf7cf536b8a1ab503a61371a565d96bf5c365d7662dc5804a3225a5222dc2093dadecd7ec040d9ceb2c5cf0913b29c93ec842e9191d6d404d8e6efa67745f95', '9cd160915b63412ad6a09d8adf0ccc3e4b05401bacc8c2c64189a5573001cf0e', 'Test', 'Admin', true);
+insert into admins (username, password_hash, salt, first_name, sur_name, is_full_time) values ('admin', 'faf7cf536b8a1ab503a61371a565d96bf5c365d7662dc5804a3225a5222dc2093dadecd7ec040d9ceb2c5cf0913b29c93ec842e9191d6d404d8e6efa67745f95', '9cd160915b63412ad6a09d8adf0ccc3e4b05401bacc8c2c64189a5573001cf0e', 'TestAdminFirstName', 'TestAdminSurName', true);
 insert into admins (username, password_hash, salt, first_name, sur_name, is_full_time) values ('kmurrigans0', '9d40b3fda46e036504262a13f49e99a2606a3abcba868e34c523edfd2a05b2ec864b30528e29ca462df0ec04dffcef832f8364b99777a72d1365c0f59cc3f292', 'cc20e3b462e5a10db9bdcc6f1417da951a748eae5352efaf7f1a2155242b63c0', 'Kiele', 'Murrigans', true);
 
 
@@ -31,7 +31,7 @@ create table doctors (
 );
 
 insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('none', '0000', '0000', 'none', 'none', false);
-insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('doctor', '3f0b2e0146d963bb497234ee5cd9dbd27e9c5833ceb9e907740223ac4e900620be03918d2bf4cac30fb6e3cb32e8d47a1557491fc6616cc54cd6269f703bbfb5', '6c841a9111f318ae744388a15de475df47c04b9981cc341434fbeda8b985d8a6', 'Test', 'Doctor', false);
+insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('doctor', '3f0b2e0146d963bb497234ee5cd9dbd27e9c5833ceb9e907740223ac4e900620be03918d2bf4cac30fb6e3cb32e8d47a1557491fc6616cc54cd6269f703bbfb5', '6c841a9111f318ae744388a15de475df47c04b9981cc341434fbeda8b985d8a6', 'TestDoctorFirstName', 'TestDoctorSurName', false);
 insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('gbuckoke0', '5f8ce858e7556d9d83bc959cd9adcf312f04077319d4442dcdff5f7f46d2d1c3e7b9354b16b83b7a2ea3404d03859f6a76e4bd11447c82c5c4a2016b95c23e4c', '6e84653e4d316083180d95b617af8f07eaadc87bfb160d209ccdc15024633640', 'Bob', 'Buckoke', true);
 insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time) values ('dpilkinton1', '1b7444301edf5dfafdb7466bcba2526503f345ddb523bb07357fef3ff8678c9d01bc4efb606d69feb4802ed7dbc57f71cf0f99d4c88b471b2d324886d36f1277', 'e2b7ccdd1dc428a982b32c9b130dbf18126b36f0c178bd061e4eef118547426a', 'James', 'Pilkinton', false);
 
@@ -47,7 +47,7 @@ create table nurses (
 );
 
 insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('none', '0000', '0000', 'none', 'none', false);
-insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('nurse', '77027f84aa6f001db0b0d44b253f23e906615843bc06cff3acedfe939cb2556a1ad4d144d95276b23228df0decfc3478c1eb5ab4792b5cad23de90448756c9af', 'a94ed051440a587c411ca18c6b74315878e31733c93900e9b511013aa0844dc6', 'Test', 'Nurse', false);
+insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('nurse', '77027f84aa6f001db0b0d44b253f23e906615843bc06cff3acedfe939cb2556a1ad4d144d95276b23228df0decfc3478c1eb5ab4792b5cad23de90448756c9af', 'a94ed051440a587c411ca18c6b74315878e31733c93900e9b511013aa0844dc6', 'TestNurseFirstName', 'TestNurseSurName', false);
 insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time) values ('mbleasdale0', '55b50e12ba227aa387396e50814aebce445ce0125b54f4994bbb84737b625147e708cec9217724346a33a37cf1fd365975a69e5de55ab57a027f8588afafe738', '3afdff3726e0b9e8b56940c23c9190bca924db3474ae4abaeba317da51f0ffdd', 'Mollie', 'Bleasdale', false);
 
 
@@ -63,7 +63,7 @@ create table patients (
         insured boolean
 );
 
-insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('patient', '15c127f33ee049cdbae94a0e2f5d4f8538b2d51e360f08b4bfc9122dadffcc536c919ed226cf5c1395ca01d204f324b0784da81ffc16bb15e9b95a3ced6a9d34', '96281e7c67a008d2a809186e64c74a027916b07436cb9cd4cce915bc8035867d', 'Test', 'Patient', '1992-03-14', '1 Test Avenue--BE16 3LO-testCounty-TestTown-999999999999', true);
+insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('patient', '15c127f33ee049cdbae94a0e2f5d4f8538b2d51e360f08b4bfc9122dadffcc536c919ed226cf5c1395ca01d204f324b0784da81ffc16bb15e9b95a3ced6a9d34', '96281e7c67a008d2a809186e64c74a027916b07436cb9cd4cce915bc8035867d', 'TestPatientFirstName', 'TestPatientSurName', '1992-03-14', '1 Test Avenue--TE00 0ST-testCounty-TestTown-999999999999', true);
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('rglendinning0', 'f32c2199f1cd692585200f12be9a3a4c071ed15aa995da91da11582ceee2983683a8f59301c4e96e9bee20c58926d742073edef560c62d0b8002dacd6b5e2c96', '3580fbfbf8e10cd224f1ae15d71ee098a963808c3e86a926d9efd5ec407a8f6c', 'Ray', 'Glendinning', '1992-03-14', '1 Melby Parkway--BE16 3LO-county-Bristol-958297970322', true);
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('aconstantinou1', '34ec15c07558111e9905ab9a9c86facf92a353b744ddb0502a5cf58034a9aab993d4e8f5203fb29e85a39894ef8f09bc9a3f5971a61ff21dd7ce5372fd9ede79', '2d50fda7c9df60eac536b6619ceb3f2524d13ddb7153098dd8eb351a8433161f', 'Amby', 'Constantinou', '1934-01-17', '773 Bowman Lane--BE16 3LO-county-Bristol-958297970322', true);
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('adeathridge2', '7d2b7e7e75e3e250db2dca4f81cd3a25e27e04263147ccd1c9371a3a36d41aea4b90cb4fb32bc57dcbda4ee735f190ecef349720cb553794aa835452dc7d79a5', '2f61a044d9a13413e8ad4b8b131b22b6251ae38554110d85d2db4fbb5d04033f', 'Albina', 'Deathridge', '1931-02-09', '54 Prairie Rose Terrace--BE16 3LO-county-Bristol-958297970322', true);

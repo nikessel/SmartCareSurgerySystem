@@ -15,33 +15,33 @@
         </style>
     </head>
     <body>
-        <h1 align="center">Employee Dashboard</h1>
+        <h1 align="center">Hello ${currentUser.firstName} ${currentUser.surName}. Welcome to your personal dashboard.</h1>
         <br>
         <br>
     <center>
-        <%out.println(request.getAttribute("userID"));%> 
-        <form action="employeeDashboard.do" method="post">
-            <input type="submit" value="Submit" />
-        </form>
-        <h2>Consultations</h2>
-        
+        <h2>Scheduled consultations</h2>
+
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Patient name</th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 <c:forEach items="${consultations}" var="consultation">
-                <tr>
-                    <td>${consultation.consultationID}</td>
-                    <td>${consultation.doctor.firstName}</td>
-                    <td>${consultation.nurse.firstName}</td>
-                </tr>
+                    <tr>
+                        <td>${consultation.consultationDate}</td>
+                        <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
+                    </tr>
                 </c:forEach>   
             </tbody>
         </table>
+        <form action="login.jsp" method="post">
+            <input type="submit" value="Logout" />
+        </form>
+
     </center>
 </body>
 </html>

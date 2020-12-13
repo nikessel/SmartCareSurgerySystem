@@ -28,6 +28,8 @@ public class TestMain {
             System.out.println(co);
         }
         
+        database.closeConnection();
+        
         System.exit(0);
         
         

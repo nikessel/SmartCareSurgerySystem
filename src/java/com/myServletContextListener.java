@@ -5,7 +5,6 @@
  */
 package com;
 
-import java.util.ArrayList;
 import javax.servlet.*;
 import model.*;
 
@@ -29,7 +28,9 @@ public class myServletContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
+        Database database = (Database) event.getServletContext().getAttribute("database");
         
+        database.closeConnection();
     }
     
 }
