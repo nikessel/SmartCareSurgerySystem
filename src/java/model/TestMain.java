@@ -19,6 +19,18 @@ public class TestMain {
 
         database.connect();
 
+        //System.out.println(database.getAdmin(10000));
+        //System.out.println(database.getConsultation(50000));
+        //database.printDatabaseTable("consultations");
+        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(30001);
+
+        for (Consultation co : cons) {
+            System.out.println(co);
+        }
+        
+        System.exit(0);
+        
+        
         Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
         database.addObjectToDatabase(nurse);
         database.addObjectToDatabase(database.getNurse(30001));
@@ -26,14 +38,6 @@ public class TestMain {
 
 
 
-        //System.out.println(database.getAdmin(10000));
-        //System.out.println(database.getConsultation(50000));
-        //database.printDatabaseTable("consultations");
-        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(20001);
-
-        for (Consultation co : cons) {
-            System.out.println(co);
-        }
 
         System.out.println(database.getUserID("doctor", "doctor"));
         System.out.println(database.getUserID("admin", "admin"));
