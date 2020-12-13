@@ -617,7 +617,7 @@ public class Database {
 
     public ArrayList<Object> getAllFromDatabaseWhereIs(String tableToGet, String where, String is) {
         ResultSet rs1 = selectFromWhere("*", tableToGet, where, is);
-
+        
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
