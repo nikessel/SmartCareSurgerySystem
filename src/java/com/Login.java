@@ -6,11 +6,14 @@
 package com;
 
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.*;
 
 /**
@@ -29,7 +32,7 @@ public class Login extends HttpServlet {
     private Doctor currentDoctor;
 
     private int currentUserID;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,56 +47,28 @@ public class Login extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        HttpSession session = null;
+        Cookie cookie = null;
+        
+        String forwardTo = "login.jsp";
 
         Database database = (Database) getServletContext().getAttribute("database");
 
         try {
 
             currentUserID = database.getUserID(username, password);
+            
 
             // username  password validation 
-            if (currentUserID > 0) {
-
-                // Check user
-                // admin
-                if (10000 <= currentUserID && currentUserID <= 19999) {
-                    currentUser = database.getAdmin(currentUserID);
-
-                    message = "ID: " + currentUserID + ", first name: "
-                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                    System.out.println("admin");
-
-                } //doctor
-                else if (20000 <= currentUserID && currentUserID <= 29999) {
-                    currentUser = new Doctor();
-                    currentUser = database.getDoctor(currentUserID);
-
-                    message = "ID: " + currentUserID + ", first name: "
-                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                    System.out.println("doctor");
-                } //nurse
-                //@ - bug in getNurse method needs fix
-                else if (30000 <= currentUserID && currentUserID <= 39999) {
-                    currentUser = new Nurse();
-                    currentUser = database.getNurse(currentUserID);
-
-                    message = "ID: " + currentUserID + ", first name: "
-                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                    System.out.println("nurse");
-                } //patient
-                else if (40000 <= currentUserID && currentUserID <= 49999) {
-                    currentUser = new Patient();
-                    currentUser = database.getPatient(currentUserID);
-
-                    message = "ID: " + currentUserID + ", first name: "
-                            + currentUser.getFirstName() + ", sur name: " + currentUser.getSurName();
-                    System.out.println("patient");
-                }
+            if (20000 <= currentUserID && currentUserID <= 39999) {
+                session = request.getSession();
+                cookie = new Cookie()
                 // show logged in user
                 request.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
-
             }
+            
+            
 
         } catch (Exception e) {
             //HttpSession session = request.getSession();

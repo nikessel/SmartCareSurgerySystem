@@ -15,6 +15,7 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.util.Date;
 
 /**
  *
@@ -302,8 +303,8 @@ public class Database {
         String username, firstName, surName;
         username = firstName = surName = "";
 
-        java.sql.Date dateOfBirth, consultationDate, invoiceDate;
-        dateOfBirth = consultationDate = invoiceDate = java.sql.Date.valueOf("1000-01-01");
+        java.util.Date dateOfBirth, consultationDate, invoiceDate;
+        dateOfBirth = consultationDate = invoiceDate = new java.util.Date();
 
         Invoice invoice = new Invoice();
         Address address = new Address();

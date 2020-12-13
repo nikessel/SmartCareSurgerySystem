@@ -4,6 +4,9 @@
         <servlet-name>ServletContextListener</servlet-name>
         <servlet-class>com.ServletContextListener</servlet-class>
     </servlet>
+    <session-config>
+        <session-timeout>20</session-timeout>
+    </session-config>
     <servlet-mapping>
         <servlet-name>ServletContextInitializer</servlet-name>
         <url-pattern>/ServletContextInitializer</url-pattern>

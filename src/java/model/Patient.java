@@ -5,7 +5,7 @@
  */
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  *
@@ -14,7 +14,7 @@ import java.sql.Date;
 public class Patient extends User {
 
     private int patientID;
-    private java.sql.Date dateOfBirth;
+    private Date dateOfBirth;
     private Address address;
     private boolean insured;
 
@@ -23,7 +23,7 @@ public class Patient extends User {
     }
 
     public Patient(String username, String firstName,
-            String surName, java.sql.Date dateOfBirth, Address address, boolean insured) {
+            String surName, Date dateOfBirth, Address address, boolean insured) {
         this.username = username;
         this.firstName = firstName;
         this.surName = surName;
@@ -34,7 +34,7 @@ public class Patient extends User {
     }
 
     protected Patient(String username, String firstName,
-            String surName, int patientID, java.sql.Date dateOfBirth, Address address, boolean insured) {
+            String surName, int patientID, Date dateOfBirth, Address address, boolean insured) {
 
         boolean isDatabase = false;
 
@@ -68,8 +68,8 @@ public class Patient extends User {
         return String.valueOf(dateOfBirth);
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = Date.valueOf(dateOfBirth);
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Address getAddress() {

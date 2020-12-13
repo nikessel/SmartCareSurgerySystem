@@ -6,12 +6,15 @@
 package com;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,6 +38,12 @@ public class EmployeeDashboard extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        HttpSession session = request.getSession();
+        
+        String sessionString = "";
+
+        RequestDispatcher view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
         Database database = (Database) getServletContext().getAttribute("database");
 
@@ -43,18 +52,17 @@ public class EmployeeDashboard extends HttpServlet {
         Doctor currentDoctor = database.getDoctor(currentUserID);
 
         User currentUser = (User) currentDoctor;
-        
-        
+
         List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
 
-        request.setAttribute("consultations", consultations);
-        
-        
-            //request.setAttribute("currentDoctor", currentDoctor);
-            //request.setAttribute("currentUser", currentUser);
+        synchronized (session) {
+            session.setAttribute("consultations", consultations);
+            session.setAttribute("currentDoctor", currentDoctor);
+            session.setAttribute("currentUser", currentUser);
+            session.setAttribute("sessionMessage", sessionString);
+        }
 
-        request.getRequestDispatcher(
-                "employeeDashboard.jsp").forward(request, response);
+        view.forward(request, response);
 
     }
 
