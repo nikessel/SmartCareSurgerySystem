@@ -746,7 +746,7 @@ public class Database {
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
-            valuesString.append(consultation.getConsulationDate() + "', ");
+            valuesString.append(consultation.getConsultationDate() + "', ");
 
             thisID = consultation.getConsultationID();
             idString = getIDString(thisID);

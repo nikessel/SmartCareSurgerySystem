@@ -43,7 +43,7 @@ public class EmployeeDashboard extends HttpServlet {
         String userName = "";
         HttpSession session = request.getSession();
 
-        Cookie cookie = new Cookie("username", (String)session.getAttribute("username"));
+        Cookie cookie = new Cookie("username", (String) session.getAttribute("username"));
         cookie.setMaxAge(20 * 60);
         response.addCookie(cookie);
 
@@ -61,21 +61,24 @@ public class EmployeeDashboard extends HttpServlet {
         String sessionString = "";
 
         Database database = (Database) getServletContext().getAttribute("database");
-        
+
         RequestDispatcher view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
         int currentUserID = (int) session.getAttribute("userID");
-
-        Doctor currentDoctor = database.getDoctor(currentUserID);
-
-        User currentUser = (User) currentDoctor;
+        
+        User currentUser;
+        
+        if (20000 <= currentUserID && currentUserID <= 29999) {
+            currentUser = database.getDoctor(currentUserID);
+        } else {
+            currentUser = database.getNurse(currentUserID);
+        }
 
         List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
 
         synchronized (session) {
             session.setAttribute("consultations", consultations);
             session.setAttribute("username", userName);
-            session.setAttribute("currentDoctor", currentDoctor);
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("sessionMessage", sessionString);
         }

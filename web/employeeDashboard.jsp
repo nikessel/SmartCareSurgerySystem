@@ -6,7 +6,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
-<%@ taglib prefix = "ex" uri = "WEB-INF/custom.tld"%>
+<%@ taglib prefix = "ex" uri = "/WEB-INF/custom.tld"%>
 
 <!DOCTYPE html>
 <html>
@@ -34,12 +34,13 @@
             <tbody>
                 <c:forEach items="${consultations}" var="consultation">
                     <tr>
-                        <td>${username}</td>
+                        <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
                         <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
                     </tr>
                 </c:forEach>   
             </tbody>
         </table>
+        <br>
         <form action="logout.do" method="post">
             <input type="submit" value="Logout" />
         </form>
