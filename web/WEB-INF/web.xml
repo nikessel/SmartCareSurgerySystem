@@ -8,6 +8,10 @@
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TableHandler</servlet-name>
+        <url-pattern>/tableHandler.do</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
     </session-config>
@@ -38,11 +42,15 @@
         <servlet-name>ServletContextInitializer</servlet-name>
         <servlet-class>com.ServletContextInitializer</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TableHandler</servlet-name>
+        <servlet-class>com.TableHandler</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login.do</url-pattern>
     </servlet-mapping>
-        <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout.do</url-pattern>
     </servlet-mapping>

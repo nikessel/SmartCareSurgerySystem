@@ -70,14 +70,12 @@ public class EmployeeDashboard extends HttpServlet {
 
         // Get database lists
         List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-        List<Patient> insuredPatients = database.getAllPatientsWhereIs("insured", "true");
-        List<Patient> unInsuredPatients = database.getAllPatientsWhereIs("insured", "false");
+        List<Patient> patients = database.getAllPatientsWhereIs("insured", "true");
 
         // Set / update attributes for currentSession
         synchronized (session) {
             session.setAttribute("consultations", consultations);
-            session.setAttribute("insuredPatients", insuredPatients);
-            session.setAttribute("insuredPatients", insuredPatients);
+            session.setAttribute("patients", patients);
             session.setAttribute("currentUser", currentUser);
         }
 

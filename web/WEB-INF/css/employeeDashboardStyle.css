@@ -5,4 +5,53 @@ table, th, td {
 
 body {
     background-image: url('images/mountain.jpg');
+    z-index: -1;
 }
+
+.dashboard {
+    height: 600px;
+    width: 1000px;
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    border-radius: 25px;
+
+
+}
+
+.dashboard .div {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    left: 50%;
+    justify-content: center;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    z-index: 2;
+}
+
+.dashboard .h1 {
+    text-align: center;
+}
+
+.dashboard .h2 {
+    text-align: center;
+}
+
+.dashboard:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url(images/dashboardBackground.jpg) center center;
+    background-size: cover;
+    border-radius: 25px;
+    opacity: .95;    
+}
+

@@ -18,38 +18,55 @@
         </style>
     </head>
     <body>
-        <h1 align="center">Hello ${currentUser.firstName} ${currentUser.surName}. Welcome to your personal dashboard.</h1>
-        <br>
-        <br>
-    <center>
-        <h2>Scheduled consultations</h2>
+        <div class="dashboard">
+            <div class="bg"></div>
+            <center>
+                <h1>Hello ${currentUser.firstName} ${currentUser.surName}. Welcome to your personal dashboard.</h1>
+                <br>
+                <br>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Patient name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${consultations}" var="consultation">
-                    <tr>
-                        <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
-                        <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
-                    </tr>
-                </c:forEach>   
-            </tbody>
-        </table>
-        <br>
-        <label for="birthday">Birthday:</label>
-        <input type="date" id="birthday" name="birthday"> 
-        <br>
-        <form action="logout.do" method="post">
-            <input type="submit" value="Logout" />
-        </form>
+                <h2>Scheduled consultations</h2>
+                <div>
+                    <label for="fromDate">Show from date:</label>
+                    <input type="date" id="fromDate" name="fromDate"> 
+                    <label for="toDate">to date:</label>
+                    <input type="date" id="toDate" name="toDate">
+                </div>
+                <div>
+                    <form action="employeeDashboard.do" method="post">
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+                <br>
+                <br>
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Patient name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${consultations}" var="consultation">
+                                <tr>
+                                    <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
+                                    <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
+                                </tr>
+                            </c:forEach>   
+                        </tbody>
+                    </table>
+                </div> 
+                <br>
+                <br>
+                <form action="logout.do" method="post">
+                    <input type="submit" value="Logout" />
+                </form>
+            </center>
+        </div>
 
-    </center>
-</body>
+
+    </body>
 </html>
 
 
