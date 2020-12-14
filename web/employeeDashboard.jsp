@@ -34,13 +34,13 @@
             <tbody>
                 <c:forEach items="${consultations}" var="consultation">
                     <tr>
-                        <td>${sessionMessage}</td>
+                        <td>${username}</td>
                         <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
                     </tr>
                 </c:forEach>   
             </tbody>
         </table>
-        <form action="login.jsp" method="post">
+        <form action="logout.do" method="post">
             <input type="submit" value="Logout" />
         </form>
 

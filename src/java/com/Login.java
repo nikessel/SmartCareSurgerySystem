@@ -6,7 +6,6 @@
 package com;
 
 import java.io.IOException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -26,10 +25,6 @@ public class Login extends HttpServlet {
 
     private String message;
     private User currentUser;
-    private Patient currentPatient;
-    private Admin currentAdmin;
-    private Nurse currentNurse;
-    private Doctor currentDoctor;
 
     private int currentUserID;
 
@@ -44,12 +39,14 @@ public class Login extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+
         HttpSession session = null;
         Cookie cookie = null;
-        
+
         String forwardTo = "login.jsp";
 
         Database database = (Database) getServletContext().getAttribute("database");
@@ -57,18 +54,15 @@ public class Login extends HttpServlet {
         try {
 
             currentUserID = database.getUserID(username, password);
-            
 
             // username  password validation 
             if (20000 <= currentUserID && currentUserID <= 39999) {
                 session = request.getSession();
-                cookie = new Cookie()
-                // show logged in user
-                request.setAttribute("userID", currentUserID);
+
+                session.setAttribute("username", username);
+                session.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
             }
-            
-            
 
         } catch (Exception e) {
             //HttpSession session = request.getSession();

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,16 +39,32 @@ public class EmployeeDashboard extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
+        String userName = "";
         HttpSession session = request.getSession();
-        
+
+        Cookie cookie = new Cookie("username", (String)session.getAttribute("username"));
+        cookie.setMaxAge(20 * 60);
+        response.addCookie(cookie);
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie thisCookie : cookies) {
+                if (thisCookie.getName().equals("username")) {
+                    userName = thisCookie.getValue();
+                    break;
+                }
+            }
+        }
+
         String sessionString = "";
 
+        Database database = (Database) getServletContext().getAttribute("database");
+        
         RequestDispatcher view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
-        Database database = (Database) getServletContext().getAttribute("database");
-
-        int currentUserID = (int) request.getAttribute("userID");
+        int currentUserID = (int) session.getAttribute("userID");
 
         Doctor currentDoctor = database.getDoctor(currentUserID);
 
@@ -57,12 +74,14 @@ public class EmployeeDashboard extends HttpServlet {
 
         synchronized (session) {
             session.setAttribute("consultations", consultations);
+            session.setAttribute("username", userName);
             session.setAttribute("currentDoctor", currentDoctor);
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("sessionMessage", sessionString);
         }
 
-        view.forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
+        //view.forward(request, response);
 
     }
 
