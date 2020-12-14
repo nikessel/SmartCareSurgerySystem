@@ -20,11 +20,11 @@
     <body>
         <div class="dashboard">
             <div class="bg"></div>
-            <center>
-                <h1>Hello ${currentUser.firstName} ${currentUser.surName}. Welcome to your personal dashboard.</h1>
-                <br>
-                <br>
-
+            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.</h1>
+            <h2>Welcome to your personal dashboard.</h2>
+            <br>
+            <br>
+            <div class="leftDiv">
                 <h2>Scheduled consultations</h2>
                 <div>
                     <label for="fromDate">Show from date:</label>
@@ -32,37 +32,73 @@
                     <label for="toDate">to date:</label>
                     <input type="date" id="toDate" name="toDate">
                 </div>
-                <div>
-                    <form action="employeeDashboard.do" method="post">
-                        <input type="submit" value="Submit" />
-                    </form>
-                </div>
-                <br>
-                <br>
-                <div>
-                    <table>
-                        <thead>
+            </div>
+            <div class="rightDiv">
+                <h2>List of patients</h2>
+            </div>
+            <br>
+            <br>
+            <div class="ltableDiv" id="consultationTableDiv">
+                <table id="consultationTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Patient name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${consultations}" var="consultation">
                             <tr>
-                                <th>Date</th>
-                                <th>Patient name</th>
+                                <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
+                                <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${consultations}" var="consultation">
-                                <tr>
-                                    <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
-                                    <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
-                                </tr>
-                            </c:forEach>   
-                        </tbody>
-                    </table>
-                </div> 
-                <br>
-                <br>
-                <form action="logout.do" method="post">
-                    <input type="submit" value="Logout" />
-                </form>
-            </center>
+                        </c:forEach>   
+                    </tbody>
+                </table>
+            </div> 
+            <div class="rtableDiv" id="patientTableDiv">
+                <table id="patientTable">
+                    <thead>
+                        <tr>
+                            <th>Patient name</th>
+                            <th>Is insured by the NHS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${patients}" var="patient">
+                            <tr>
+                                <td>${patient.firstName} ${patient.surName}</td>
+                                <td>${patient.insured}</td>
+                            </tr>
+                        </c:forEach>
+                        <c:forEach items="${patients}" var="patient">
+                            <tr>
+                                <td>${patient.firstName} ${patient.surName}</td>
+                                <td>${patient.insured}</td>
+                            </tr>
+                        </c:forEach>  
+                        <c:forEach items="${patients}" var="patient">
+                            <tr>
+                                <td>${patient.firstName} ${patient.surName}</td>
+                                <td>${patient.insured}</td>
+                            </tr>
+                        </c:forEach>  
+                        <c:forEach items="${patients}" var="patient">
+                            <tr>
+                                <td>${patient.firstName} ${patient.surName}</td>
+                                <td>${patient.insured}</td>
+                            </tr>
+                        </c:forEach>  
+                    </tbody>
+                </table>
+            </div> 
+            <br>
+            <br>
+            <form action="logout.do" method="post">
+                <input type="submit" value="Logout" />
+            </form>
+            <br>
+
         </div>
 
 

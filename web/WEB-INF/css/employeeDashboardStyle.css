@@ -4,34 +4,43 @@ table, th, td {
 }
 
 body {
+
+}
+
+body:before {    
+    content: "";
+    position: absolute;
+    z-index: -2;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-image: url('images/mountain.jpg');
-    z-index: -1;
+    background-size: cover;
+    border-radius: 25px;
+
+    /* Add the blur effect */
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
 }
 
 .dashboard {
-    height: 600px;
-    width: 1000px;
+    height: max-content;
+    width: 70%;
+    padding: 50px;
     position: absolute;
     z-index: 1;
     left: 50%;
     top: 50%;
+    overflow-x: hidden;
+    overflow-y: auto;
     text-align: center;
     transform: translate(-50%, -50%);
-    border-radius: 25px;
+    color: black;
 
 
 }
 
-.dashboard .div {
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    left: 50%;
-    justify-content: center;
-    display: inline-block;
-    margin: 0 auto;
-    text-align: center;
-    z-index: 2;
-}
 
 .dashboard .h1 {
     text-align: center;
@@ -49,9 +58,62 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: url(images/dashboardBackground.jpg) center center;
+    background-image: url('images/dashboardBackground.jpg');
     background-size: cover;
-    border-radius: 25px;
-    opacity: .95;    
+    border-radius: 25px;   
 }
+
+.leftDiv {
+    height: 100px;
+    width:50%;
+    float:left;
+}
+
+.rightDiv {
+    height: 100px;
+    width:50%;
+    float:right;
+}
+
+.rtableDiv {
+    height: max-content;
+    width:50%;
+    float:right;
+    height:500px;
+}
+
+.ltableDiv {
+    height: max-content;
+    width:50%;
+    float:left;
+    height:500px;
+}
+
+consultationTable {
+    border-spacing: 20px;
+    width:80%;
+    height:80%;
+
+}
+table {
+    margin: auto; /* or margin: 0 auto 0 auto */
+    overflow-y:scroll;
+    height:400px;
+    display:inline-block;
+    border:none;
+}
+
+th {
+    background-color: #d7e6ed;
+    color: black;
+    padding: 10px;
+}
+
+td {
+    background-color: #d7e6ed;
+    color: black;
+    padding: 10px;
+}
+
+
 
