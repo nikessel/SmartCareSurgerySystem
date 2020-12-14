@@ -41,6 +41,9 @@
             </tbody>
         </table>
         <br>
+        <label for="birthday">Birthday:</label>
+        <input type="date" id="birthday" name="birthday"> 
+        <br>
         <form action="logout.do" method="post">
             <input type="submit" value="Logout" />
         </form>

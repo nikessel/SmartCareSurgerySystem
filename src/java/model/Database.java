@@ -510,12 +510,25 @@ public class Database {
 
     private ResultSet selectFromWhere(String whatToSelect, String fromTable, String where, String is) {
         String isString = "='" + is + "'";
+        boolean isNumber, isBoolean;
+        isNumber = isBoolean = false;
 
         try {
             Double.parseDouble(is);
-            isString = "=" + is;
+            isNumber = true;
         } catch (NumberFormatException ex) {
 
+        }
+
+        try {
+            Boolean.parseBoolean(is);
+            isBoolean = true;
+        } catch (NumberFormatException ex1) {
+
+        }
+
+        if (isNumber || isBoolean) {
+            isString = "=" + is;
         }
 
         return executeQuery("SELECT " + whatToSelect + " FROM " + fromTable + " WHERE " + where + isString);
@@ -619,7 +632,7 @@ public class Database {
 
     public ArrayList<Object> getAllFromDatabaseWhereIs(String tableToGet, String where, String is) {
         ResultSet rs1 = selectFromWhere("*", tableToGet, where, is);
-        
+
         try {
             return getListFromDatabase(rs1);
         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -631,9 +644,9 @@ public class Database {
     }
 
     public ArrayList<Consultation> getAllConsultationsWhereIDIs(int id) {
-        
+
         idString = getIDString(id);
-        
+
         ArrayList<Object> objects = getAllFromDatabaseWhereIs("consultations", idString, String.valueOf(id));
         ArrayList<Consultation> output = new ArrayList();
 
@@ -645,9 +658,9 @@ public class Database {
     }
 
     public ArrayList<Invoice> getAllInvoicesWhereIDIs(int id) {
-                
+
         idString = getIDString(id);
-        
+
         ArrayList<Object> objects = getAllFromDatabaseWhereIs("invoices", idString, String.valueOf(id));
         ArrayList<Invoice> output = new ArrayList();
 
@@ -656,6 +669,25 @@ public class Database {
         });
 
         return output;
+    }
+
+    public ArrayList<Patient> getAllPatientsWhereIs(String where, String is) {
+        ResultSet rs1 = selectFromWhere("*", "patients", where, is);
+        ArrayList objects = new ArrayList();
+        ArrayList<Patient> output = new ArrayList();
+
+        try {
+            objects = getListFromDatabase(rs1);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.err.println("Error getting patient list from database (Invalid where or is?)");
+        }
+
+        for (Object obj : objects) {
+            output.add((Patient) obj);
+        }
+
+        return output;
+
     }
 
     public void printDatabaseTable(String tableToPrint) {

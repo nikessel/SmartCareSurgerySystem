@@ -6,7 +6,6 @@
 package com;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,6 +26,13 @@ import model.*;
 
 public class EmployeeDashboard extends HttpServlet {
 
+    int currentUserID;
+    HttpSession session;
+    Cookie cookie;
+    Database database;
+    RequestDispatcher view;
+    User currentUser;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,47 +46,39 @@ public class EmployeeDashboard extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String userName = "";
-        HttpSession session = request.getSession();
+        //Get session
+        session = request.getSession();
 
-        Cookie cookie = new Cookie("username", (String) session.getAttribute("username"));
-        cookie.setMaxAge(20 * 60);
-        response.addCookie(cookie);
+        // Get attributes
+        currentUserID = (int) session.getAttribute("userID");
+        database = (Database) getServletContext().getAttribute("database");
 
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (Cookie thisCookie : cookies) {
-                if (thisCookie.getName().equals("username")) {
-                    userName = thisCookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        String sessionString = "";
-
-        Database database = (Database) getServletContext().getAttribute("database");
-
-        RequestDispatcher view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
-
-        int currentUserID = (int) session.getAttribute("userID");
-        
-        User currentUser;
-        
+        // Set currentUser
         if (20000 <= currentUserID && currentUserID <= 29999) {
             currentUser = database.getDoctor(currentUserID);
         } else {
             currentUser = database.getNurse(currentUserID);
         }
 
-        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+        // Set cookie
+        //cookie = new Cookie("username", (String) session.getAttribute("username"));
+        //cookie.setMaxAge(20 * 60);
+        //response.addCookie(cookie);
+        
+        // Set view
+        //view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
+        // Get database lists
+        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+        List<Patient> insuredPatients = database.getAllPatientsWhereIs("insured", "true");
+        List<Patient> unInsuredPatients = database.getAllPatientsWhereIs("insured", "false");
+
+        // Set / update attributes for currentSession
         synchronized (session) {
             session.setAttribute("consultations", consultations);
-            session.setAttribute("username", userName);
+            session.setAttribute("insuredPatients", insuredPatients);
+            session.setAttribute("insuredPatients", insuredPatients);
             session.setAttribute("currentUser", currentUser);
-            session.setAttribute("sessionMessage", sessionString);
         }
 
         response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");

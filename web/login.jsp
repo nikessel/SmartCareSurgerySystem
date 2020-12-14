@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="ISO-8859-1">
         <title>SmartCareSurgerySystem</title>
         <style>
             <%@include file="/WEB-INF/css/loginstyle.css"%>
