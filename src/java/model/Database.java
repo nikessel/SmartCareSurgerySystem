@@ -632,7 +632,7 @@ public class Database {
 
     public ArrayList<Patient> getAllPatients() {
         ResultSet rs1 = executeQuery("SELECT * FROM patients");
-  
+
         ArrayList<Patient> output = new ArrayList();
 
         getAllFromDatabase("patients").forEach((obj) -> {
@@ -665,6 +665,26 @@ public class Database {
 
         objects.forEach((obj) -> {
             output.add((Consultation) obj);
+        });
+
+        return output;
+    }
+
+    public ArrayList<Consultation> getAllConsultationsWhereIDIsFromTo(int id, Date fromDate, Date toDate) {
+
+        idString = getIDString(id);
+
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("consultations", idString, String.valueOf(id));
+        ArrayList<Consultation> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            Consultation thisConsultation = (Consultation) obj;
+
+            if (thisConsultation.getConsultationDate().after(fromDate) && 
+                    thisConsultation.getConsultationDate().before(toDate)) {
+                output.add(thisConsultation);
+            }
+
         });
 
         return output;
