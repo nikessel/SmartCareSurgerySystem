@@ -1,7 +1,7 @@
 <%-- 
     Document   : employeeDashboard
     Created on : 09-Dec-2020, 20:15:47
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>

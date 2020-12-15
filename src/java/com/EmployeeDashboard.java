@@ -19,7 +19,8 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ * *
  */
 import model.*;
 

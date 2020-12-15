@@ -1,3 +1,10 @@
+/**
+ *
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
+ */
+
+
 DROP TABLE invoices;
 DROP TABLE consultations;
 DROP TABLE admins;

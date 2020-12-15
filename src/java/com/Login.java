@@ -17,7 +17,7 @@ import model.*;
 
 /**
  *
- * @author niklas
+ * @author Genius
  */
 @WebServlet("/login")
 
@@ -63,10 +63,12 @@ public class Login extends HttpServlet {
                 session.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
             }
-
+            else {
+                 throw new Exception();
+            }
+            
+           
         } catch (Exception e) {
-            //HttpSession session = request.getSession();
-            //session.setAttribute("user", username);
             response.sendRedirect("login.jsp");
 
         }

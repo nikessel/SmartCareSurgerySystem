@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
 public class TestMain {
 

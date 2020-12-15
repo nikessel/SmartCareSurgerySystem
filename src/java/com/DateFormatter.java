@@ -7,7 +7,8 @@ package com;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ * *
  */
 import java.text.SimpleDateFormat;
 import java.util.Date;

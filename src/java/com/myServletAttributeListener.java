@@ -11,7 +11,8 @@ import model.*;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ * *
  */
 public class myServletAttributeListener implements ServletContextAttributeListener {
 

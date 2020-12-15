@@ -16,14 +16,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
-
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18034466
+ * @author Niklas Sarup-Lytzen ID: 18036644
  *
- */
-/*
-
  */
 public class Database {
 
