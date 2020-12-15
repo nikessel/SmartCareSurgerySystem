@@ -38,7 +38,7 @@ public class EmployeeDashboard extends HttpServlet {
     List<Patient> patients;
     String message = "";
     Date fromDate, toDate;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -56,22 +56,28 @@ public class EmployeeDashboard extends HttpServlet {
 
         //Get session
         session = request.getSession();
-        
-        
+
         try {
-            fromDate = Date.valueOf(request.getParameter("fromDate"));
-            toDate = Date.valueOf(request.getParameter("toDate"));
-            
-            consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
+            if (Boolean.parseBoolean(String.valueOf(request.getAttribute("resetDates")))) {
+                consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+                fromDate = null;
+                toDate = null;
+            } else {
+
+                fromDate = Date.valueOf(request.getParameter("fromDate"));
+                toDate = Date.valueOf(request.getParameter("toDate"));
+
+                consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
+
+            }
+
             session.setAttribute("consultations", consultations);
-            
             view.forward(request, response);
-            
+
         } catch (Exception e) {
 
         }
-        
-   
+
         try {
             int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
             boolean insured = true;

@@ -32,6 +32,15 @@
                         <label for="toDate">to date:</label>
                         <input type="date" id="toDate" name="toDate" onchange="this.form.submit();">
                     </form>
+                    <br>
+                    <c:if test = "${not empty param.fromDate && not empty param.toDate}">
+                        <label for="dateButton">Displaying consultations from ${param.fromDate} to ${param.toDate}</label>
+                        <form action="employeeDashboard.do" method="post">
+                            <input type="hidden" name="resetDates" value="true">
+                            <input style="padding: 5px;" type="submit" value="Reset" />
+                        </form>
+                    </c:if>
+                        <br>
                 </div>
             </div>
             <div class="rightDiv">

@@ -56,13 +56,13 @@ body:before {
 }
 
 .leftDiv {
-    height: 150px;
+    height: 200px;
     width:50%;
     float:left;
 }
 
 .rightDiv {
-    height: 150px;
+    height: 200px;
     width:50%;
     float:right;
 }
