@@ -23,12 +23,12 @@ public class myServletContextListener implements ServletContextListener {
         database.connect();
         
         sc.setAttribute("database", database);
+        
     }
     
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
 
-    }
-    
+    }  
 }

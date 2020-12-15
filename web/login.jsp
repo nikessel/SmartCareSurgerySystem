@@ -5,7 +5,7 @@
     <head>
         <title>SmartCareSurgerySystem</title>
         <style>
-            <%@include file="/WEB-INF/css/dashboardStyle.css"%>
+            <%@include file="/WEB-INF/css/style.css"%>
         </style>
     </head>
     <body>

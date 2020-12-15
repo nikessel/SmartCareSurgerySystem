@@ -6,6 +6,7 @@
 package com;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,10 +30,15 @@ public class EmployeeDashboard extends HttpServlet {
     int currentUserID;
     HttpSession session;
     Cookie cookie;
+    Cookie[] cookies;
     Database database;
     RequestDispatcher view;
     User currentUser;
-
+    List<Consultation> consultations;
+    List<Patient> patients;
+    String message = "";
+    Date fromDate, toDate;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,9 +51,41 @@ public class EmployeeDashboard extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        // Set view
+        view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
         //Get session
         session = request.getSession();
+        
+        
+        try {
+            fromDate = Date.valueOf(request.getParameter("fromDate"));
+            toDate = Date.valueOf(request.getParameter("toDate"));
+        } catch (Exception e) {
+
+        }
+        
+   
+        try {
+            int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
+            boolean insured = true;
+
+            switch (choice) {
+                case 2:
+                    session.setAttribute("patients", database.getAllPatients());
+                    break;
+                case 1:
+                    insured = false;
+                default:
+                    session.setAttribute("patients", database.getAllPatientsWhereIs("insured", String.valueOf(insured)));
+            }
+
+            session.setAttribute("insuranceSelection", null);
+            view.forward(request, response);
+
+        } catch (Exception ex) {
+            message = "";
+        }
 
         // Get attributes
         currentUserID = (int) session.getAttribute("userID");
@@ -60,23 +98,22 @@ public class EmployeeDashboard extends HttpServlet {
             currentUser = database.getNurse(currentUserID);
         }
 
+        Cookie[] cookies = request.getCookies();
+
         // Set cookie
-        //cookie = new Cookie("username", (String) session.getAttribute("username"));
         //cookie.setMaxAge(20 * 60);
         //response.addCookie(cookie);
-        
-        // Set view
-        //view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
-
         // Get database lists
-        List<Consultation> consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-        List<Patient> patients = database.getAllPatientsWhereIs("insured", "true");
+        consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+        patients = database.getAllPatients();
 
         // Set / update attributes for currentSession
         synchronized (session) {
             session.setAttribute("consultations", consultations);
             session.setAttribute("patients", patients);
             session.setAttribute("currentUser", currentUser);
+            session.setAttribute("message", message);
+
         }
 
         response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");

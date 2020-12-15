@@ -61,4 +61,7 @@
     <listener>
         <listener-class>com.myServletContextListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>com.myServletAttributeListener</listener-class>
+    </listener>
 </web-app>

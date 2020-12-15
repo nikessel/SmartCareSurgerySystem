@@ -14,28 +14,38 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Employee Dashboard Page</title>
         <style>
-            <%@include file="/WEB-INF/css/employeeDashboardStyle.css"%>
+            <%@include file="/WEB-INF/css/style.css"%>
         </style>
     </head>
     <body>
         <div class="dashboard">
             <div class="bg"></div>
-            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.</h1>
+            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
             <h2>Welcome to your personal dashboard.</h2>
-            <br>
             <br>
             <div class="leftDiv">
                 <h2>Scheduled consultations</h2>
                 <div>
-                    <label for="fromDate">Show from date:</label>
-                    <input type="date" id="fromDate" name="fromDate"> 
-                    <label for="toDate">to date:</label>
-                    <input type="date" id="toDate" name="toDate">
+                    <form method="post" action="employeeDashboard.do" name="dateSelector">
+                        <label for="fromDate">Show from date:</label>
+                        <input type="date" id="fromDate" name="fromDate"> 
+                        <label for="toDate">to date:</label>
+                        <input type="date" id="toDate" name="toDate" onchange="this.form.submit();">
+                    </form>
                 </div>
             </div>
             <div class="rightDiv">
                 <h2>List of patients</h2>
+                <form method="post" action="employeeDashboard.do" name="patientListSelector">
+                    <select name="insuranceSelection" onchange="this.form.submit();">
+                        <option disabled selected value> sort by insurance status </option>
+                        <option value="0">insured
+                        <option value="1">not insured
+                        <option value="2">all
+                    </select>
+                </form>
             </div>
+
             <br>
             <br>
             <div class="ltableDiv" id="consultationTableDiv">
@@ -68,27 +78,9 @@
                         <c:forEach items="${patients}" var="patient">
                             <tr>
                                 <td>${patient.firstName} ${patient.surName}</td>
-                                <td>${patient.insured}</td>
+                                <td>${patient.insured ? 'Yes' : 'No'}</td>
                             </tr>
                         </c:forEach>
-                        <c:forEach items="${patients}" var="patient">
-                            <tr>
-                                <td>${patient.firstName} ${patient.surName}</td>
-                                <td>${patient.insured}</td>
-                            </tr>
-                        </c:forEach>  
-                        <c:forEach items="${patients}" var="patient">
-                            <tr>
-                                <td>${patient.firstName} ${patient.surName}</td>
-                                <td>${patient.insured}</td>
-                            </tr>
-                        </c:forEach>  
-                        <c:forEach items="${patients}" var="patient">
-                            <tr>
-                                <td>${patient.firstName} ${patient.surName}</td>
-                                <td>${patient.insured}</td>
-                            </tr>
-                        </c:forEach>  
                     </tbody>
                 </table>
             </div> 

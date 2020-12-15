@@ -630,6 +630,19 @@ public class Database {
 
     }
 
+    public ArrayList<Patient> getAllPatients() {
+        ResultSet rs1 = executeQuery("SELECT * FROM patients");
+  
+        ArrayList<Patient> output = new ArrayList();
+
+        getAllFromDatabase("patients").forEach((obj) -> {
+            output.add((Patient) obj);
+        });
+
+        return output;
+
+    }
+
     public ArrayList<Object> getAllFromDatabaseWhereIs(String tableToGet, String where, String is) {
         ResultSet rs1 = selectFromWhere("*", tableToGet, where, is);
 

@@ -1,8 +1,3 @@
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
 body {
 
 }
@@ -15,13 +10,10 @@ body:before {
     bottom: 0;
     left: 0;
     right: 0;
-    background-image: url('images/mountain.jpg');
+    background-image: url("images/white.jpg");
     background-size: cover;
     border-radius: 25px;
 
-    /* Add the blur effect */
-    filter: blur(4px);
-    -webkit-filter: blur(4px);
 }
 
 .dashboard {
@@ -36,7 +28,7 @@ body:before {
     overflow-y: auto;
     text-align: center;
     transform: translate(-50%, -50%);
-    color: black;
+    color: #0b3649;
 
 
 }
@@ -58,19 +50,19 @@ body:before {
     bottom: 0;
     left: 0;
     right: 0;
-    background-image: url('images/dashboardBackground.jpg');
+    background-color: #e0eef5;
     background-size: cover;
     border-radius: 25px;   
 }
 
 .leftDiv {
-    height: 100px;
+    height: 150px;
     width:50%;
     float:left;
 }
 
 .rightDiv {
-    height: 100px;
+    height: 150px;
     width:50%;
     float:right;
 }
@@ -104,13 +96,13 @@ table {
 }
 
 th {
-    background-color: #d7e6ed;
+    background-color: #b8d8e6;
     color: black;
     padding: 10px;
 }
 
 td {
-    background-color: #d7e6ed;
+    background-color: #b8d8e6;
     color: black;
     padding: 10px;
 }
@@ -119,6 +111,10 @@ td {
     width: 30%;
 }
 
+input {
+    padding: 10px;
+}
 
-
-
+select {
+    text-align: center;
+}
