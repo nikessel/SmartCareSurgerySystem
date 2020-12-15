@@ -15,7 +15,7 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *

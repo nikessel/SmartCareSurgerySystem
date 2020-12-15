@@ -61,6 +61,12 @@ public class EmployeeDashboard extends HttpServlet {
         try {
             fromDate = Date.valueOf(request.getParameter("fromDate"));
             toDate = Date.valueOf(request.getParameter("toDate"));
+            
+            consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
+            session.setAttribute("consultations", consultations);
+            
+            view.forward(request, response);
+            
         } catch (Exception e) {
 
         }

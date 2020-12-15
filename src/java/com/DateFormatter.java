@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public final class DateFormatter {
-    
+
     Date date;
 
     private DateFormatter() {
@@ -31,7 +31,5 @@ public final class DateFormatter {
     public void setDate(Date date) {
         this.date = date;
     }
-    
-    
-    
+
 }

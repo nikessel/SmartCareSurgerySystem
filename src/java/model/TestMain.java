@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -18,10 +19,22 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
+
+        Date fromDate = Date.valueOf("2000-01-01");
+        Date toDate = Date.valueOf("2020-09-09");
+
+        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIsFromTo(database.getUserID("doctor", "doctor"), fromDate, toDate);
+
+        for (Consultation co : cons) {
+            System.out.println(co);
+        }
+
+        System.exit(0);
+
         //System.out.println(database.getAdmin(10000));
         //System.out.println(database.getConsultation(50000));
         //database.printDatabaseTable("consultations");
-        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(database.getUserID("doctor", "doctor"));
+        //ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(database.getUserID("doctor", "doctor"));
 
         for (Consultation co : cons) {
             System.out.println(co);
