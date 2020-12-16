@@ -874,12 +874,12 @@ public class Database {
 
     }
 
-    public String setPassword(int userID, String password) {
+    public void setPassword(int userID, String password) {
         int lowerBound;
         int upperBound;
 
         if (!(10000 <= userID && userID <= 49999)) {
-            return "Invalid userID";
+            return;
         }
 
         for (int i = 0; i < USERTABLENAMES.length; i++) {
@@ -915,8 +915,6 @@ public class Database {
         } finally {
             closeRSAndStatement();
         }
-
-        return "";
     }
 
     /*
