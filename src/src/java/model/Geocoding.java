@@ -21,18 +21,8 @@ public class Geocoding {
     private static String locality = null;
     private static String postal_town = null;
     private static String administrative_area_level_1 = null;
-    private static String country = null;   
-    public static void main(String[] args) {     
-        validateGeocode("NP56045");
-        System.out.println("Status:" + status);
-        System.out.println("Formatted Address:" + formattedAddress);
-        System.out.println("postcode:" + postcode);
-        System.out.println("Route:" + route);
-        System.out.println("Locality:" + locality);
-        System.out.println("Postal Town:" + postal_town);
-        System.out.println("Area Level 2:" + administrative_area_level_1);
-        System.out.println("Country:" + country);             
-    }
+    private static String country = null;      
+    // API key is restricted to Goocode of Google Maps only
     private static final String API_KEY = "AIzaSyD8oPDTMzQ-85uLrbyJerocg2Pv1Z3zYtU";
     public static void validateGeocode(String postcode){
         // Change url to inject postcode into the url after ensuring the URL is formatted correctly         
