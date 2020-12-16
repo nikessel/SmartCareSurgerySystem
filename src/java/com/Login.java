@@ -27,6 +27,7 @@ public class Login extends HttpServlet {
     private User currentUser;
 
     private int currentUserID;
+    private String currentUserPassword;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,8 +42,18 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
+        // start password management
+        String bt = request.getParameter("bt");
+        
+        if (bt != null) { 
+            request.getRequestDispatcher("/employeeDashboard_password_management.jsp").forward(request, response);
+            
+        }
+       // end password management 
+       
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String update_password = request.getParameter("update_password");
 
         HttpSession session = null;
         Cookie cookie = null;
@@ -62,6 +73,14 @@ public class Login extends HttpServlet {
                 session.setAttribute("username", username);
                 session.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
+               /* @note author - genius 
+                *lazy approach to change user password. 
+                * User is transfered to second login page at which they should enter username, password.
+                * And NEW_PASSWORD. if username,password are correct then NEW_PASSWORD will be saved,
+                * and user is logged in right away.
+                * If the user tries to log in again, they must use thier new password.
+                */
+                currentUserPassword= database.setPassword(currentUserID,update_password);
             }
             else {
                  throw new Exception();
