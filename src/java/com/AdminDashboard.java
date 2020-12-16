@@ -6,6 +6,9 @@
 package com;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -13,18 +16,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.*;
 
 /**
  *
- * @author Genius
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ * *
  */
-@WebServlet("/login")
+import model.*;
 
-public class Login extends HttpServlet {
+@WebServlet("/adminDashboard")
 
-    private String message;
-    private int currentUserID;
+public class AdminDashboard extends HttpServlet {
+
+    int currentUserID;
+    HttpSession session;
+    Cookie cookie;
+    Cookie[] cookies;
+    Database database;
+    RequestDispatcher view;
+    User currentUser;
+    List<Consultation> consultations;
+    List<Patient> patients;
+    String message = "";
+    Date fromDate, toDate;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,50 +52,38 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        // Set view
+        view = getServletContext().getRequestDispatcher("/adminDashboard.jsp");
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        Database database = (Database) getServletContext().getAttribute("database");
+        //Get session
+        session = request.getSession();
 
-        HttpSession session = null;
-        Cookie cookie = null;
+        // Get attributes
+        currentUserID = (int) session.getAttribute("userID");
+        database = (Database) getServletContext().getAttribute("database");
 
-        String forwardTo = "login.jsp";
+        // Set currentUser
+        currentUser = database.getAdmin(currentUserID);
+        Cookie[] cookies = request.getCookies();
 
-        try {
-            currentUserID = database.getUserID(username, password);
-
-            // username  password validation 
-            if (10000 <= currentUserID && currentUserID <= 19999) {
-                session = request.getSession();
-
-                session.setAttribute("username", username);
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/adminDashboard.do").forward(request, response);
-            } else if (20000 <= currentUserID && currentUserID <= 39999) {
-                session = request.getSession();
-
-                session.setAttribute("username", username);
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
-            } else if (40000 <= currentUserID && currentUserID <= 49999) {
-                session = request.getSession();
-
-                session.setAttribute("username", username);
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/patientDashboard.do").forward(request, response);
-            } else {
-                throw new Exception();
-            }
-
-        } catch (Exception e) {
-            response.sendRedirect("login.jsp");
+        // Set cookie
+        //cookie.setMaxAge(20 * 60);
+        //response.addCookie(cookie);
+        // Get database lists
+        
+        // Set / update attributes for currentSession
+        synchronized (session) {
+            session.setAttribute("currentUser", currentUser);
+            session.setAttribute("message", message);
 
         }
 
+        response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
+        //view.forward(request, response);
+
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

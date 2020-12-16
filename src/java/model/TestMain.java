@@ -20,6 +20,11 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
+        
+        
+        System.out.println(database.getUserID("admin", "admin"));
+        
+        System.exit(0);
 
         Date fromDate = Date.valueOf("2000-01-01");
         Date toDate = Date.valueOf("2020-09-09");

@@ -47,6 +47,14 @@
         <servlet-class>com.EmployeeDashboard</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AdminDashboard</servlet-name>
+        <servlet-class>com.AdminDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PatientDashboard</servlet-name>
+        <servlet-class>com.PatientDashboard</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ServletContextInitializer</servlet-name>
         <servlet-class>com.ServletContextInitializer</servlet-class>
     </servlet>
@@ -65,6 +73,14 @@
     <servlet-mapping>
         <servlet-name>EmployeeDashboard</servlet-name>
         <url-pattern>/employeeDashboard.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboard</servlet-name>
+        <url-pattern>/adminDashboard.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PatientDashboard</servlet-name>
+        <url-pattern>/patientDashboard.do</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>com.myServletContextListener</listener-class>
