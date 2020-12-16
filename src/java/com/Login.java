@@ -62,12 +62,16 @@ public class Login extends HttpServlet {
                 session.setAttribute("username", username);
                 session.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
+            } else if (40000 <= currentUserID && currentUserID <= 49999) {
+                session = request.getSession();
+
+                session.setAttribute("username", username);
+                session.setAttribute("userID", currentUserID);
+                request.getRequestDispatcher("/patientDashboard.do").forward(request, response);
+            } else {
+                throw new Exception();
             }
-            else {
-                 throw new Exception();
-            }
-            
-           
+
         } catch (Exception e) {
             response.sendRedirect("login.jsp");
 
