@@ -24,10 +24,7 @@ import model.*;
 public class Login extends HttpServlet {
 
     private String message;
-    private User currentUser;
-
     private int currentUserID;
-    private String currentUserPassword;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,30 +39,18 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        // start password management
-        String bt = request.getParameter("bt");
-        
-        if (bt != null) { 
-            request.getRequestDispatcher("/employeeDashboard_password_management.jsp").forward(request, response);
-            
-        }
-       // end password management 
-       
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String update_password = request.getParameter("update_password");
+        Database database = (Database) getServletContext().getAttribute("database");
 
         HttpSession session = null;
         Cookie cookie = null;
 
         String forwardTo = "login.jsp";
 
-        Database database = (Database) getServletContext().getAttribute("database");
-
         try {
-
             currentUserID = database.getUserID(username, password);
-
+            
             // username  password validation 
             if (20000 <= currentUserID && currentUserID <= 39999) {
                 session = request.getSession();
@@ -73,20 +58,12 @@ public class Login extends HttpServlet {
                 session.setAttribute("username", username);
                 session.setAttribute("userID", currentUserID);
                 request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
-               /* @note author - genius 
-                *lazy approach to change user password. 
-                * User is transfered to second login page at which they should enter username, password.
-                * And NEW_PASSWORD. if username,password are correct then NEW_PASSWORD will be saved,
-                * and user is logged in right away.
-                * If the user tries to log in again, they must use thier new password.
-                */
-                currentUserPassword= database.setPassword(currentUserID,update_password);
+            } else if (40000 <= currentUserID && currentUserID <= 49999) {
+                response.sendRedirect("loginsuccess.jsp");
+            } else {
+                throw new Exception();
             }
-            else {
-                 throw new Exception();
-            }
-            
-           
+
         } catch (Exception e) {
             response.sendRedirect("login.jsp");
 
@@ -94,7 +71,7 @@ public class Login extends HttpServlet {
 
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

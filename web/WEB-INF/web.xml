@@ -4,6 +4,10 @@
         <servlet-name>ServletContextListener</servlet-name>
         <servlet-class>com.ServletContextListener</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PasswordChanger</servlet-name>
+        <servlet-class>com.PasswordChanger</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout.do</url-pattern>
@@ -11,6 +15,10 @@
     <servlet-mapping>
         <servlet-name>TableHandler</servlet-name>
         <url-pattern>/tableHandler.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PasswordChanger</servlet-name>
+        <url-pattern>/passwordChanger.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
