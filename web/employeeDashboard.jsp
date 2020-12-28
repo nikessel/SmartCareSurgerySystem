@@ -26,7 +26,7 @@
             <div class="leftDiv">
                 <h2>Scheduled consultations</h2>
                 <div>
-                    <form method="post" action="employeeDashboard.do" name="dateSelector">
+                    <form method="post" action="/protected/employeeDashboard.do" name="dateSelector">
                         <label for="fromDate">Show from date:</label>
                         <input type="date" id="fromDate" name="fromDate"> 
                         <label for="toDate">to date:</label>
@@ -35,7 +35,7 @@
                     <br>
                     <c:if test = "${not empty param.fromDate && not empty param.toDate}">
                         <label for="dateButton">Displaying consultations from ${param.fromDate} to ${param.toDate}</label>
-                        <form action="employeeDashboard.do" method="post">
+                        <form action="/protected/employeeDashboard.do" method="post">
                             <input type="hidden" name="resetDates" value="true">
                             <input style="padding: 5px;" type="submit" value="Reset" />
                         </form>
@@ -45,7 +45,7 @@
             </div>
             <div class="rightDiv">
                 <h2>List of patients</h2>
-                <form method="post" action="employeeDashboard.do" name="patientListSelector">
+                <form method="post" action="/protected/employeeDashboard.do" name="patientListSelector">
                     <select name="insuranceSelection" onchange="this.form.submit();">
                         <option disabled selected value> sort by insurance status </option>
                         <option value="0">insured

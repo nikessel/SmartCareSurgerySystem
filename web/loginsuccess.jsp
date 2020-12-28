@@ -10,7 +10,7 @@
 	<div align="center">
 		<h1>You have successfully logged in</h1>
                 
-      <%out.println(request.getAttribute("name"));%> 
+                <h2>${session.username}</h2>
       
 	</div>
 </body>

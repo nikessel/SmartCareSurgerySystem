@@ -54,10 +54,12 @@ public class EmployeeDashboard extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         // Set view
-        view = getServletContext().getRequestDispatcher("/WEB-INF/employeeDashboard.jsp");
+        view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
         //Get session
         session = request.getSession();
+        
+        database = (Database) getServletContext().getAttribute("database");
         
         
 
@@ -105,7 +107,6 @@ public class EmployeeDashboard extends HttpServlet {
 
         // Get attributes
         currentUserID = (int) session.getAttribute("userID");
-        database = (Database) getServletContext().getAttribute("database");
 
         // Set currentUser
         if (20000 <= currentUserID && currentUserID <= 29999) {

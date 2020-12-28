@@ -16,10 +16,6 @@
         <servlet-name>PasswordChanger</servlet-name>
         <url-pattern>/passwordChanger.do</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DashboardFilter</servlet-name>
-        <url-pattern>/dashboardFilter.do</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
     </session-config>
@@ -29,7 +25,7 @@
     </servlet>
     <servlet>
         <servlet-name>DashboardFilter</servlet-name>
-        <servlet-class>com.DashboardFilter</servlet-class>
+        <servlet-class>com.AuthorizationFilter</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextInitializer</servlet-name>
@@ -76,15 +72,15 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmployeeDashboard</servlet-name>
-        <url-pattern>/employeeDashboard.do</url-pattern>
+        <url-pattern>/protected/employeeDashboard.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminDashboard</servlet-name>
-        <url-pattern>/adminDashboard.do</url-pattern>
+        <url-pattern>/protected/adminDashboard.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PatientDashboard</servlet-name>
-        <url-pattern>/patientDashboard.do</url-pattern>
+        <url-pattern>/protected/patientDashboard.do</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>com.myServletContextListener</listener-class>
@@ -96,4 +92,20 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/errorPage.jsp</location>
     </error-page>
+    <filter>
+        <filter-name>AuthorizationFilter</filter-name>
+        <filter-class>com.AuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthorizationFilter</filter-name>
+        <url-pattern>/protected/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/login.do</url-pattern>
+    </filter-mapping>
 </web-app>

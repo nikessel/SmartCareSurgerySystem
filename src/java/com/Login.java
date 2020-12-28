@@ -39,43 +39,34 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        Database database = (Database) getServletContext().getAttribute("database");
-
         HttpSession session = null;
         Cookie cookie = null;
 
-        String forwardTo = "login.jsp";
-
         try {
-            currentUserID = database.getUserID(username, password);
+            currentUserID = (int) request.getAttribute("userID");
 
             // username  password validation 
             if (10000 <= currentUserID && currentUserID <= 19999) {
                 session = request.getSession();
 
-                session.setAttribute("username", username);
                 session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/adminDashboard.do").forward(request, response);
+                request.getRequestDispatcher("/protected/adminDashboard.do").forward(request, response);
             } else if (20000 <= currentUserID && currentUserID <= 39999) {
                 session = request.getSession();
-
-                session.setAttribute("username", username);
+                
                 session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
+                request.getRequestDispatcher("/protected/employeeDashboard.do").forward(request, response);
             } else if (40000 <= currentUserID && currentUserID <= 49999) {
                 session = request.getSession();
 
-                session.setAttribute("username", username);
                 session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/patientDashboard.do").forward(request, response);
+                request.getRequestDispatcher("/protected/patientDashboard.do").forward(request, response);
             } else {
                 throw new Exception();
             }
 
         } catch (Exception e) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/login.jsp");
 
         }
 
