@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 public class AuthorizationFilter implements Filter {
 
     private FilterConfig fc;
-    private String message;
+    private String errorMessage;
     private int currentUserID;
 
     @Override
@@ -67,11 +67,15 @@ public class AuthorizationFilter implements Filter {
                 throw new Exception();
             }
 
+            httpRequest.getServletContext().setAttribute("errorMessage", "");
+
             chain.doFilter(httpRequest, response);
 
         } catch (Exception e) {
 
-            RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/login.jsp");
+            httpRequest.getServletContext().setAttribute("errorMessage", "You are not allowed to access this resource");
+
+            RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);
         }
     }

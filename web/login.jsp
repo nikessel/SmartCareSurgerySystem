@@ -13,7 +13,6 @@
             <div class="dashboard login">
                 <h1>Smart Care Surgery System</h1>
                 <h2>Login</h2>
-                <h3>${message}</h3>
                 <br>
                 <form action="${pageContext.request.contextPath}/login.do" method="post">
                     <input id="username" name="username" required="required" type="text" placeholder="Username"/>
@@ -21,6 +20,7 @@
                     <input type="submit" value="Submit" />
                 </form>
                 <br>
+                <h3>${errorMessage}</h3>
                 <br>
                 <form action="${pageContext.request.contextPath}/passwordChanger.jsp" method="post">
                     <input type="submit" value="Change password" />

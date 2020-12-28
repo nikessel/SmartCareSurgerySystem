@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  */
 public class Login extends HttpServlet {
 
-    private String message;
+    private String errorMessage;
     private int currentUserID;
 
     /**
@@ -69,6 +69,7 @@ public class Login extends HttpServlet {
             }
 
         } catch (Exception e) {
+
             response.sendRedirect(request.getContextPath() + "/logout.do");
 
         }

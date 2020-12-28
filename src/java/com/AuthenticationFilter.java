@@ -23,8 +23,16 @@ import model.Database;
 public class AuthenticationFilter implements Filter {
 
     private FilterConfig fc;
-    private String message;
+    private String errorMessage;
     private int currentUserID;
+
+    private boolean wrongUsername() {
+        return currentUserID == -2;
+    }
+
+    private boolean wrongPassword() {
+        return currentUserID == -1;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -39,6 +47,7 @@ public class AuthenticationFilter implements Filter {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         Database database = (Database) request.getServletContext().getAttribute("database");
+        errorMessage = "";
 
         try {
             currentUserID = database.getUserID(username, password);
@@ -51,8 +60,16 @@ public class AuthenticationFilter implements Filter {
             }
 
         } catch (NullPointerException e) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("login.jsp");
-            requestDispatcher.include(request, response);
+            if (wrongUsername()) {
+                errorMessage = "Invalid username, please try again";
+            } else if (wrongPassword()) {
+                errorMessage = "Invalid password, please try again";
+            }
+
+            httpRequest.getServletContext().setAttribute("errorMessage", errorMessage);
+
+            RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/login.jsp");
+            requestDispatcher.forward(httpRequest, response);
         }
 
     }
