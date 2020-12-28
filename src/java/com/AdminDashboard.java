@@ -33,6 +33,7 @@ public class AdminDashboard extends HttpServlet {
     Cookie cookie;
     Cookie[] cookies;
     Database database;
+    String loggedInAs = "";
     RequestDispatcher view;
     User currentUser;
     List<Consultation> consultations;
@@ -64,6 +65,7 @@ public class AdminDashboard extends HttpServlet {
 
         // Set currentUser
         currentUser = database.getAdmin(currentUserID);
+        loggedInAs = "admin";
         Cookie[] cookies = request.getCookies();
 
         // Set cookie
@@ -75,6 +77,7 @@ public class AdminDashboard extends HttpServlet {
         synchronized (session) {
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
+            session.setAttribute("loggedInAs", loggedInAs);
 
         }
 

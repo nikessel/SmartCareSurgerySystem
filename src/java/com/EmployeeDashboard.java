@@ -35,6 +35,7 @@ public class EmployeeDashboard extends HttpServlet {
     Database database;
     RequestDispatcher view;
     User currentUser;
+    String loggedInAs = "";
     List<Consultation> consultations;
     List<Patient> patients;
     String message = "";
@@ -57,6 +58,8 @@ public class EmployeeDashboard extends HttpServlet {
 
         //Get session
         session = request.getSession();
+        
+        
 
         try {
             if (Boolean.parseBoolean(String.valueOf(request.getAttribute("resetDates")))) {
@@ -107,8 +110,10 @@ public class EmployeeDashboard extends HttpServlet {
         // Set currentUser
         if (20000 <= currentUserID && currentUserID <= 29999) {
             currentUser = database.getDoctor(currentUserID);
+            loggedInAs = "doctor";
         } else {
             currentUser = database.getNurse(currentUserID);
+            loggedInAs = "nurse";
         }
 
         Cookie[] cookies = request.getCookies();
@@ -126,6 +131,7 @@ public class EmployeeDashboard extends HttpServlet {
             session.setAttribute("patients", patients);
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
+            session.setAttribute("loggedInAs", loggedInAs);
 
         }
 

@@ -27,7 +27,7 @@
                 <input type="submit" value="Logout" />
             </form>
             <br>
-
+            <p style="text-align: right">You are logged in as a ${loggedInAs}<p>
         </div>
 
 

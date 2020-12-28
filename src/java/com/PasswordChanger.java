@@ -76,7 +76,7 @@ public class PasswordChanger extends HttpServlet {
         }
 
         session.setAttribute("message", message);
-
+        
         response.sendRedirect(request.getContextPath() + "/passwordChanger.jsp");
 
     }

@@ -40,7 +40,7 @@
                             <input style="padding: 5px;" type="submit" value="Reset" />
                         </form>
                     </c:if>
-                        <br>
+                    <br>
                 </div>
             </div>
             <div class="rightDiv">
@@ -99,7 +99,7 @@
                 <input type="submit" value="Logout" />
             </form>
             <br>
-
+            <p style="text-align: right">You are logged in as a ${loggedInAs}<p>
         </div>
 
 

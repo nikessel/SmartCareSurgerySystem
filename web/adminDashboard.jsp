@@ -20,14 +20,16 @@
     <body>
         <div class="dashboard">
             <div class="bg"></div>
+            
             <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
             <h2>Welcome to your personal dashboard.</h2>
+            
             <br>
             <form action="logout.do" method="post">
                 <input type="submit" value="Logout" />
             </form>
             <br>
-
+            <p style="text-align: right">You are logged in as an ${loggedInAs}<p>
         </div>
 
 

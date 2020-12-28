@@ -19,8 +19,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
 import model.*;
 
@@ -33,6 +32,7 @@ public class PatientDashboard extends HttpServlet {
     Cookie cookie;
     Cookie[] cookies;
     Database database;
+    String loggedInAs = "";
     RequestDispatcher view;
     User currentUser;
     List<Consultation> consultations;
@@ -63,17 +63,18 @@ public class PatientDashboard extends HttpServlet {
         database = (Database) getServletContext().getAttribute("database");
 
         // Set currentUser
-            currentUser = database.getPatient(currentUserID);
+        currentUser = database.getPatient(currentUserID);
+        loggedInAs = "patient";
         Cookie[] cookies = request.getCookies();
 
         // Set cookie
         //cookie.setMaxAge(20 * 60);
         //response.addCookie(cookie);
-
         // Set / update attributes for currentSession
         synchronized (session) {
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
+            session.setAttribute("loggedInAs", loggedInAs);
 
         }
 
