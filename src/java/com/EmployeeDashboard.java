@@ -54,7 +54,7 @@ public class EmployeeDashboard extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         // Set view
-        view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
+        view = getServletContext().getRequestDispatcher("/WEB-INF/employeeDashboard.jsp");
 
         //Get session
         session = request.getSession();
@@ -135,8 +135,8 @@ public class EmployeeDashboard extends HttpServlet {
 
         }
 
-        response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
-        //view.forward(request, response);
+        //response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
+        view.forward(request, response);
 
     }
 

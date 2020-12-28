@@ -13,12 +13,12 @@
         <url-pattern>/Logout.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>TableHandler</servlet-name>
-        <url-pattern>/tableHandler.do</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>PasswordChanger</servlet-name>
         <url-pattern>/passwordChanger.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DashboardFilter</servlet-name>
+        <url-pattern>/dashboardFilter.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
@@ -26,6 +26,10 @@
     <servlet>
         <servlet-name>Logout</servlet-name>
         <servlet-class>com.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DashboardFilter</servlet-name>
+        <servlet-class>com.DashboardFilter</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextInitializer</servlet-name>
