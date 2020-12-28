@@ -23,7 +23,7 @@
             <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
             <h2>Welcome to your personal dashboard.</h2>
             <br>
-            <form action="logout.do" method="post">
+            <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Logout" />
             </form>
             <br>

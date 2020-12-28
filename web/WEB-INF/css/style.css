@@ -10,7 +10,7 @@ body:before {
     bottom: 0;
     left: 0;
     right: 0;
-    background-image: url("images/white.jpg");
+    background-image: url("/SmartCareSurgerySystem/images/white.jpg");
     background-size: cover;
     border-radius: 25px;
 

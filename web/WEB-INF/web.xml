@@ -10,7 +10,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
-        <url-pattern>/Logout.do</url-pattern>
+        <url-pattern>/logout.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PasswordChanger</servlet-name>
@@ -29,11 +29,11 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextInitializer</servlet-name>
-        <url-pattern>/ServletContextInitializer</url-pattern>
+        <url-pattern>/servletContextInitializer.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletContextListener</servlet-name>
-        <url-pattern>/servlet-context-listener</url-pattern>
+        <url-pattern>/servlet-context-listener.do</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/login.jsp</welcome-file>
@@ -57,10 +57,6 @@
     <servlet>
         <servlet-name>ServletContextInitializer</servlet-name>
         <servlet-class>com.ServletContextInitializer</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>TableHandler</servlet-name>
-        <servlet-class>com.TableHandler</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -93,19 +89,19 @@
         <location>/errorPage.jsp</location>
     </error-page>
     <filter>
-        <filter-name>AuthorizationFilter</filter-name>
-        <filter-class>com.AuthorizationFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AuthorizationFilter</filter-name>
-        <url-pattern>/protected/*</url-pattern>
-    </filter-mapping>
-    <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>com.AuthenticationFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/login.do</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AuthorizationFilter</filter-name>
+        <filter-class>com.AuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthorizationFilter</filter-name>
+        <url-pattern>/protected/*</url-pattern>
     </filter-mapping>
 </web-app>

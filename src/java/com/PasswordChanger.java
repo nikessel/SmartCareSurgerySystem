@@ -18,7 +18,6 @@ import model.Database;
  *
  * @author niklas
  */
-@WebServlet("/passwordChanger")
 
 public class PasswordChanger extends HttpServlet {
 

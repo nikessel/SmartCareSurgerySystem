@@ -13,7 +13,7 @@
             <h1>Smart Care Surgery System Password Management</h1>
             <h2>${message}</h2>
             <br>
-            <form action="passwordChanger.do" method="post">
+            <form action="${pageContext.request.contextPath}/passwordChanger.do" method="post">
                 <input id="username" name="username" required="required" type="text" placeholder="Username"/>
                 <input id="password" name="password" required="required" type="password" placeholder="Password" />
                 <input id="updatePassword" name="updatePassword" required="required" type="password" placeholder="Input new password" />
@@ -21,7 +21,7 @@
             </form>
             <br>
             <br>
-            <form action="logout.do" method="post">
+            <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Back" />
             </form>
 

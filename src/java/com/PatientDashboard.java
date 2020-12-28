@@ -23,8 +23,6 @@ import javax.servlet.http.HttpSession;
  */
 import model.*;
 
-@WebServlet("/patientDashboard")
-
 public class PatientDashboard extends HttpServlet {
 
     int currentUserID;
@@ -78,8 +76,8 @@ public class PatientDashboard extends HttpServlet {
 
         }
 
-        response.sendRedirect(request.getContextPath() + "/patientDashboard.jsp");
-        //view.forward(request, response);
+        //response.sendRedirect(request.getContextPath() + "/patientDashboard.jsp");
+        view.forward(request, response);
 
     }
 

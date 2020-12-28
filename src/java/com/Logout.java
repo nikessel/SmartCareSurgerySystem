@@ -48,9 +48,7 @@ public class Logout extends HttpServlet {
             session.invalidate();
         }
 
-        RequestDispatcher view = getServletContext().getRequestDispatcher("/login");
-
-        view.forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -7,20 +7,15 @@ package com;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.*;
-
 /**
  *
  * @author Genius
  */
-@WebServlet("/login")
-
 public class Login extends HttpServlet {
 
     private String message;
@@ -35,6 +30,18 @@ public class Login extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private boolean isAdmin() {
+        return 10000 <= currentUserID && currentUserID <= 19999;
+    }
+
+    private boolean isEmployee() {
+        return 20000 <= currentUserID && currentUserID <= 39999;
+    }
+
+    private boolean isPatient() {
+        return 40000 <= currentUserID && currentUserID <= 49999;
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -44,29 +51,25 @@ public class Login extends HttpServlet {
 
         try {
             currentUserID = (int) request.getAttribute("userID");
+            session = request.getSession();
+            session.setAttribute("userID", currentUserID);
 
             // username  password validation 
-            if (10000 <= currentUserID && currentUserID <= 19999) {
-                session = request.getSession();
-
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/protected/adminDashboard.do").forward(request, response);
-            } else if (20000 <= currentUserID && currentUserID <= 39999) {
-                session = request.getSession();
+            if (isAdmin()) {
+                response.sendRedirect(request.getContextPath() + "/protected/adminDashboard.do");
                 
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/protected/employeeDashboard.do").forward(request, response);
-            } else if (40000 <= currentUserID && currentUserID <= 49999) {
-                session = request.getSession();
-
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/protected/patientDashboard.do").forward(request, response);
+            } else if (isEmployee()) {
+                response.sendRedirect(request.getContextPath() + "/protected/employeeDashboard.do");
+                
+            } else if (isPatient()) {
+                response.sendRedirect(request.getContextPath() + "/protected/patientDashboard.do");
+                
             } else {
                 throw new Exception();
             }
 
         } catch (Exception e) {
-            response.sendRedirect("/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/logout.do");
 
         }
 

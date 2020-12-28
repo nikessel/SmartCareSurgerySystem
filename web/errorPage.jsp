@@ -18,7 +18,7 @@
         <div class="dashboard login">
             <h1>Error page</h1>
             <h2>Exception: ${pageContext.exception}</h2>
-            <form action="logout.do" method="post">
+            <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Return to login" />
             </form>
 

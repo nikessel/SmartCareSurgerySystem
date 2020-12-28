@@ -24,8 +24,6 @@ import javax.servlet.http.HttpSession;
  */
 import model.*;
 
-@WebServlet("/adminDashboard")
-
 public class AdminDashboard extends HttpServlet {
 
     int currentUserID;
@@ -81,8 +79,8 @@ public class AdminDashboard extends HttpServlet {
 
         }
 
-        response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
-        //view.forward(request, response);
+        //response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
+        view.forward(request, response);
 
     }
 

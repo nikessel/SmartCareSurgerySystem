@@ -24,8 +24,6 @@ import javax.servlet.http.HttpSession;
  */
 import model.*;
 
-@WebServlet("/employeeDashboard")
-
 public class EmployeeDashboard extends HttpServlet {
 
     int currentUserID;
