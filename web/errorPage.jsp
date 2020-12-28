@@ -17,11 +17,10 @@
     <body>
         <div class="dashboard login">
             <h1>Error page</h1>
-            <h2>Exception: ${pageContext.exception}</h2>
+            <h2>${errorMessage}</h2>
             <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Return to login" />
             </form>
-
         </div>
     </body>
 </html>
