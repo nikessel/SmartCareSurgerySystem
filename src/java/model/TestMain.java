@@ -33,7 +33,6 @@ public class TestMain {
         // Also has get dayOfWeek, hour and so on
         // Same for surgeries
         
-
         //database.printDatabaseTable("all");
     }
 

@@ -51,6 +51,7 @@ public class Database {
     SecureRandom random = new SecureRandom();
 
     private final Calendar calendar = Calendar.getInstance(Locale.UK);
+    int currentWeekNumber;
 
     String queryString = "";
     String idString = "";
@@ -185,7 +186,8 @@ public class Database {
     }
 
     public int getCurrentWeekNumber() {
-        return calendar.get(Calendar.WEEK_OF_YEAR);
+        this.currentWeekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+        return currentWeekNumber;
     }
 
 

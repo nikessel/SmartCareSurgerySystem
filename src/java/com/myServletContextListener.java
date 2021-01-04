@@ -23,6 +23,8 @@ public class myServletContextListener implements ServletContextListener {
         
         database.connect();
         
+        database.getCurrentWeekNumber();
+        
         sc.setAttribute("database", database);
         
         sc.setAttribute("errorMessage", "");
