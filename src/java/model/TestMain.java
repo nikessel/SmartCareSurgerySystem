@@ -22,12 +22,19 @@ public class TestMain {
         database.connect();
         
         Surgery surgery = database.getSurgery(70002);
-        
-        System.out.println(surgery.getSurgeryTime().getWeekNumber());
+
+        Consultation consultation = database.getConsultation(50001);
 
         System.out.println(database.getCurrentWeekNumber());
         
-        database.printDatabaseTable("all");
+        
+        int currentWeekNumber = database.getCurrentWeekNumber();
+        
+        // Also has get dayOfWeek, hour and so on
+        // Same for surgeries
+        
+
+        //database.printDatabaseTable("all");
     }
 
 }
