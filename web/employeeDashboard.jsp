@@ -68,7 +68,7 @@
                     <tbody>
                         <c:forEach items="${consultations}" var="consultation">
                             <tr>
-                                <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
+                                <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy")}</td>
                                 <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
                             </tr>
                         </c:forEach>   
