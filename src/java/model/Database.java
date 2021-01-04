@@ -9,13 +9,21 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.Locale;
+
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
@@ -29,7 +37,7 @@ public class Database {
     private final String DATABASESTRING = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private final String USERNAME = "databaseUser";
     private final String PASSWORD = "password";
-    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices"};
+    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries"};
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
@@ -41,6 +49,9 @@ public class Database {
     int keyLength = 512;
     KeySpec spec;
     SecureRandom random = new SecureRandom();
+
+    private final Calendar calendar = Calendar.getInstance(Locale.UK);
+
     String queryString = "";
     String idString = "";
     int thisID = -2;
@@ -173,6 +184,11 @@ public class Database {
 
     }
 
+    public int getCurrentWeekNumber() {
+        return calendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+
     private String getIDString(int id) {
         if (id == -1) {
             return "";
@@ -180,11 +196,19 @@ public class Database {
 
         tableName = TABLENAMES[(int) id / 10000 - 1];
 
-        return tableName.substring(0, tableName.length() - 1) + "_id";
+        if (tableName.equals("surgeries")) {
+            return tableName.substring(0, tableName.length() - 3) + "y_id";
+        } else {
+            return tableName.substring(0, tableName.length() - 1) + "_id";
+        }
     }
 
     private String getIDString(String tableName) {
-        return tableName.substring(0, tableName.length() - 1) + "_id";
+        if (tableName.equals("surgeries")) {
+            return tableName.substring(0, tableName.length() - 3) + "y_id";
+        } else {
+            return tableName.substring(0, tableName.length() - 1) + "_id";
+        }
     }
 
     private Address convertStringToAddress(String thisAddressString) {
@@ -219,7 +243,7 @@ public class Database {
     }
 
     private String getCredentialsSQLString(String tableName) {
-        idString = tableName.substring(0, tableName.length() - 1) + "_id";
+        idString = getIDString(tableName);
 
         return "SELECT " + idString + ", username, password_hash, salt FROM " + tableName;
 
@@ -288,9 +312,10 @@ public class Database {
     private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
 
         boolean isUser, isEmployee, isAdmin, isDoctor, isNurse, isPatient,
-                isConsultation, isInvoice, paid, insured, isFullTime;
+                isConsultation, isInvoice, isSurgery, paid, insured, isFullTime;
         isUser = isEmployee = isAdmin = isDoctor = isNurse = isPatient
-                = isConsultation = isInvoice = paid = insured = isFullTime = false;
+                = isConsultation = isInvoice = isSurgery = paid = insured
+                = isFullTime = false;
 
         int id = -1;
 
@@ -299,8 +324,11 @@ public class Database {
         String username, firstName, surName;
         username = firstName = surName = "";
 
-        java.util.Date dateOfBirth, consultationDate, invoiceDate;
-        dateOfBirth = consultationDate = invoiceDate = new java.util.Date();
+        java.util.Date dateOfBirth, invoiceDate;
+        dateOfBirth = invoiceDate = new java.util.Date();
+
+        Timestamp consultationTime, surgeryTime;
+        consultationTime = surgeryTime = new Timestamp(0);
 
         Invoice invoice = new Invoice();
         Address address = new Address();
@@ -308,6 +336,7 @@ public class Database {
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
         Consultation consultation = new Consultation();
+        Surgery surgery = new Surgery();
 
         // Get ID
         try {
@@ -343,6 +372,8 @@ public class Database {
             isConsultation = true;
         } else if (60000 <= id && id <= 69999) {
             isInvoice = true;
+        } else if (70000 <= id && id <= 79999) {
+            isSurgery = true;
         }
 
         if (isUser) {
@@ -401,7 +432,7 @@ public class Database {
                     patient = getPatient(rs.getInt("patient_id"));
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     nurse = getNurse(rs.getInt("nurse_id"));
-                    consultationDate = rs.getDate("consultation_date");
+                    consultationTime = Timestamp.convertToMyTimestamp(rs.getTimestamp("consultation_time"));
                 }
 
             } catch (SQLException ex) {
@@ -425,6 +456,21 @@ public class Database {
             }
         }
 
+        if (isSurgery) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    doctor = getDoctor(rs.getInt("doctor_id"));
+                    patient = getPatient(rs.getInt("patient_id"));
+                    surgeryTime = Timestamp.convertToMyTimestamp(rs.getTimestamp("surgery_time"));
+
+                }
+            } catch (SQLException ex) {
+                System.err.println(ex);
+            }
+        }
+
         if (isUser) {
             if (isEmployee) {
                 if (isAdmin) {
@@ -438,9 +484,11 @@ public class Database {
                 return new Patient(username, firstName, surName, id, dateOfBirth, address, insured);
             }
         } else if (isConsultation) {
-            return new Consultation(patient, doctor, nurse, consultationDate, id);
+            return new Consultation(patient, doctor, nurse, consultationTime, id);
         } else if (isInvoice) {
             return new Invoice(consultation, price, invoiceDate, paid, insured, id);
+        } else if (isSurgery) {
+            return new Surgery(patient, doctor, surgeryTime, id);
         }
 
         return new DatabaseObject();
@@ -473,7 +521,6 @@ public class Database {
             rs.beforeFirst();
             while (rs.next()) {
                 int thisID = rs.getInt(1);
-                System.out.println(thisID);
 
                 switch (name) {
                     case "admins":
@@ -493,6 +540,9 @@ public class Database {
                         break;
                     case "invoices":
                         outputList.add(getInvoice(thisID));
+                        break;
+                    case "surgeries":
+                        outputList.add(getSurgery(thisID));
                         break;
 
                 }
@@ -601,15 +651,29 @@ public class Database {
         try {
             return (Invoice) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
-            System.err.println("Error getting invoice from database (Invalid id?)");
+            System.err.println("Error getting invoice from database (Invalid id?)" + "id: " + invoiceID);
         }
 
         return new Invoice();
     }
 
+    public Surgery getSurgery(int surgeryID) {
+
+        ResultSet rs1 = selectFromWhere("*", "surgeries", "surgery_id", String.valueOf(surgeryID));
+
+        try {
+            return (Surgery) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println(ex);
+            System.err.println("Error getting surgery from database (Invalid id?)");
+        }
+
+        return new Surgery();
+    }
+
     public ArrayList<Object> getAllFromDatabase(String tableToGet) {
 
-        idString = tableToGet.substring(0, tableToGet.length() - 1) + "_id";
+        idString = getIDString(tableToGet);
 
         queryString = "SELECT " + idString
                 + " FROM " + tableToGet;
@@ -676,8 +740,8 @@ public class Database {
         objects.forEach((obj) -> {
             Consultation thisConsultation = (Consultation) obj;
 
-            if (thisConsultation.getConsultationDate().after(fromDate) && 
-                    thisConsultation.getConsultationDate().before(toDate)) {
+            if (thisConsultation.getConsultationTime().after(fromDate)
+                    && thisConsultation.getConsultationTime().before(toDate)) {
                 output.add(thisConsultation);
             }
 
@@ -772,20 +836,17 @@ public class Database {
                     Admin admin = (Admin) object;
                     tableName = TABLENAMES[0];
                     thisID = admin.getAdminID();
-                    idString = getIDString(thisID);
 
                 } else if (employee instanceof Doctor) {
                     Doctor doctor = (Doctor) object;
                     tableName = TABLENAMES[1];
 
                     thisID = doctor.getDoctorID();
-                    idString = getIDString(thisID);
                 } else if (employee instanceof Nurse) {
                     Nurse nurse = (Nurse) object;
                     tableName = TABLENAMES[2];
 
                     thisID = nurse.getNurseID();
-                    idString = getIDString(thisID);
                 }
             } else if (object instanceof Patient) {
                 Patient patient = (Patient) object;
@@ -797,7 +858,6 @@ public class Database {
                 valuesString.append(patient.isInsured() + ", ");
 
                 thisID = patient.getPatientID();
-                idString = getIDString(thisID);
             }
         } else if (object instanceof Consultation) {
             Consultation consultation = (Consultation) object;
@@ -807,10 +867,9 @@ public class Database {
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
-            valuesString.append(consultation.getConsultationDate() + "', ");
+            valuesString.append(consultation.getConsultationTime() + "', ");
 
             thisID = consultation.getConsultationID();
-            idString = getIDString(thisID);
 
         } else if (object instanceof Invoice) {
             Invoice invoice = (Invoice) object;
@@ -824,8 +883,20 @@ public class Database {
             valuesString.append(invoice.isInsured() + ", ");
 
             thisID = invoice.getInvoiceID();
-            idString = getIDString(thisID);
+        } else if (object instanceof Surgery) {
+            Surgery surgery = (Surgery) object;
+            tableName = TABLENAMES[6];
+
+            namesString.append("surgery_id, doctor_id, patient_id, surgery_time, ");
+            valuesString.append(surgery.getSurgeryID() + ", ");
+            valuesString.append(surgery.getDoctor().getDoctorID() + ", ");
+            valuesString.append(surgery.getPatient().getPatientID() + ", ");
+            valuesString.append("'" + surgery.getSurgeryTime() + "', ");
+
+            thisID = surgery.getSurgeryID();
         }
+
+        idString = getIDString(thisID);
 
         namesString.delete(namesString.length() - 2, namesString.length());
         valuesString.delete(valuesString.length() - 2, valuesString.length());
@@ -943,6 +1014,10 @@ public class Database {
 
         } else if (object instanceof Invoice) {
             id = ((Invoice) object).getInvoiceID();
+
+        } else if (object instanceof Surgery) {
+            id = ((Surgery) object).getSurgeryID();
+
         } else {
             System.err.println("Error writing object to database, "
                     + "object type not found.");

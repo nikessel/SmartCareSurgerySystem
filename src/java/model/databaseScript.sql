@@ -4,14 +4,13 @@
  *
  */
 
-
+DROP TABLE surgeries;
 DROP TABLE invoices;
 DROP TABLE consultations;
 DROP TABLE admins;
 DROP TABLE doctors;
 DROP TABLE nurses;
 DROP TABLE patients;
-
 
 create table admins (
 	admin_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 10000, INCREMENT BY 1) primary key,
@@ -87,24 +86,23 @@ insert into patients (username, password_hash, salt, first_name, sur_name, date_
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('cocooneyd', '44b38bec943a7d3d23d1b2811db66067d696fd36cf0da0a3a4a033fe5aeed04dfc947c2dba04a0ed24ffc4550cc031cde45edf49d70c34be4e25d8a912dddb16', 'f56cdc10a660a52af59e64f5a39c97199d8bbc697bf5ac40bed464721e1a0957', 'Crissie', 'O''Cooney', '1955-12-07', '3127 Holmberg Court--BE16 3LO-county-Bristol-958297970322', false);
 
 
-
 create table consultations (
 	consultation_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 50000, INCREMENT BY 1) primary key,
 	patient_id INT,
 	doctor_id INT,
         nurse_id INT,
-	consultation_date DATE,
-        CONSTRAINT fk_doctor
+	consultation_time TIMESTAMP,
+        CONSTRAINT fk_doctor_consultation
         FOREIGN KEY (doctor_id) 
         REFERENCES doctors(doctor_id)
             ON UPDATE RESTRICT
             ON DELETE CASCADE,
-        CONSTRAINT fk_nurse
+        CONSTRAINT fk_nurse_consultation
         FOREIGN KEY (nurse_id) 
         REFERENCES nurses(nurse_id)
             ON UPDATE RESTRICT
             ON DELETE CASCADE,
-        CONSTRAINT fk_patient
+        CONSTRAINT fk_patient_consultation
         FOREIGN KEY (patient_id) 
         REFERENCES patients(patient_id)
             ON UPDATE RESTRICT
@@ -112,84 +110,85 @@ create table consultations (
 );
 
 /* Doctor only consultations */
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40013, 20001, 30000, '2020-06-30');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20002, 30000, '2020-07-02');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40004, 20002, 30000, '2020-06-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40008, 20001, 30000, '2021-02-20');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40013, 20001, 30000, '2020-12-04');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20001, 30000, '2020-07-11');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40011, 20002, 30000, '2021-02-14');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20001, 30000, '2021-01-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20001, 30000, '2020-08-22');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40005, 20001, 30000, '2020-11-12');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40008, 20001, 30000, '2020-02-16');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20001, 30000, '2020-07-18');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40012, 20002, 30000, '2020-01-06');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40003, 20002, 30000, '2020-04-22');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40000, 20002, 30000, '2021-03-05');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40012, 20002, 30000, '2020-12-04');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20001, 30000, '2020-07-17');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40011, 20001, 30000, '2020-11-25');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40011, 20002, 30000, '2020-04-24');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40002, 20001, 30000, '2020-05-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20001, 30000, '2020-06-23');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20002, 30000, '2020-06-14');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20002, 30000, '2020-03-18');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20002, 30000, '2021-02-06');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20002, 30000, '2020-02-29');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40013, 20001, 30000, '1997-12-31 23:59:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20002, 30000, '2020-07-02 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40004, 20002, 30000, '2020-06-09 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40008, 20001, 30000, '2021-02-20 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40013, 20001, 30000, '2020-12-04 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20001, 30000, '2020-07-11 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40011, 20002, 30000, '2021-02-14 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40007, 20001, 30000, '2021-01-26 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20001, 30000, '2020-08-22 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40005, 20001, 30000, '2020-11-12 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40008, 20001, 30000, '2020-02-16 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40007, 20001, 30000, '2020-07-18 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40012, 20002, 30000, '2020-01-06 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40003, 20002, 30000, '2020-04-22 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40000, 20002, 30000, '2021-03-05 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40012, 20002, 30000, '2020-12-04 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20001, 30000, '2020-07-17 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40011, 20001, 30000, '2020-11-25 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40011, 20002, 30000, '2020-04-24 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40002, 20001, 30000, '2020-05-26 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20001, 30000, '2020-06-23 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40001, 20002, 30000, '2020-06-14 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40007, 20002, 30000, '2020-03-18 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20002, 30000, '2021-02-06 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20002, 30000, '2020-02-29 12:00:00');
 
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40008, 20002, 30000, '2020-01-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20002, 30000, '2020-11-01');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20001, 30000, '2021-01-19');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40011, 20001, 30000, '2020-06-11');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20001, 30000, '2020-10-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20002, 30000, '2020-04-27');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20001, 30000, '2021-01-30');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20002, 30000, '2020-09-27');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40014, 20001, 30000, '2021-02-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20002, 30000, '2020-06-05');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20001, 30000, '2020-01-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20001, 30000, '2020-02-29');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40002, 20002, 30000, '2020-08-31');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40002, 20001, 30000, '2021-02-04');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40001, 20002, 30000, '2020-10-11');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40014, 20002, 30000, '2019-12-18');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20001, 30000, '2020-03-10');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40003, 20002, 30000, '2020-12-23');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20001, 30000, '2020-05-23');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20002, 30000, '2020-03-21');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20001, 30000, '2019-12-28');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40000, 20001, 30000, '2020-02-29');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40014, 20001, 30000, '2020-09-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20002, 30000, '2021-01-26');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40011, 20002, 30000, '2021-02-02');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40008, 20002, 30000, '2020-01-15 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40001, 20002, 30000, '2020-11-01 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20001, 30000, '2021-01-19 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40011, 20001, 30000, '2020-06-11 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20001, 30000, '2020-10-26 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20002, 30000, '2020-04-27 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20001, 30000, '2021-01-30 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40001, 20002, 30000, '2020-09-27 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40014, 20001, 30000, '2021-02-26 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40001, 20002, 30000, '2020-06-05 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40001, 20001, 30000, '2020-01-26 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20001, 30000, '2020-02-29 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40002, 20002, 30000, '2020-08-31 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40002, 20001, 30000, '2021-02-04 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40001, 20002, 30000, '2020-10-11 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40014, 20002, 30000, '2019-12-18 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20001, 30000, '2020-03-10 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40003, 20002, 30000, '2020-12-23 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20001, 30000, '2020-05-23 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20002, 30000, '2020-03-21 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20001, 30000, '2019-12-28 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40000, 20001, 30000, '2020-02-29 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40014, 20001, 30000, '2020-09-15 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40007, 20002, 30000, '2021-01-26 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40011, 20002, 30000, '2021-02-02 12:00:00');
 
 /* Nurse only consultations */
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20000, 30001, '2020-02-02');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40013, 20000, 30001, '2020-07-22');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40013, 20000, 30001, '2021-01-21');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40011, 20000, 30001, '2021-01-05');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40014, 20000, 30001, '2020-02-29');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40012, 20000, 30001, '2020-07-07');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20000, 30001, '2020-06-22');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20000, 30001, '2020-02-12');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40004, 20000, 30001, '2020-06-14');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40004, 20000, 30001, '2021-02-09');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20000, 30001, '2020-10-03');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20000, 30001, '2020-10-21');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40007, 20000, 30001, '2021-03-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40000, 20000, 30001, '2021-03-13');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20000, 30001, '2020-11-29');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20000, 30001, '2020-10-05');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40013, 20000, 30001, '2020-02-11');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20000, 30001, '2020-06-05');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40005, 20000, 30001, '2019-12-29');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40014, 20000, 30001, '2020-09-15');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40012, 20000, 30001, '2021-01-29');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40008, 20000, 30001, '2020-01-04');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40006, 20000, 30001, '2020-07-02');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40010, 20000, 30001, '2020-01-08');
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_date) values (40009, 20000, 30001, '2020-11-29');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40007, 20000, 30001, '2020-02-02 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40013, 20000, 30001, '2020-07-22 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40013, 20000, 30001, '2021-01-21 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40011, 20000, 30001, '2021-01-05 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40014, 20000, 30001, '2020-02-29 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40012, 20000, 30001, '2020-07-07 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20000, 30001, '2020-06-22 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20000, 30001, '2020-02-12 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40004, 20000, 30001, '2020-06-14 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40004, 20000, 30001, '2021-02-09 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20000, 30001, '2020-10-03 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20000, 30001, '2020-10-21 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40007, 20000, 30001, '2021-03-15 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40000, 20000, 30001, '2021-03-13 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20000, 30001, '2020-11-29 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20000, 30001, '2020-10-05 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40013, 20000, 30001, '2020-02-11 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20000, 30001, '2020-06-05 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40005, 20000, 30001, '2019-12-29 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40014, 20000, 30001, '2020-09-15 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40012, 20000, 30001, '2021-01-29 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40008, 20000, 30001, '2020-01-04 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40006, 20000, 30001, '2020-07-02 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40010, 20000, 30001, '2020-01-08 12:00:00');
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time) values (40009, 20000, 30001, '2020-11-29 12:00:00');
+
 
 create table invoices (
         invoice_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 60000, INCREMENT BY 1) primary key,
@@ -208,3 +207,75 @@ create table invoices (
 
 insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (5291.92, '2020-5-18', 50001, true, false);
 insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (7747.29, '2020-2-7', 50003, false, true);
+
+
+
+create table surgeries (
+	surgery_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 70000, INCREMENT BY 1) primary key,
+	patient_id INT,
+	doctor_id INT,
+	surgery_time TIMESTAMP,
+        CONSTRAINT fk_doctor_surgery
+        FOREIGN KEY (doctor_id) 
+        REFERENCES doctors(doctor_id)
+            ON UPDATE RESTRICT
+            ON DELETE CASCADE,
+        CONSTRAINT fk_patient_surgery
+        FOREIGN KEY (patient_id) 
+        REFERENCES patients(patient_id)
+            ON UPDATE RESTRICT
+            ON DELETE CASCADE
+);
+
+/* Doctor only surgeries */
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '1997-12-31 23:59:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-07-02 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40004, 20002, '2020-06-09 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2021-02-20 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2020-12-04 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-07-11 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2021-02-14 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2021-01-26 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-08-22 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40005, 20001, '2020-11-12 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2020-02-16 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2020-07-18 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2020-01-06 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40003, 20002, '2020-04-22 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40000, 20002, '2021-03-05 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2020-12-04 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-07-17 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20001, '2020-11-25 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2020-04-24 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20001, '2020-05-26 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-06-23 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-06-14 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2020-03-18 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2021-02-06 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-02-29 12:00:00');
+
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20002, '2020-01-15 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-11-01 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20001, '2021-01-19 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20001, '2020-06-11 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-10-26 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20002, '2020-04-27 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2021-01-30 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-09-27 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20001, '2021-02-26 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-06-05 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20001, '2020-01-26 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-02-29 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20002, '2020-08-31 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20001, '2021-02-04 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-10-11 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20002, '2019-12-18 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20001, '2020-03-10 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40003, 20002, '2020-12-23 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20001, '2020-05-23 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20002, '2020-03-21 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2019-12-28 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40000, 20001, '2020-02-29 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20001, '2020-09-15 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2021-01-26 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2021-02-02 12:00:00');

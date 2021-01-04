@@ -21,73 +21,13 @@ public class TestMain {
 
         database.connect();
         
+        Surgery surgery = database.getSurgery(70002);
         
-        System.out.println(database.getUserID("admin", "admin"));
+        System.out.println(surgery.getSurgeryTime().getWeekNumber());
+
+        System.out.println(database.getCurrentWeekNumber());
         
-        System.exit(0);
-
-        Date fromDate = Date.valueOf("2000-01-01");
-        Date toDate = Date.valueOf("2020-09-09");
-
-        ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIsFromTo(database.getUserID("doctor", "doctor"), fromDate, toDate);
-
-        for (Consultation co : cons) {
-            System.out.println(co);
-        }
-
-        System.exit(0);
-
-        //System.out.println(database.getAdmin(10000));
-        //System.out.println(database.getConsultation(50000));
-        //database.printDatabaseTable("consultations");
-        //ArrayList<Consultation> cons = database.getAllConsultationsWhereIDIs(database.getUserID("doctor", "doctor"));
-
-        for (Consultation co : cons) {
-            System.out.println(co);
-        }
-        System.exit(0);
-
-        Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
-        database.addObjectToDatabase(nurse);
-        database.addObjectToDatabase(database.getNurse(30001));
-        database.addObjectToDatabase(database.getConsultation(50002));
-
-        System.out.println(database.getUserID("doctor", "doctor"));
-        System.out.println(database.getUserID("admin", "admin"));
-        System.out.println(database.getUserID("nurse", "nurse"));
-        System.out.println(database.getUserID("patient", "patient"));
-
-        User currentUser;
-        int currentUserID = -2;
-
-        ArrayList<Integer> int_arr = new ArrayList();
-
-        int_arr = database.getIDs();
-
-        //currentUserID = database.getUserID("testdoctor", "password");
-        System.out.println(currentUserID);
-
-        Admin admin = new Admin("AAAAA", "dsd", "dsds", true);
-        database.addObjectToDatabase(admin);
-
-        Doctor doctor = new Doctor("dds", "dsd", "dsds", true);
-        database.addObjectToDatabase(doctor);
-
-        //Nurse nurse = new Nurse("dds", "dsd", "dsds", true);
-        Patient patient = new Patient("fsdfs", "dsadsa", "dasdas", java.sql.Date.valueOf("2000-12-12"), new Address("sdaa", "sad", "sd", "dsaf", "sda", "asd"), false);
-        database.addObjectToDatabase(patient);
-
-        currentUserID = database.getUserID("nurse", "nurse");
-
-        System.out.println(currentUserID);
-
-        database.deleteObjectFromDatabase(database.getNurse(currentUserID));
-        currentUserID = database.getUserID("nurse", "nurse");
-
-        System.out.println(database.getConsultation(50002));
-
         database.printDatabaseTable("all");
-
     }
 
 }

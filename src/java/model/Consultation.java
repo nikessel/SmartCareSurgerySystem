@@ -17,14 +17,14 @@ public class Consultation extends DatabaseObject {
     private Patient patient;
     private Doctor doctor;
     private Nurse nurse;
-    private Date consultationDate;
+    private Timestamp consultationTime;
     private int consultationID;
 
     public Consultation() {
 
     }
 
-    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Date consultationDate, int consulationID) {
+    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime, int consulationID) {
         boolean isDatabase = false;
 
         try {
@@ -39,18 +39,18 @@ public class Consultation extends DatabaseObject {
             this.patient = patient;
             this.doctor = doctor;
             this.nurse = nurse;
-            this.consultationDate = consultationDate;
+            this.consultationTime = consultationTime;
             this.consultationID = consulationID;
         } else {
             System.out.println("Constructor with ID can only be called by the Database class");
         }
     }
 
-    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Date consultationDate) {
+    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime) {
         this.patient = patient;
         this.doctor = doctor;
         this.nurse = nurse;
-        this.consultationDate = consultationDate;
+        this.consultationTime = consultationTime;
         this.consultationID = -1;
     }
 
@@ -82,18 +82,18 @@ public class Consultation extends DatabaseObject {
         this.nurse = nurse;
     }
 
-    public Date getConsultationDate() {
-        return consultationDate;
+    public Timestamp getConsultationTime() {
+        return consultationTime;
     }
 
-    public void setConsultationDate(Date consultationDate) {
-        this.consultationDate = consultationDate;
+    public void setConsultationTime(Timestamp consultationTime) {
+        this.consultationTime = consultationTime;
     }
 
 
     @Override
     public String toString() {
-        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consultationDate=" + consultationDate + ", consulationID=" + consultationID + '}';
+        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consultationTime=" + consultationTime + ", consulationID=" + consultationID + '}';
     }
 
 }
