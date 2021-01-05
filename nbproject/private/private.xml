@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/myServletAttributeListener.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/databaseScript.sql</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Surgery.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/myServletContextListener.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/EmployeeDashboard.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/TestMain.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Database.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/employeeDashboard.jsp</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Consultation.java</file>
+            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Timestamp.java</file>
+        </group>
     </open-files>
 </project-private>

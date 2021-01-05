@@ -64,7 +64,7 @@
                             <th>Date</th>
                             <th>Patient name</th>
                             <th>Week number</th>
-                            <th>Day of month</th>
+                            <th>Day of week</th>
                             <th>Hour of day</th>
                             <th>Minute of day</th>
                         </tr>
