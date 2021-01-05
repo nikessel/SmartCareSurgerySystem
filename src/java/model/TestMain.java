@@ -17,23 +17,13 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        Database database = new Database();
-
-        database.connect();
         
-        Surgery surgery = database.getSurgery(70002);
-
-        Consultation consultation = database.getConsultation(50001);
-
-        System.out.println(database.getCurrentWeekNumber());
+        Geocoding.validateGeocode("BS161PU");
         
         
-        int currentWeekNumber = database.getCurrentWeekNumber();
+        System.out.println((Geocoding.ToString()));
         
-        // Also has get dayOfWeek, hour and so on
-        // Same for surgeries
         
-        //database.printDatabaseTable("all");
     }
 
 }
