@@ -17,6 +17,7 @@
                 <input id="username" name="username" required="required" type="text" placeholder="Username"/>
                 <input id="password" name="password" required="required" type="password" placeholder="Password" />
                 <input id="updatePassword" name="updatePassword" required="required" type="password" placeholder="Input new password" />
+                <input id="repeatPassword" name="repeatPassword" required="required" type="password" placeholder="Repeat password" />
                 <input type="submit" value="Submit" />
             </form>
             <br>
