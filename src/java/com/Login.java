@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
  */
 public class Login extends HttpServlet {
 
-    private String errorMessage;
     private int currentUserID;
 
     /**

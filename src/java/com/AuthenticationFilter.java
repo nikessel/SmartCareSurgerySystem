@@ -66,7 +66,7 @@ public class AuthenticationFilter implements Filter {
                 errorMessage = "Invalid password, please try again";
             }
 
-            httpRequest.getServletContext().setAttribute("errorMessage", errorMessage);
+            httpRequest.getServletContext().setAttribute("message", errorMessage);
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/login.jsp");
             requestDispatcher.forward(httpRequest, response);

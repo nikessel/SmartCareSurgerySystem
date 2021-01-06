@@ -2,6 +2,8 @@ package model;
 
 import java.io.*;
 import java.net.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.*;
@@ -17,32 +19,28 @@ import java.security.cert.X509Certificate;
 
 public class Geocoding {
 
-    /**
-     * @param args the command line arguments
-     */
     public static class SSLTool {
 
         public static void disableCertificateValidation() {
             // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
+                    @Override
                     public X509Certificate[] getAcceptedIssuers() {
                         return new X509Certificate[0];
                     }
 
+                    @Override
                     public void checkClientTrusted(X509Certificate[] certs, String authType) {
                     }
 
+                    @Override
                     public void checkServerTrusted(X509Certificate[] certs, String authType) {
                     }
                 }};
 
             // Ignore differences between given hostname and certificate hostname
-            HostnameVerifier hv = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+            HostnameVerifier hv = (String hostname, SSLSession session) -> true;
 
             // Install the all-trusting trust manager
             try {
@@ -50,7 +48,7 @@ public class Geocoding {
                 sc.init(null, trustAllCerts, new SecureRandom());
                 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
                 HttpsURLConnection.setDefaultHostnameVerifier(hv);
-            } catch (Exception e) {
+            } catch (KeyManagementException | NoSuchAlgorithmException e) {
             }
         }
     }
@@ -64,12 +62,34 @@ public class Geocoding {
     private static String administrative_area_level_1 = null;
     private static String administrative_area_level_2 = null;
     private static String country = null;
+
     // API key is restricted to Geocode of Google Maps only
     private static final String API_KEY = "AIzaSyD8oPDTMzQ-85uLrbyJerocg2Pv1Z3zYtU";
 
-    public static void validateGeocode(String postcode) {
-        
-        SSLTool.disableCertificateValidation();
+    private static void clearAll() {
+        status = null;
+        formattedAddress = null;
+        postcode = null;
+        route = null;
+        locality = null;
+        postal_town = null;
+        administrative_area_level_1 = null;
+        administrative_area_level_2 = null;
+        country = null;
+    }
+
+    public static boolean validateGeocode(String postcode) {
+
+        try {
+            if (postcode.isEmpty()) {
+                return false;
+            }
+        } catch (NullPointerException ex) {
+            return false;
+        }
+
+        clearAll();
+
         //Replace empty spaces with nothing       
         postcode = postcode.replace(" ", "");
         // Change url to inject postcode into the url after ensuring the URL is formatted correctly         
@@ -94,7 +114,7 @@ public class Geocoding {
             String output;
             String out = "";
 
-            // Loop througb br reader and assemble XML string from the response
+            // Loop through br reader and assemble XML string from the response
             while ((output = br.readLine()) != null) {
                 out += output;
             }
@@ -112,6 +132,7 @@ public class Geocoding {
                 Element GeoElement = (Element) GeoResponse;
                 // Get the status of the response contained in the status node
                 status = GeoElement.getElementsByTagName("status").item(0).getTextContent();
+
                 // Check if the status is OK so that data can be assigned to the attirbutes
                 if (status.equals("OK")) {
                     // Get the formatted address and assign to the attribute formattedAddress
@@ -131,16 +152,19 @@ public class Geocoding {
                             AssignAttribute((Element) AddressComponents.get(nodeIndex));
                         }
                     }
+                } else {
+                    return false;
                 }
             }
             // Disconnect the connection
             conn.disconnect();
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("Malformed URL passed");
-        } catch (IOException e) {
-            throw new RuntimeException("Error : " + e.getMessage());
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+            return true;
+        } catch (SSLHandshakeException ex) {
+            SSLTool.disableCertificateValidation();
+            return validateGeocode(postcode);
+        } catch (RuntimeException | IOException ex) {
+            System.out.println(ex);
+            return false;
         }
     }
 
@@ -150,6 +174,8 @@ public class Geocoding {
         // Get text content of "long_name" text node
         String ComponentContent = NodeElement.getElementsByTagName("long_name").item(0).getTextContent();
         // Determine which attribute to assign the text content to using the type content
+
+        System.out.println(TypeContent + ": " + ComponentContent);
         switch (TypeContent) {
             case "postal_code":
                 postcode = ComponentContent;
@@ -239,7 +265,10 @@ public class Geocoding {
         return country;
     }
 
-    public static String ToString() {
-        return formattedAddress;
+    public static Address getAddress() {
+        Address address = new Address(route, "", postcode, administrative_area_level_2, postal_town, "");
+
+        return address;
     }
+
 }

@@ -67,13 +67,13 @@ public class AuthorizationFilter implements Filter {
                 throw new Exception();
             }
 
-            httpRequest.getServletContext().setAttribute("errorMessage", "");
+            httpRequest.getServletContext().setAttribute("message", "");
 
             chain.doFilter(httpRequest, response);
 
         } catch (Exception e) {
 
-            httpRequest.getServletContext().setAttribute("errorMessage", "You are not allowed to access this resource");
+            httpRequest.getServletContext().setAttribute("message", "You are not allowed to access this resource");
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);

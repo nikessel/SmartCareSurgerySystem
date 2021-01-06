@@ -17,8 +17,27 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-
         
+        
+            
+        System.out.println(Geocoding.validateGeocode("wl5531ll"));
+        
+        System.out.println(Geocoding.getAddress());
+        System.exit(0);
+        
+        Database database = new Database();
+        
+        database.connect();
+        
+        Patient patient = database.getPatient(40017);
+        
+        System.out.println(patient.getSurName());
+        
+  
+        database.addPasswordToUser(patient, "hello");
+        
+        
+
     }
 
 }

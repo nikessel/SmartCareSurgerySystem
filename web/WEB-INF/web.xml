@@ -17,8 +17,8 @@
         <url-pattern>/passwordChanger.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AddUser</servlet-name>
-        <url-pattern>/addUser.do</url-pattern>
+        <servlet-name>AddPatient</servlet-name>
+        <url-pattern>/addPatient.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
@@ -63,8 +63,8 @@
         <servlet-class>com.ServletContextInitializer</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AddUser</servlet-name>
-        <servlet-class>com.AddUser</servlet-class>
+        <servlet-name>AddPatient</servlet-name>
+        <servlet-class>com.AddPatient</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>

@@ -20,9 +20,20 @@
     <body>
         <div class="dashboard">
             <div class="bg"></div>
-            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
+            <h1>Hello ${sessionScope.currentUser.firstName} ${sessionScope.currentUser.surName}.${message}</h1>
             <h2>Welcome to your personal dashboard.</h2>
             <br>
+            <h3>Personal information</h3>
+            <h5>Date of birth: ${sessionScope.currentUser.dateOfBirth}</h5>
+            <h5>Insured by the NHS: ${sessionScope.currentUser.insured ? 'Yes' : 'No'}</h5>
+            <h4>Address</h4>
+            <h5>${sessionScope.currentUser.address.addressLine1}</h5>
+            <h5>${sessionScope.currentUser.address.addressLine2}</h5>
+            <h5>${sessionScope.currentUser.address.postcode}</h5>
+            <h5>${sessionScope.currentUser.address.county}</h5>
+            <h5>${sessionScope.currentUser.address.town}</h5>
+            <h5>${sessionScope.currentUser.address.telephoneNumber}</h5>
+
             <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Logout" />
             </form>

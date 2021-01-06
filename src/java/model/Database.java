@@ -190,7 +190,6 @@ public class Database {
         return currentWeekNumber;
     }
 
-
     private String getIDString(int id) {
         if (id == -1) {
             return "";
@@ -569,6 +568,10 @@ public class Database {
         }
 
         try {
+            if (!(is.equals("true") || is.equals("false"))) {
+                throw new NumberFormatException();
+            }
+
             Boolean.parseBoolean(is);
             isBoolean = true;
         } catch (NumberFormatException ex1) {
@@ -579,7 +582,9 @@ public class Database {
             isString = "=" + is;
         }
 
-        return executeQuery("SELECT " + whatToSelect + " FROM " + fromTable + " WHERE " + where + isString);
+        String queryString = "SELECT " + whatToSelect + " FROM " + fromTable + " WHERE " + where + isString;
+
+        return executeQuery(queryString);
     }
 
     public Admin getAdmin(int adminID) {
@@ -861,6 +866,7 @@ public class Database {
 
                 thisID = patient.getPatientID();
             }
+
         } else if (object instanceof Consultation) {
             Consultation consultation = (Consultation) object;
             tableName = TABLENAMES[4];
@@ -945,6 +951,35 @@ public class Database {
             }
         }
 
+    }
+
+    public void addPasswordToUser(User user, String password) {
+        String username = user.getUsername();
+
+        if (user instanceof Admin) {
+            tableName = TABLENAMES[1];
+        } else if (user instanceof Doctor) {
+            tableName = TABLENAMES[1];
+        } else if (user instanceof Nurse) {
+            tableName = TABLENAMES[2];
+        } else if (user instanceof Patient) {
+            tableName = TABLENAMES[3];
+        }
+
+        idString = getIDString(tableName);
+
+        ResultSet rs1 = selectFromWhere(idString, tableName, "username", username);
+
+        try {
+            if (rs1.next()) {
+                thisID = rs1.getInt(idString);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            System.err.println("Error adding password to user");
+        }
+
+        setPassword(thisID, password);
     }
 
     public void setPassword(int userID, String password) {
