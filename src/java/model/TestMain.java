@@ -17,12 +17,7 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        
-        Geocoding.validateGeocode("BS161PU");
-        
-        
-        System.out.println((Geocoding.ToString()));
-        
+
         
     }
 
