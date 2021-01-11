@@ -62,9 +62,6 @@ public class EmployeeDashboard extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        showConsultationTable = getBoolean(request, "showConsultationTable");
-        showPatientTable = getBoolean(request, "showPatientTable");
-
         // Set view
         view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 

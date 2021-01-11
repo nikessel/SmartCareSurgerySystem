@@ -22,34 +22,25 @@ public class TestMain {
 
         database.connect();
         
-        System.exit(0);
         database.printDatabaseTable("doctors");
 
-        Nurse nurse = new Nurse("dasd", "dasd", "dasd", true);
-        Doctor doctor = new Doctor("sdffsd", "fdsf", "fsdfs", false);
+        Nurse nurse = database.getNurse(30001);
+        Doctor doctor = database.getDoctor(20001);
+        Patient patient = database.getPatient(40001);
         
-        database.addObjectToDatabase(nurse);
+        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(1992, 2, 4, 5, 2), "fsafwefwffwfwfwf", 10);
         
-        database.addObjectToDatabase(doctor);
-
-
-        ArrayList<Integer> arr = database.getPendingUsers();
-        ArrayList<Employee> emp = new ArrayList<>();
-
-        for (int i : arr) {
-            System.out.println(i);
-
-            if (database.isNurse(i)) {
-                emp.add(database.getNurse(i));
-            }
-            else if (database.isDoctor(i)) {
-                emp.add(database.getDoctor(i));
-            }
+        database.addObjectToDatabase(consultation);
+        
+        ArrayList<Object> cons = database.getAllFromDatabase("consultations");
+        
+        
+        for (Object obj : cons ) {
+            System.out.println(obj);
         }
-
-        for (Employee em : emp) {
-            System.out.println(em);
-        }
+        
+        
+        
     }
 
 }

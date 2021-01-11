@@ -19,12 +19,14 @@ public class Consultation extends DatabaseObject {
     private Nurse nurse;
     private Timestamp consultationTime;
     private int consultationID;
+    private String note;
+    private int duration;
 
     public Consultation() {
 
     }
 
-    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime, int consulationID) {
+    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime, String note, int duration, int consulationID) {
         boolean isDatabase = false;
 
         try {
@@ -41,16 +43,20 @@ public class Consultation extends DatabaseObject {
             this.nurse = nurse;
             this.consultationTime = consultationTime;
             this.consultationID = consulationID;
+            this.note = note;
+            this.duration = duration;
         } else {
             System.out.println("Constructor with ID can only be called by the Database class");
         }
     }
 
-    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime) {
+    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime, String note, int duration) {
         this.patient = patient;
         this.doctor = doctor;
         this.nurse = nurse;
         this.consultationTime = consultationTime;
+        this.note = note;
+        this.duration = duration;
         this.consultationID = -1;
     }
 
@@ -90,10 +96,30 @@ public class Consultation extends DatabaseObject {
         this.consultationTime = consultationTime;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+    
+    
 
     @Override
     public String toString() {
-        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consultationTime=" + consultationTime + ", consulationID=" + consultationID + '}';
+        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + 
+                ", nurse=" + nurse + ", consultationTime=" + consultationTime + 
+                ", note:" + note + ", duration:" + duration +
+                ", consulationID=" + consultationID + '}';
     }
 
 }

@@ -362,7 +362,6 @@ public class Database {
         return output;
     }
 
-    
     public boolean isUserPending(int id) {
 
         try {
@@ -434,12 +433,13 @@ public class Database {
                 = isConsultation = isInvoice = isSurgery = paid = insured
                 = isFullTime = false;
 
-        int id = -1;
+        int id, duration;
 
+        id = duration = -1;
         double price = -1.0;
 
-        String username, firstName, surName;
-        username = firstName = surName = "";
+        String username, firstName, surName, note;
+        username = firstName = surName = note = "";
 
         java.util.Date dateOfBirth, invoiceDate;
         dateOfBirth = invoiceDate = new java.util.Date();
@@ -550,6 +550,8 @@ public class Database {
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     nurse = getNurse(rs.getInt("nurse_id"));
                     consultationTime = Timestamp.convertToMyTimestamp(rs.getTimestamp("consultation_time"));
+                    note = rs.getString("note");
+                    duration = rs.getInt("duration");
                 }
 
             } catch (SQLException ex) {
@@ -601,7 +603,7 @@ public class Database {
                 return new Patient(username, firstName, surName, id, dateOfBirth, address, insured);
             }
         } else if (isConsultation) {
-            return new Consultation(patient, doctor, nurse, consultationTime, id);
+            return new Consultation(patient, doctor, nurse, consultationTime, note, duration, id);
         } else if (isInvoice) {
             return new Invoice(consultation, price, invoiceDate, paid, insured, id);
         } else if (isSurgery) {
@@ -1023,6 +1025,12 @@ public class Database {
 
                 valuesString.append("true, ");
             }
+
+            namesString.append("note, ");
+            valuesString.append("'" + consultation.getNote() + "', ");
+
+            namesString.append("duration, ");
+            valuesString.append(consultation.getDuration());
 
         } else if (object instanceof Invoice) {
             Invoice invoice = (Invoice) object;
