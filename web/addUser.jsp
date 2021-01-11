@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="dashboard login">
-            <h1>Smart Care Surgery System Add New Patient</h1>
+            <h1>Smart Care Surgery System Add New User</h1>
             <h2>${message}</h2>
             <form action="${pageContext.request.contextPath}/addPatient.do" method="post">
 
