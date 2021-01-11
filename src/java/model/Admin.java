@@ -7,8 +7,7 @@ package model;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
 public class Admin extends Employee {
 
@@ -49,6 +48,10 @@ public class Admin extends Employee {
     }
 
     public int getAdminID() {
+        return adminID;
+    }
+
+    public int getID() {
         return adminID;
     }
 

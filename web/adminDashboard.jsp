@@ -20,16 +20,34 @@
     <body>
         <div class="dashboard">
             <div class="bg"></div>
-            
+
             <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
             <h2>Welcome to your personal dashboard.</h2>
-            
+
             <br>
             <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Logout" />
             </form>
             <br>
             <p style="text-align: right">You are logged in as an ${loggedInAs}<p>
+
+            <h3>Pending new employee requests</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${sessionScope.pendingEmployees}" var="pendingEmployee">
+                        <tr>
+                            <td>${pendingEmployee.ID}</td>
+                            <td>${pendingEmployee.firstName} ${pendingEmployee.surName}</td>
+                        </tr>
+                    </c:forEach>   
+                </tbody>
+            </table>
         </div>
 
 

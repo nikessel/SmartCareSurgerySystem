@@ -23,8 +23,6 @@ import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -36,7 +34,7 @@ public class Database {
     private Connection connection;
     private Statement statement;
     private ResultSet rs = null;
-    private final String DATABASESTRING = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
+    private final String DATABASEPATH = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private final String USERNAME = "databaseUser";
     private final String PASSWORD = "password";
     private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries"};
@@ -69,7 +67,7 @@ public class Database {
     public void connect() {
 
         try {
-            connection = DriverManager.getConnection(DATABASESTRING, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(DATABASEPATH, USERNAME, PASSWORD);
             statement = connection.createStatement();
         } catch (SQLException e) {
             System.err.println(e);
@@ -252,6 +250,14 @@ public class Database {
 
     }
 
+    public boolean isDoctor(int thisID) {
+        return 20000 <= thisID && thisID <= 29999;
+    }
+
+    public boolean isNurse(int thisID) {
+        return 30000 <= thisID && thisID <= 39999;
+    }
+
     public int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
@@ -355,9 +361,9 @@ public class Database {
 
         return output;
     }
-    
+
     public boolean isUserPending(int id) {
-        
+
         try {
             for (int i = 1; i < 3; i++) {
                 tableName = USERTABLENAMES[i];
@@ -374,6 +380,49 @@ public class Database {
         }
 
         return false;
+    }
+
+    public void approveEmployee(int id) {
+        idString = getIDString(id);
+
+        if (isDoctor(id)) {
+            tableName = USERTABLENAMES[1];
+        } else if (isNurse(id)) {
+            tableName = USERTABLENAMES[2];
+        }
+
+        try {
+
+            queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
+
+            System.out.println(queryString);
+            executeUpdate(queryString);
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            closeRSAndStatement();
+        }
+
+    }
+
+    public void approveConsultation(int id) {
+        idString = getIDString(id);
+
+        tableName = TABLENAMES[4];
+        try {
+
+            queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
+
+            System.out.println(queryString);
+            executeUpdate(queryString);
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            closeRSAndStatement();
+        }
+
     }
 
     private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
@@ -939,7 +988,7 @@ public class Database {
                     thisID = nurse.getNurseID();
                 }
 
-                if (!(employee instanceof Admin)) {
+                if (!(employee instanceof Admin) && thisID == -1) {
                     namesString.append("pending, ");
 
                     valuesString.append("true, ");
@@ -960,15 +1009,19 @@ public class Database {
         } else if (object instanceof Consultation) {
             Consultation consultation = (Consultation) object;
             tableName = TABLENAMES[4];
+            thisID = consultation.getConsultationID();
 
-            namesString.append("patient_id, doctor_id, nurse_id, consultation_time, pending, ");
+            namesString.append("patient_id, doctor_id, nurse_id, consultation_time, ");
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
             valuesString.append(consultation.getConsultationTime() + "', ");
-            valuesString.append("true, ");
 
-            thisID = consultation.getConsultationID();
+            if (thisID == -1) {
+                namesString.append("pending, ");
+
+                valuesString.append("true, ");
+            }
 
         } else if (object instanceof Invoice) {
             Invoice invoice = (Invoice) object;
@@ -1035,6 +1088,7 @@ public class Database {
 
             queryString = updatePrefix + tableName + " SET " + updateString.toString() + " WHERE " + idString + "=" + thisID;
 
+            System.out.println(queryString);
             try {
                 executeUpdate(queryString);
             } catch (SQLException ex) {

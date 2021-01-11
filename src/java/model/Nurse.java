@@ -52,6 +52,10 @@ public class Nurse extends Employee {
     public int getNurseID() {
         return nurseID;
     }
+    
+    public int getID() {
+        return nurseID;
+    }
 
     @Override
     public String toString() {

@@ -25,6 +25,7 @@ public class AuthorizationFilter implements Filter {
     private FilterConfig fc;
     private String errorMessage;
     private int currentUserID;
+    private HttpSession session;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -46,7 +47,7 @@ public class AuthorizationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpSession session = httpRequest.getSession(false);
+        session = httpRequest.getSession(false);
         String requestURI = httpRequest.getRequestURI();
 
         response.setContentType("text/html;charset=UTF-8");
@@ -67,13 +68,13 @@ public class AuthorizationFilter implements Filter {
                 throw new Exception();
             }
 
-            httpRequest.getServletContext().setAttribute("message", "");
+            session.setAttribute("message", "");
 
             chain.doFilter(httpRequest, response);
 
         } catch (Exception e) {
 
-            httpRequest.getServletContext().setAttribute("message", "You are not allowed to access this resource");
+            session.setAttribute("message", "You are not allowed to access this resource");
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);

@@ -89,6 +89,10 @@ public class Patient extends User {
         this.insured = insured;
     }
 
+    public int getID() {
+        return patientID;
+    }
+
     @Override
     public String toString() {
         return "Patient{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", patientID=" + patientID + ", dateOfBirth=" + dateOfBirth + ", address=" + address + '}';
