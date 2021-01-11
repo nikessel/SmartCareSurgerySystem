@@ -23,6 +23,8 @@ import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -303,6 +305,50 @@ public class Database {
                     output.add(thisID);
                 }
             }
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+
+        return output;
+    }
+
+    public ArrayList<Integer> getPendingUsers() {
+        ArrayList<Integer> output = new ArrayList();
+
+        try {
+            for (int i = 1; i < 3; i++) {
+                tableName = USERTABLENAMES[i];
+                idString = getIDString(tableName);
+                ResultSet rs1 = selectFromWhere("*", tableName, "pending", "true");
+
+                while (rs1.next()) {
+                    thisID = rs1.getInt(idString);
+
+                    output.add(thisID);
+                }
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+
+        return output;
+    }
+
+    public ArrayList<Integer> getPendingConsultations() {
+        ArrayList<Integer> output = new ArrayList();
+
+        try {
+            tableName = TABLENAMES[4];
+            idString = getIDString(tableName);
+            ResultSet rs1 = selectFromWhere("*", tableName, "pending", "true");
+
+            while (rs1.next()) {
+                thisID = rs1.getInt(idString);
+
+                output.add(thisID);
+            }
+
         } catch (SQLException ex) {
             System.err.println(ex);
         }
@@ -810,6 +856,23 @@ public class Database {
         }
     }
 
+    public int getLastEntryID(String tableName) {
+        idString = getIDString(tableName);
+        int output = -1;
+        String queryString = "SELECT * FROM " + tableName + " ORDER BY " + idString;
+        System.out.println(queryString);
+        ResultSet rs1 = executeQuery(queryString);
+
+        try {
+            while (rs1.next()) {
+                output = rs1.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return output;
+    }
+
     public void addObjectToDatabase(Object object) {
         StringBuilder namesString = new StringBuilder();
         StringBuilder valuesString = new StringBuilder();
@@ -855,6 +918,13 @@ public class Database {
 
                     thisID = nurse.getNurseID();
                 }
+
+                if (!(employee instanceof Admin)) {
+                    namesString.append("pending, ");
+
+                    valuesString.append("true, ");
+                }
+
             } else if (object instanceof Patient) {
                 Patient patient = (Patient) object;
                 tableName = TABLENAMES[3];
@@ -871,11 +941,12 @@ public class Database {
             Consultation consultation = (Consultation) object;
             tableName = TABLENAMES[4];
 
-            namesString.append("patient_id, doctor_id, nurse_id, consultation_date, ");
+            namesString.append("patient_id, doctor_id, nurse_id, consultation_time, pending, ");
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
             valuesString.append(consultation.getConsultationTime() + "', ");
+            valuesString.append("true, ");
 
             thisID = consultation.getConsultationID();
 

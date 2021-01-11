@@ -5,6 +5,7 @@
  */
 package model;
 
+import com.mysql.cj.x.protobuf.MysqlxExpect;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -17,26 +18,31 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        
-        
-            
-        System.out.println(Geocoding.validateGeocode("wl5531ll"));
-        
-        System.out.println(Geocoding.getAddress());
-        System.exit(0);
-        
         Database database = new Database();
-        
+
         database.connect();
+
+        Doctor doctor = database.getDoctor(20001);
+
+        database.addObjectToDatabase(doctor);
+
+        database.printDatabaseTable("doctors");
+
+        Nurse nurse = database.getNurse(30001);
         
-        Patient patient = database.getPatient(40017);
+        Patient patient = database.getPatient(40001);
+
+        database.addObjectToDatabase(nurse);
         
-        System.out.println(patient.getSurName());
+        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(1992, 2, 2, 2, 2));
+
+        database.addObjectToDatabase(consultation);
         
-  
-        database.addPasswordToUser(patient, "hello");
-        
-        
+        ArrayList<Integer> arr = database.getPendingConsultations();
+
+        for (int i : arr) {
+            System.out.println(i);
+        }
 
     }
 
