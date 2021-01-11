@@ -158,6 +158,13 @@ public class AddUser extends HttpServlet {
             } catch (Exception ex) {
 
             }
+            
+            if (userType == 2) {
+                headline = "Doctor";
+            }
+            else {
+                headline = "Nurse";
+            }
         }
 
         session.setAttribute("headline", headline);

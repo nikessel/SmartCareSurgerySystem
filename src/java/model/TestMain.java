@@ -21,7 +21,8 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
-
+        
+        System.exit(0);
         database.printDatabaseTable("doctors");
 
         Nurse nurse = new Nurse("dasd", "dasd", "dasd", true);
