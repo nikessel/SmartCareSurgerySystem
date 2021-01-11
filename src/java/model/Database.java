@@ -1030,7 +1030,7 @@ public class Database {
             valuesString.append("'" + consultation.getNote() + "', ");
 
             namesString.append("duration, ");
-            valuesString.append(consultation.getDuration());
+            valuesString.append(consultation.getDuration() + ", ");
 
         } else if (object instanceof Invoice) {
             Invoice invoice = (Invoice) object;
