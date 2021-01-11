@@ -12,14 +12,14 @@
         <div class="dashboard login">
             <h1>Smart Care Surgery System Add New User</h1>
             <h2>${message}</h2>
-            <form action="${pageContext.request.contextPath}/addPatient.do" method="post">
+            <form action="${pageContext.request.contextPath}/addUser.do" method="post">
 
                 <input id="lookupPostcode" name="lookupPostcode" required="required" type="text" placeholder="Lookup postcode"/>
                 <input type="submit" value="Submit" />
 
             </form>
             <br>
-            <form action="${pageContext.request.contextPath}/addPatient.do" method="post">
+            <form action="${pageContext.request.contextPath}/addUser.do" method="post">
                 <h3>Credentials</h3>
                 <input id="username" name="username" required="required" type="text" placeholder="Username" value="${username}"/>
                 <input id="password" name="password" required="required" type="password" placeholder="Password"/>

@@ -53,7 +53,7 @@ public class AddUser extends HttpServlet {
         message = "";
         success = false;
         session = request.getSession();
-        view = getServletContext().getRequestDispatcher("/addPatient.jsp");
+        view = getServletContext().getRequestDispatcher("/addUser.jsp");
         lookupPostcode = request.getParameter("lookupPostcode");
         thisAddress = new Address("", "", "", "", "", "");
 
