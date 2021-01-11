@@ -25,7 +25,7 @@
             <form action="${pageContext.request.contextPath}/passwordChanger.jsp" method="post">
                 <input type="submit" value="Change password" />
             </form>
-            <form action="${pageContext.request.contextPath}/addPatient.jsp" method="post">
+            <form action="${pageContext.request.contextPath}/addUser.jsp" method="post">
                 <input type="submit" value="Create a new user" />
             </form>
 

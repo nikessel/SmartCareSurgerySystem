@@ -22,7 +22,7 @@ import java.sql.Date;
  *
  * @author niklas
  */
-public class AddPatient extends HttpServlet {
+public class AddUser extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,7 +53,7 @@ public class AddPatient extends HttpServlet {
         message = "";
         success = false;
         session = request.getSession();
-        view = getServletContext().getRequestDispatcher("/addPatient.jsp");
+        view = getServletContext().getRequestDispatcher("/addUser.jsp");
         lookupPostcode = request.getParameter("lookupPostcode");
         thisAddress = new Address("", "", "", "", "", "");
 
