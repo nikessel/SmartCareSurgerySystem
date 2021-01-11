@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import model.Database;
 
 /**
@@ -25,6 +26,8 @@ public class AuthenticationFilter implements Filter {
     private FilterConfig fc;
     private String errorMessage;
     private int currentUserID;
+    private boolean isPending;
+    private HttpSession session;
 
     private boolean wrongUsername() {
         return currentUserID == -2;
@@ -44,29 +47,40 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         response.setContentType("text/html;charset=UTF-8");
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        Database database = (Database) request.getServletContext().getAttribute("database");
+        String username = httpRequest.getParameter("username");
+        String password = httpRequest.getParameter("password");
+        session = httpRequest.getSession();
+        Database database = (Database) httpRequest.getServletContext().getAttribute("database");
+
         errorMessage = "";
 
         try {
             currentUserID = database.getUserID(username, password);
+            isPending = database.isUserPending(currentUserID);
 
-            if (currentUserID >= 0) {
-                request.setAttribute("userID", currentUserID);
-                chain.doFilter(request, response);
-            } else {
+            if (isPending) {
                 throw new NullPointerException();
+            } else {
+
+                if (currentUserID >= 0) {
+                    httpRequest.setAttribute("userID", currentUserID);
+                    chain.doFilter(httpRequest, response);
+                } else {
+                    throw new NullPointerException();
+                }
             }
 
         } catch (NullPointerException e) {
-            if (wrongUsername()) {
+            if (isPending) {
+                errorMessage = "Admin approval required before this user can login";
+            } else if (wrongUsername()) {
                 errorMessage = "Invalid username, please try again";
             } else if (wrongPassword()) {
                 errorMessage = "Invalid password, please try again";
             }
 
             httpRequest.getServletContext().setAttribute("message", errorMessage);
+            session.setAttribute("message", errorMessage);
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/login.jsp");
             requestDispatcher.forward(httpRequest, response);

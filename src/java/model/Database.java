@@ -355,6 +355,26 @@ public class Database {
 
         return output;
     }
+    
+    public boolean isUserPending(int id) {
+        
+        try {
+            for (int i = 1; i < 3; i++) {
+                tableName = USERTABLENAMES[i];
+                idString = getIDString(tableName);
+                ResultSet rs1 = selectFromWhere("*", tableName, idString, String.valueOf(id));
+
+                while (rs1.next()) {
+                    return rs1.getBoolean("pending");
+                }
+            }
+
+        } catch (SQLException ex) {
+
+        }
+
+        return false;
+    }
 
     private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
 
