@@ -18,8 +18,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
 import model.*;
 
@@ -37,6 +36,7 @@ public class EmployeeDashboard extends HttpServlet {
     List<Patient> patients;
     String message = "";
     Date fromDate, toDate;
+    boolean showConsultationTable, showPatientTable;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,18 +47,31 @@ public class EmployeeDashboard extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private boolean getBoolean(HttpServletRequest request, String variableName) {
+        try {
+            if (request.getParameter(variableName).equals("true")) {
+                return true;
+            }
+        } catch (NullPointerException ex) {
+
+        }
+        return false;
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
+        showConsultationTable = getBoolean(request, "showConsultationTable");
+        showPatientTable = getBoolean(request, "showPatientTable");
+
         // Set view
         view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
         //Get session
         session = request.getSession();
-        
+
         database = (Database) getServletContext().getAttribute("database");
-        
-        
 
         try {
             if (Boolean.parseBoolean(String.valueOf(request.getAttribute("resetDates")))) {
@@ -120,7 +133,14 @@ public class EmployeeDashboard extends HttpServlet {
         //cookie.setMaxAge(20 * 60);
         //response.addCookie(cookie);
         // Get database lists
-        consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+        if (showConsultationTable) {
+            consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+            showPatientTable = false;
+        } else if (showPatientTable) {
+            patients = database.getAllPatients();
+            showConsultationTable = false;
+        }
+
         patients = database.getAllPatients();
 
         // Set / update attributes for currentSession
@@ -130,6 +150,8 @@ public class EmployeeDashboard extends HttpServlet {
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
             session.setAttribute("loggedInAs", loggedInAs);
+            session.setAttribute("showConsultationTable", showConsultationTable);
+            session.setAttribute("showPatientTable", showPatientTable);
 
         }
 

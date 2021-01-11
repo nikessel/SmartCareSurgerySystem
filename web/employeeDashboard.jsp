@@ -23,7 +23,17 @@
             <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
             <h2>Welcome to your personal dashboard.</h2>
             <br>
-            <div class="leftDiv">
+            <br>
+            <form method="post" action="${pageContext.request.contextPath}/protected/employeeDashboard.do">
+                <label for="showConsultationTable">Show consultation table</label>
+                <input type="radio" value="true" name="showConsultationTable"/>
+                <label for="showPatientTable">Show patient table</label>
+                <input type="radio" value="true" name="showPatientTable"/>
+                <input type="submit" value="Submit" />
+            </form>
+            <br>
+            <c:if test = "${sessionScope.showConsultationTable}">
+
                 <h2>Scheduled consultations</h2>
                 <div>
                     <form method="post" action="${pageContext.request.contextPath}/protected/employeeDashboard.do" name="dateSelector">
@@ -42,65 +52,65 @@
                     </c:if>
                     <br>
                 </div>
-            </div>
-            <div class="rightDiv">
-                <h2>List of patients</h2>
-                <form method="post" action="${pageContext.request.contextPath}/protected/employeeDashboard.do" name="patientListSelector">
-                    <select name="insuranceSelection" onchange="this.form.submit();">
-                        <option disabled selected value> sort by insurance status </option>
-                        <option value="0">insured
-                        <option value="1">not insured
-                        <option value="2">all
-                    </select>
-                </form>
-            </div>
+                <div id="consultationTableDiv">
 
-            <br>
-            <br>
-            <div class="ltableDiv" id="consultationTableDiv">
-                <table id="consultationTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Patient name</th>
-                            <th>Week number</th>
-                            <th>Day of week</th>
-                            <th>Hour of day</th>
-                            <th>Minute of day</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${consultations}" var="consultation">
+                    <table id="consultationTable">
+                        <thead>
                             <tr>
-                                <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy")}</td>
-                                <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
-                                <td>${consultation.consultationTime.weekNumber}</td>
-                                <td>${consultation.consultationTime.day}</td>
-                                <td>${consultation.consultationTime.hours}</td>
-                                <td>${consultation.consultationTime.minutes}</td>
+                                <th>Date</th>
+                                <th>Patient name</th>
+                                <th>Week number</th>
+                                <th>Day of week</th>
+                                <th>Hour of day</th>
+                                <th>Minute of day</th>
                             </tr>
-                        </c:forEach>   
-                    </tbody>
-                </table>
-            </div> 
-            <div class="rtableDiv" id="patientTableDiv">
-                <table id="patientTable">
-                    <thead>
-                        <tr>
-                            <th>Patient name</th>
-                            <th>Is insured by the NHS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${patients}" var="patient">
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${consultations}" var="consultation">
+                                <tr>
+                                    <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy")}</td>
+                                    <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
+                                    <td>${consultation.consultationTime.weekNumber}</td>
+                                    <td>${consultation.consultationTime.day}</td>
+                                    <td>${consultation.consultationTime.hours}</td>
+                                    <td>${consultation.consultationTime.minutes}</td>
+                                </tr>
+                            </c:forEach>   
+                        </tbody>
+                    </table>
+
+                </div> 
+            </c:if>
+            <c:if test = "${sessionScope.showPatientTable}">
+                    <h2>List of patients</h2>
+                    <form method="post" action="${pageContext.request.contextPath}/protected/employeeDashboard.do" name="patientListSelector">
+                        <select name="insuranceSelection" onchange="this.form.submit();">
+                            <option disabled selected value> sort by insurance status </option>
+                            <option value="0">insured
+                            <option value="1">not insured
+                            <option value="2">all
+                        </select>
+                    </form>
+
+                <div id="patientTableDiv">
+                    <table id="patientTable">
+                        <thead>
                             <tr>
-                                <td>${patient.firstName} ${patient.surName}</td>
-                                <td>${patient.insured ? 'Yes' : 'No'}</td>
+                                <th>Patient name</th>
+                                <th>Is insured by the NHS</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div> 
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${patients}" var="patient">
+                                <tr>
+                                    <td>${patient.firstName} ${patient.surName}</td>
+                                    <td>${patient.insured ? 'Yes' : 'No'}</td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div> 
+            </c:if>
             <br>
             <br>
             <form action="${pageContext.request.contextPath}/logout.do" method="post">
