@@ -37,7 +37,7 @@ public class Database {
     private final String DATABASEPATH = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private final String USERNAME = "databaseUser";
     private final String PASSWORD = "password";
-    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries"};
+    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries", "prices"};
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
@@ -250,12 +250,24 @@ public class Database {
 
     }
 
+    public boolean isAdmin(int thisID) {
+        return 10000 <= thisID && thisID <= 19999;
+    }
+
     public boolean isDoctor(int thisID) {
         return 20000 <= thisID && thisID <= 29999;
     }
 
     public boolean isNurse(int thisID) {
         return 30000 <= thisID && thisID <= 39999;
+    }
+
+    public boolean isEmployee(int thisID) {
+        return 20000 <= thisID && thisID <= 39999;
+    }
+
+    public boolean isPatient(int thisID) {
+        return 40000 <= thisID && thisID <= 49999;
     }
 
     public int getUserID(String username, String password) {
@@ -360,6 +372,22 @@ public class Database {
         }
 
         return output;
+    }
+
+    public int getPrice(String of) {
+        tableName = TABLENAMES[7];
+
+        try {
+            ResultSet rs1 = executeQuery("SELECT " + of + "_hourly FROM prices");
+
+            while (rs1.next()) {
+                return rs1.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Unable to get surgery price");
+
+        }
+        return -1;
     }
 
     public boolean isUserPending(int id) {
@@ -1190,6 +1218,18 @@ public class Database {
             System.err.println(ex);
         } finally {
             closeRSAndStatement();
+        }
+    }
+
+    public void setPrice(String of, double to) {
+        tableName = TABLENAMES[7];
+
+        queryString = "UPDATE prices SET " + of + "_hourly=" + to + " WHERE price_id=80000";
+
+        try {
+            executeUpdate(queryString);
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
     }
 

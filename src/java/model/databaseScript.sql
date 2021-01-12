@@ -289,7 +289,9 @@ insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002
 
 
 create table prices (
+        price_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 80000, INCREMENT BY 1) primary key,
     	surgery_hourly DECIMAL(7,2),
         consultation_hourly DECIMAL(7,2)
-)
-insert into prices (surgery_hourly, consultation_hourly) values (1000.00, 100.00)
+);
+
+insert into prices (surgery_hourly, consultation_hourly) values (1000.00, 100.00);

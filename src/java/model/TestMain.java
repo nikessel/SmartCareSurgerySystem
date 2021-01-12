@@ -21,17 +21,18 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
-
-        database.printDatabaseTable("doctors");
-
-        Nurse nurse = database.getNurse(30001);
+        
         Doctor doctor = database.getDoctor(20001);
-        Patient patient = database.getPatient(40001);
+        
+        database.addObjectToDatabase(doctor);
 
-        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(1992, 2, 4, 5, 2), "fsafwefwffwfwfwf", 10);
-
-        database.addObjectToDatabase(consultation);
-
+        System.out.println(database.getPrice("consultation"));
+        
+        database.setPrice("consultation", 555);
+        
+        System.out.println(database.getPrice("consultation"));
+        
+        
 
 
     }

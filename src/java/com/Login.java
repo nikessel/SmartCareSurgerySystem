@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Database;
 /**
  *
  * @author Genius
@@ -29,17 +30,7 @@ public class Login extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private boolean isAdmin() {
-        return 10000 <= currentUserID && currentUserID <= 19999;
-    }
 
-    private boolean isEmployee() {
-        return 20000 <= currentUserID && currentUserID <= 39999;
-    }
-
-    private boolean isPatient() {
-        return 40000 <= currentUserID && currentUserID <= 49999;
-    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,6 +38,7 @@ public class Login extends HttpServlet {
 
         HttpSession session = null;
         Cookie cookie = null;
+        Database database = (Database) request.getServletContext().getAttribute("database");
 
         try {
             currentUserID = (int) request.getAttribute("userID");
@@ -54,13 +46,13 @@ public class Login extends HttpServlet {
             session.setAttribute("userID", currentUserID);
 
             // username  password validation 
-            if (isAdmin()) {
+            if (database.isAdmin(currentUserID)) {
                 response.sendRedirect(request.getContextPath() + "/protected/adminDashboard.do");
                 
-            } else if (isEmployee()) {
+            } else if (database.isEmployee(currentUserID)) {
                 response.sendRedirect(request.getContextPath() + "/protected/employeeDashboard.do");
                 
-            } else if (isPatient()) {
+            } else if (database.isPatient(currentUserID)) {
                 response.sendRedirect(request.getContextPath() + "/protected/patientDashboard.do");
                 
             } else {
