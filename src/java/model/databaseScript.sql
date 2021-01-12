@@ -4,6 +4,7 @@
  *
  */
 
+DROP TABLE prices;
 DROP TABLE surgeries;
 DROP TABLE invoices;
 DROP TABLE consultations;
@@ -286,3 +287,9 @@ insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20001
 insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2021-01-26 12:00:00');
 insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2021-02-02 12:00:00');
 
+
+create table prices (
+    	surgery_hourly DECIMAL(7,2),
+        consultation_hourly DECIMAL(7,2)
+)
+insert into prices (surgery_hourly, consultation_hourly) values (1000.00, 100.00)
