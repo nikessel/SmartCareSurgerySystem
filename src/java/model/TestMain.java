@@ -32,7 +32,9 @@ public class TestMain {
         
         database.addObjectToDatabase(consultation);
         
-        ArrayList<Object> cons = database.getAllFromDatabase("consultations");
+        ArrayList<Surgery> cons = database.getAllSurgeriesWhereIDIs(20001);
+        
+        
         
         
         for (Object obj : cons ) {

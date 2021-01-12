@@ -875,6 +875,20 @@ public class Database {
         return output;
     }
 
+    public ArrayList<Surgery> getAllSurgeriesWhereIDIs(int id) {
+
+        idString = getIDString(id);
+
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("surgeries", idString, String.valueOf(id));
+        ArrayList<Surgery> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            output.add((Surgery) obj);
+        });
+
+        return output;
+    }
+
     public ArrayList<Invoice> getAllInvoicesWhereIDIs(int id) {
 
         idString = getIDString(id);
