@@ -130,14 +130,7 @@ public class EmployeeDashboard extends HttpServlet {
         //cookie.setMaxAge(20 * 60);
         //response.addCookie(cookie);
         // Get database lists
-        if (showConsultationTable) {
-            consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-            showPatientTable = false;
-        } else if (showPatientTable) {
-            patients = database.getAllPatients();
-            showConsultationTable = false;
-        }
-
+        consultations = database.getAllConsultationsWhereIDIs(currentUserID);
         patients = database.getAllPatients();
 
         // Set / update attributes for currentSession
@@ -147,8 +140,6 @@ public class EmployeeDashboard extends HttpServlet {
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
             session.setAttribute("loggedInAs", loggedInAs);
-            session.setAttribute("showConsultationTable", showConsultationTable);
-            session.setAttribute("showPatientTable", showPatientTable);
 
         }
 
