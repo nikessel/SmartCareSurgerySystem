@@ -96,7 +96,7 @@ public class AddUser extends HttpServlet {
         surName = request.getParameter("surName");
 
         dateOfBirth = Date.valueOf(request.getParameter("dateOfBirth"));
-        addressLine1 = request.getParameter("addressLine1");
+        addressLine1 = request.getParameter("streetNumber") + " " + request.getParameter("addressLine1");
         addressLine2 = request.getParameter("addressLine2");
         county = request.getParameter("county");
         town = request.getParameter("town");
@@ -119,26 +119,43 @@ public class AddUser extends HttpServlet {
 
         message = "";
         success = false;
-        headline = "";
         session = request.getSession();
         this.request = request;
 
-        view = getServletContext().getRequestDispatcher("/chooseUser.jsp");
+        view = getServletContext().getRequestDispatcher("/addUser.jsp");
         lookupPostcode = request.getParameter("lookupPostcode");
         address = new Address("", "", "", "", "", "");
 
         try {
-            userType = Integer.parseInt(request.getParameter("userType"));
+            userType = Integer.parseInt((String) session.getAttribute("userType"));
 
-        } catch (NumberFormatException ex2) {
+        } catch (NumberFormatException ex1) {
+            try {
+                userType = Integer.parseInt(request.getParameter("userType"));
+                session.setAttribute("userType", String.valueOf(userType));
 
+                switch (userType) {
+                    case 1:
+                        headline = "Patient";
+                        break;
+                    case 2:
+                        headline = "Doctor";
+                        break;
+                    case 3:
+                        headline = "Nurse";
+                        break;
+                }
+
+                session.setAttribute("headline", headline);
+            } catch (NumberFormatException ex2) {
+
+            }
         }
-
-        message = String.valueOf(userType);
 
         if (Geocoding.validateGeocode(lookupPostcode)) {
 
             address = Geocoding.getAddress();
+            session.setAttribute("address", address);
 
         } else {
 
@@ -165,6 +182,9 @@ public class AddUser extends HttpServlet {
         }
 
         if (success) {
+            session.setAttribute("userType", "");
+            session.setAttribute("message", message);
+
             response.sendRedirect(request.getContextPath() + "/login.jsp");
         } else {
             view.forward(request, response);
