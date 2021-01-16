@@ -5,7 +5,6 @@
 --%>
 <%@ include file = "/objects/jspHeader.jsp"%>
 
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,32 +14,35 @@
             <%@include file="/WEB-INF/css/style.css"%>
         </style>
     </head>
-    <body>
-        <div class="dashboard">
-            <div class="bg"></div>
-            <h1>Hello ${sessionScope.currentUser.firstName} ${sessionScope.currentUser.surName}.${message}</h1>
-            <h2>Welcome to your personal dashboard.</h2>
-            <br>
-            <h3>Personal information</h3>
-            <h5>Date of birth: ${sessionScope.currentUser.dateOfBirth}</h5>
-            <h5>Insured by the NHS: ${sessionScope.currentUser.insured ? 'Yes' : 'No'}</h5>
-            <h4>Address</h4>
-            <h5>${sessionScope.currentUser.address.addressLine1}</h5>
-            <h5>${sessionScope.currentUser.address.addressLine2}</h5>
-            <h5>${sessionScope.currentUser.address.postcode}</h5>
-            <h5>${sessionScope.currentUser.address.county}</h5>
-            <h5>${sessionScope.currentUser.address.town}</h5>
-            <h5>${sessionScope.currentUser.address.telephoneNumber}</h5>
+    <div class="grid-container">    
 
-            <form action="${pageContext.request.contextPath}/logout.do" method="post">
-                <input type="submit" value="Logout" />
-            </form>
-            <br>
-            <p style="text-align: right">You are logged in as a ${loggedInAs}<p>
-        </div>
+        <c:import url="objects/dashboardHeader.jsp"/>
+                    
+        <aside class="sidenav">
+
+        </aside>
+                     
+
+        <main class="main">
+            <div class="wide_card">
+                <div class="centerDiv">
+                    <h2>Timetabled consultations and surgeries</h2>
+                </div>
+
+                <c:import url="objects/timetable.jsp"/>
+            </div>
 
 
-    </body>
+            <div class="main-cards">
+                <div class="card">
+                     <c:import url="objects/personalInfo.jsp"/>
+                </div>
+                <div class="card">Card</div>
+            </div>
+
+        </main>
+
+    </div>
 </html>
 
 

@@ -65,11 +65,14 @@ public class PatientDashboard extends HttpServlet {
         loggedInAs = " patient";
         Cookie[] cookies = request.getCookies();
 
+        consultations = database.getAllConsultationsWhereIDIs(currentUserID);
         // Set cookie
         //cookie.setMaxAge(20 * 60);
         //response.addCookie(cookie);
         // Set / update attributes for currentSession
+        
         synchronized (session) {
+            session.setAttribute("consultations", consultations);
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
             session.setAttribute("loggedInAs", loggedInAs);

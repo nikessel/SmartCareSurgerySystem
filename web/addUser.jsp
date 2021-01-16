@@ -12,6 +12,7 @@
         <div class="login card">
             <h1>Smart Care Surgery System Add New User</h1>
             <h2>${headline}</h2>
+            <h3>${message}</h3>
 
             <c:if test = "${empty userType}">
                 <form action="${pageContext.request.contextPath}/addUser.do" method="post">
@@ -56,9 +57,9 @@
                     <input id="streetNumber" name="streetNumber" required="required" type="text" placeholder="Street number"/>
                     <input id="addressLine1" name="addressLine1" required="required" type="text" placeholder="Street name" value="${address.addressLine1}"/>
                     <input id="addressLine2" name="addressLine2" type="text" placeholder="Address line 2" value="${address.addressLine2}"/>
-                    <input id="county" name="county" required="required" type="text" placeholder="County" value="${address.county}"/>
+                    <input id="county" name="county" type="text" placeholder="County" value="${address.county}"/>
                     <input id="town" name="town" required="required" type="text" placeholder="Town" value="${address.town}"/>
-                    <input id="telephoneNumber" name="telephoneNumber" required="required" type="text" placeholder="Telephone number" value="${address.telephoneNumber}"/>
+                    <input id="telephoneNumber" name="telephoneNumber" type="text" placeholder="Telephone number" value="${address.telephoneNumber}"/>
                     <br><br>
                     <input type="submit" value="Submit" />
                 </form>

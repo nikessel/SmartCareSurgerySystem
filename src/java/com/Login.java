@@ -45,7 +45,7 @@ public class Login extends HttpServlet {
             session = request.getSession();
             session.setAttribute("userID", currentUserID);
 
-            // username  password validation 
+            // username password validation 
             if (database.isAdmin(currentUserID)) {
                 response.sendRedirect(request.getContextPath() + "/protected/adminDashboard.do");
                 

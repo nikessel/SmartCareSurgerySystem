@@ -163,16 +163,9 @@ public class AddUser extends HttpServlet {
                 getUserAttributes();
 
                 if (userType == 1) {
-                    headline = "Patient";
                     getPatientAttributes();
                 } else {
                     getEmployeeAttributes();
-                }
-
-                if (userType == 2) {
-                    headline = "Doctor";
-                } else if (userType == 3) {
-                    headline = "Nurse";
                 }
 
                 attemptAddUser();
@@ -181,9 +174,10 @@ public class AddUser extends HttpServlet {
             }
         }
 
+        session.setAttribute("message", message);
+        
         if (success) {
             session.setAttribute("userType", "");
-            session.setAttribute("message", message);
 
             response.sendRedirect(request.getContextPath() + "/login.jsp");
         } else {

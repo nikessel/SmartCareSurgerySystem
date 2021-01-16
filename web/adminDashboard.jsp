@@ -31,6 +31,9 @@
                     <div class="card">
                         <c:import url="objects/pendingEmployeesTable.jsp"/>
                     </div>
+                    <div class="card">
+                        <c:import url="objects/personalInfo.jsp"/>
+                    </div>
                     
                 </div>
 
