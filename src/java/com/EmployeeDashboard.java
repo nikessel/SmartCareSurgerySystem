@@ -118,10 +118,10 @@ public class EmployeeDashboard extends HttpServlet {
         // Set currentUser
         if (20000 <= currentUserID && currentUserID <= 29999) {
             currentUser = database.getDoctor(currentUserID);
-            loggedInAs = "doctor";
+            loggedInAs = " doctor";
         } else {
             currentUser = database.getNurse(currentUserID);
-            loggedInAs = "nurse";
+            loggedInAs = " nurse";
         }
 
         Cookie[] cookies = request.getCookies();

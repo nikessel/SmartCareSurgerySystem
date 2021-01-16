@@ -62,7 +62,7 @@ public class PatientDashboard extends HttpServlet {
 
         // Set currentUser
         currentUser = database.getPatient(currentUserID);
-        loggedInAs = "patient";
+        loggedInAs = " patient";
         Cookie[] cookies = request.getCookies();
 
         // Set cookie

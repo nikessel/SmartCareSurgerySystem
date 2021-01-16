@@ -3,9 +3,8 @@
     Created on : 28-Dec-2020, 09:41:25
     Author     : niklas
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1"%>
+<%@ include file = "/objects/jspHeader.jsp"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +14,7 @@
         </style>
     </head>
     <body>
-        <div class="dashboard login">
+        <div class="login">
             <h1>Error page</h1>
             <h2>${errorMessage}</h2>
             <form action="${pageContext.request.contextPath}/logout.do" method="post">
