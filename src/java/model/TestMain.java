@@ -22,6 +22,7 @@ public class TestMain {
 
         database.connect();
         
+        Patient patient = database.getPatient(40012);
         Doctor doctor = database.getDoctor(20001);
         
         database.addObjectToDatabase(doctor);
@@ -33,8 +34,18 @@ public class TestMain {
         System.out.println(database.getPrice("consultation"));
         
         database.printDatabaseTable("all");
-           
+        
+        Perscription perscript = new Perscription(patient, doctor, "2132131321");
+        
+        database.addObjectToDatabase(perscript);
 
+        database.printDatabaseTable("perscriptions");
+
+        database.approvePerscription(90001);
+        
+        database.printDatabaseTable("perscriptions");
+        
+        database.deleteObjectFromDatabase(database.getPerscription(90000));
 
     }
 }

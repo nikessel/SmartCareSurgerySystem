@@ -37,7 +37,7 @@ public class Database {
     private final String DATABASEPATH = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private final String USERNAME = "databaseUser";
     private final String PASSWORD = "password";
-    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries", "prices"};
+    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries", "prices", "perscriptions"};
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
@@ -286,6 +286,10 @@ public class Database {
         return 70000 <= thisID && thisID <= 79999;
     }
 
+    public boolean isPerscription(int thisID) {
+        return 90000 <= thisID && thisID <= 99999;
+    }
+
     public int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
@@ -390,6 +394,27 @@ public class Database {
         return output;
     }
 
+    public ArrayList<Integer> getPendingPerscriptions() {
+        ArrayList<Integer> output = new ArrayList();
+
+        try {
+            tableName = TABLENAMES[8];
+            idString = getIDString(tableName);
+            ResultSet rs1 = selectFromWhere("*", tableName, "pending", "true");
+
+            while (rs1.next()) {
+                thisID = rs1.getInt(idString);
+
+                output.add(thisID);
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+
+        return output;
+    }
+
     public int getPrice(String of) {
         tableName = TABLENAMES[7];
 
@@ -469,6 +494,25 @@ public class Database {
 
     }
 
+    public void approvePerscription(int id) {
+        idString = getIDString(id);
+
+        tableName = TABLENAMES[8];
+        try {
+
+            queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
+
+            System.out.println(queryString);
+            executeUpdate(queryString);
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            closeRSAndStatement();
+        }
+
+    }
+
     private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
 
         boolean paid, insured, isFullTime;
@@ -479,8 +523,8 @@ public class Database {
         id = duration = -1;
         double price = -1.0;
 
-        String username, firstName, surName, note;
-        username = firstName = surName = note = "";
+        String username, firstName, surName, note, medication;
+        username = firstName = surName = note = medication = "";
 
         java.util.Date dateOfBirth, invoiceDate;
         dateOfBirth = invoiceDate = new java.util.Date();
@@ -552,9 +596,7 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
-        }
-
-        else if (isConsultation(id)) {
+        } else if (isConsultation(id)) {
             try {
                 rs.beforeFirst();
 
@@ -570,9 +612,7 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
-        }
-
-        else if (isInvoice(id)) {
+        } else if (isInvoice(id)) {
             try {
                 rs.beforeFirst();
 
@@ -586,9 +626,7 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
-        }
-
-        else if (isSurgery(id)) {
+        } else if (isSurgery(id)) {
             try {
                 rs.beforeFirst();
 
@@ -596,6 +634,19 @@ public class Database {
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     patient = getPatient(rs.getInt("patient_id"));
                     surgeryTime = Timestamp.convertToMyTimestamp(rs.getTimestamp("surgery_time"));
+
+                }
+            } catch (SQLException ex) {
+                System.err.println(ex);
+            }
+        } else if (isPerscription(id)) {
+            try {
+                rs.beforeFirst();
+
+                if (rs.next()) {
+                    patient = getPatient(rs.getInt("patient_id"));
+                    doctor = getDoctor(rs.getInt("doctor_id"));
+                    medication = rs.getString("medication");
 
                 }
             } catch (SQLException ex) {
@@ -621,6 +672,8 @@ public class Database {
             return new Invoice(consultation, price, invoiceDate, paid, insured, id);
         } else if (isSurgery(id)) {
             return new Surgery(patient, doctor, surgeryTime, id);
+        } else if (isPerscription(id)) {
+            return new Perscription(patient, doctor, medication, id);
         }
 
         return new DatabaseObject();
@@ -675,6 +728,9 @@ public class Database {
                         break;
                     case "surgeries":
                         outputList.add(getSurgery(thisID));
+                        break;
+                    case "perscriptions":
+                        outputList.add(getPerscription(thisID));
                         break;
 
                 }
@@ -809,12 +865,28 @@ public class Database {
         return new Surgery();
     }
 
+    public Perscription getPerscription(int perscriptionID) {
+
+        ResultSet rs1 = selectFromWhere("*", "perscriptions", "perscription_id", String.valueOf(perscriptionID));
+
+        try {
+            return (Perscription) getDatabaseObject(rs1);
+        } catch (ClassCastException ex) {
+            System.out.println(ex);
+            System.err.println("Error getting surgery from database (Invalid id?)");
+        }
+
+        return new Perscription();
+    }
+
     public ArrayList<Object> getAllFromDatabase(String tableToGet) {
 
         idString = getIDString(tableToGet);
 
         queryString = "SELECT " + idString
                 + " FROM " + tableToGet;
+        
+        System.out.println(queryString);
 
         ResultSet rs1 = executeQuery(queryString);
 
@@ -1075,13 +1147,29 @@ public class Database {
             Surgery surgery = (Surgery) object;
             tableName = TABLENAMES[6];
 
-            namesString.append("surgery_id, doctor_id, patient_id, surgery_time, ");
-            valuesString.append(surgery.getSurgeryID() + ", ");
+            namesString.append("doctor_id, patient_id, surgery_time, ");
             valuesString.append(surgery.getDoctor().getDoctorID() + ", ");
             valuesString.append(surgery.getPatient().getPatientID() + ", ");
             valuesString.append("'" + surgery.getSurgeryTime() + "', ");
 
             thisID = surgery.getSurgeryID();
+        } else if (object instanceof Perscription) {
+            Perscription perscription = (Perscription) object;
+            tableName = TABLENAMES[8];
+
+            namesString.append("doctor_id, patient_id, medication, ");
+            valuesString.append(perscription.getDoctor().getDoctorID() + ", ");
+            valuesString.append(perscription.getPatient().getPatientID() + ", ");
+            valuesString.append("'" + perscription.getMedication() + "', ");
+
+            thisID = perscription.getPerscriptionID();
+            
+            if (thisID == -1) {
+                namesString.append("pending, ");
+
+                valuesString.append("true, ");
+            }
+
         }
 
         idString = getIDString(thisID);
@@ -1247,6 +1335,9 @@ public class Database {
 
         } else if (object instanceof Surgery) {
             id = ((Surgery) object).getSurgeryID();
+
+        } else if (object instanceof Perscription) {
+            id = ((Perscription) object).getPerscriptionID();
 
         } else {
             System.err.println("Error writing object to database, "
