@@ -47,8 +47,10 @@ public class AddUser extends HttpServlet {
     HttpServletRequest request;
 
     RequestDispatcher view;
-    Address thisAddress;
+    Address address;
     Patient thisPatient;
+    Doctor thisDoctor;
+    Nurse thisNurse;
 
     boolean success, insured;
 
@@ -65,18 +67,17 @@ public class AddUser extends HttpServlet {
             success = true;
 
             if (userType == 1) {
-                thisAddress = new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
-                thisPatient = new Patient(username, firstName, surName, dateOfBirth, thisAddress, insured);
+                thisPatient = new Patient(username, firstName, surName, dateOfBirth, address, insured);
                 database.addObjectToDatabase(thisPatient);
                 database.addPasswordToUser(thisPatient, password);
                 message = "User added succesfully, please login";
             } else if (userType == 2) {
-                Doctor thisDoctor = new Doctor(username, firstName, surName, isFullTime);
+                Doctor thisDoctor = new Doctor(username, firstName, surName, dateOfBirth, address, isFullTime);
                 database.addObjectToDatabase(thisDoctor);
                 database.addPasswordToUser(thisDoctor, password);
                 message = "Request to add a doctor has been forwarded to admin for approval";
             } else if (userType == 3) {
-                Nurse thisNurse = new Nurse(username, firstName, surName, isFullTime);
+                Nurse thisNurse = new Nurse(username, firstName, surName, dateOfBirth, address, isFullTime);
                 database.addObjectToDatabase(thisNurse);
                 database.addPasswordToUser(thisNurse, password);
                 message = "Request to add a nurse has been forwarded to admin for approval";
@@ -93,17 +94,23 @@ public class AddUser extends HttpServlet {
         repeatPassword = request.getParameter("repeatPassword");
         firstName = request.getParameter("firstName");
         surName = request.getParameter("surName");
-    }
 
-    private void getPatientAttributes() {
         dateOfBirth = Date.valueOf(request.getParameter("dateOfBirth"));
-        insured = Boolean.parseBoolean(request.getParameter("insured"));
         addressLine1 = request.getParameter("addressLine1");
         addressLine2 = request.getParameter("addressLine2");
         county = request.getParameter("county");
         town = request.getParameter("town");
         telephoneNumber = request.getParameter("telephoneNumber");
 
+        address = new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
+    }
+
+    private void getPatientAttributes() {
+        insured = Boolean.parseBoolean(request.getParameter("insured"));
+    }
+
+    private void getEmployeeAttributes() {
+        isFullTime = Boolean.parseBoolean(request.getParameter("isFullTime"));
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -117,58 +124,51 @@ public class AddUser extends HttpServlet {
 
         view = getServletContext().getRequestDispatcher("/addUser.jsp");
         lookupPostcode = request.getParameter("lookupPostcode");
-        thisAddress = new Address("", "", "", "", "", "");
+        address = new Address("", "", "", "", "", "");
 
         try {
             userType = Integer.parseInt(request.getParameter("userType"));
-            message = String.valueOf(userType);
         } catch (NumberFormatException ex) {
             headline = "";
         }
 
-        if (userType == 1) {
-            headline = "Patient";
+        if (Geocoding.validateGeocode(lookupPostcode)) {
 
-            if (Geocoding.validateGeocode(lookupPostcode)) {
+            address = Geocoding.getAddress();
 
-                thisAddress = Geocoding.getAddress();
-
-            } else {
-
-                try {
-                    getUserAttributes();
-                    getPatientAttributes();
-
-                    attemptAddUser();
-
-                } catch (Exception ex) {
-                }
-            }
-
-            session.setAttribute("thisAddress", thisAddress);
-
-        } else if (userType == 2 || userType == 3) {
+        } else {
 
             try {
                 getUserAttributes();
 
-                isFullTime = Boolean.parseBoolean(request.getParameter("isFullTime"));
-
+                if (userType == 1) {
+                    headline = "Patient";
+                    getPatientAttributes();
+                }
+                else {
+                    getEmployeeAttributes();
+                }
+                
+                if (userType == 2) {
+                    headline = "Doctor";
+                }
+                else if (userType == 3) {
+                    headline = "Nurse";
+                }
+                
                 attemptAddUser();
-            } catch (Exception ex) {
 
-            }
-            
-            if (userType == 2) {
-                headline = "Doctor";
-            }
-            else {
-                headline = "Nurse";
+            } catch (Exception ex) {
             }
         }
 
-        session.setAttribute("headline", headline);
-        session.setAttribute("message", message);
+        session.setAttribute("address", address);
+
+
+        session.setAttribute(
+                "headline", headline);
+        session.setAttribute(
+                "message", message);
 
         if (success) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -178,7 +178,7 @@ public class AddUser extends HttpServlet {
 
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
