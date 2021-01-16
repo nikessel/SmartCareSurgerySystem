@@ -65,7 +65,7 @@ public class AdminDashboard extends HttpServlet {
 
         // Set currentUser
         currentUser = database.getAdmin(currentUserID);
-        loggedInAs = "admin";
+        loggedInAs = "n admin";
         Cookie[] cookies = request.getCookies();
 
         pendingEmployeeIDs = database.getPendingUsers();

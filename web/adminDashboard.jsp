@@ -3,10 +3,7 @@
     Created on : 09-Dec-2020, 20:15:47
     Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
-<%@ taglib prefix = "ex" uri = "/WEB-INF/custom.tld"%>
+<%@ include file = "/objects/jspHeader.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -18,39 +15,28 @@
         </style>
     </head>
     <body>
-        <div class="dashboard">
-            <div class="bg"></div>
+        <div class="grid-container">    
 
-            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
-            <h2>Welcome to your personal dashboard.</h2>
+            <c:import url="objects/dashboardHeader.jsp"/>
 
-            <br>
-            <form action="${pageContext.request.contextPath}/logout.do" method="post">
-                <input type="submit" value="Logout" />
-            </form>
-            <br>
-            <p style="text-align: right">You are logged in as an ${loggedInAs}<p>
+            <aside class="sidenav">
 
-            <h3>Pending new employee requests</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach items="${sessionScope.pendingEmployees}" var="pendingEmployee">
-                        <tr>
-                            <td>${pendingEmployee.ID}</td>
-                            <td>${pendingEmployee.firstName} ${pendingEmployee.surName}</td>
-                        </tr>
-                    </c:forEach>   
-                </tbody>
-            </table>
+            </aside>                  
+
+            <main class="main">
+                <div class="main-cards">
+                    <div class="card">
+                        <c:import url="objects/patientTable.jsp"/>
+                    </div>
+                    <div class="card">
+                        <c:import url="objects/pendingEmployeesTable.jsp"/>
+                    </div>
+                    
+                </div>
+
+            </main>
+
         </div>
-
-
     </body>
 </html>
 

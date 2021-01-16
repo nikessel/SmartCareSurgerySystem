@@ -1,24 +1,241 @@
 body {
-
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    box-sizing: border-box;
 }
 
-body:before {    
-    content: "";
-    position: absolute;
-    z-index: -2;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-image: url("/SmartCareSurgerySystem/images/white.jpg");
-    background-size: cover;
-    border-radius: 25px;
-
+/* Assign grid instructions to our parent grid container, mobile-first (hide the sidenav) */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr 50px;
+    grid-template-areas:
+        'header'
+        'main'
+        'footer';
+    height: 100vh;
 }
 
-.dashboard {
+/* Give every child element its grid name */
+.header {
+    display: flex;
+    align-items: center;
+    text_align: right;
+    justify-content: space-between;
+    padding: 0 16px;
+    background-color: #394263;
+    color: #e8e8e8;
+}
+
+.centerDiv {
+    margin: 0 auto;
+}
+
+.inline {
+    display: flex;
+    width: max-content;
     height: max-content;
-    width: 70%;
+}
+
+.logout_form {
+    padding: 16px;
+    justify-content: space-between;
+}
+
+.sidenav {
+    grid-area: sidenav;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 240px;
+    position: fixed;
+    overflow-y: auto;
+    transform: translateX(-245px);
+    transition: all .6s ease-in-out;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    z-index: 2; /* Needs to sit above the hamburger menu icon */
+    background-color: #394263;
+}
+
+.sidenav.active {
+    transform: translateX(0);
+}
+
+.sidenav__close-icon {
+    position: absolute;
+    visibility: visible;
+    top: 8px;
+    right: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    color: black;
+}
+
+.sidenav__list {
+    padding: 0;
+    margin-top: 85px;
+    list-style-type: none;
+}
+
+.sidenav__list-item {
+    padding: 20px 20px 20px 40px;
+    color: white;
+}
+
+.sidenav__list-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.main {
+    grid-area: main;
+    background-color: white;
+}
+
+.wide_card {
+    display: fixed;
+    margin: 20px;
+    padding: 20px;
+    height: max-content;
+    background-color: #ecfbfd;
+    color: black;
+    box-shadow: 4px 3px 8px 1px #969696;
+    -webkit-box-shadow: 4px 3px 8px 1px #969696;
+    border-radius: 5px;
+    text-align: center;
+
+}
+
+.main-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+    grid-auto-rows: 94px;
+    grid-gap: 20px;
+    margin: 20px;
+
+}
+
+.overviewcard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #a49aca;
+    box-shadow: 4px 3px 8px 1px #969696;
+    -webkit-box-shadow: 4px 3px 8px 1px #969696;
+    border-radius: 5px;
+}
+
+.main-cards {
+    column-count: 1;
+    column-gap: 20px;
+    margin: 20px;
+    height: 600px;
+
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 600px;
+    background-color: #ecfdf5;
+    margin-bottom: 20px;
+    -webkit-column-break-inside: avoid;
+    padding: 24px;
+    box-sizing: border-box;
+    box-shadow: 4px 3px 8px 1px #969696;
+    -webkit-box-shadow: 4px 3px 8px 1px #969696;
+    border-radius: 5px;
+}
+
+.footer {
+    grid-area: footer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background-color: #648ca6;
+}
+
+/* Non-mobile styles, 750px breakpoint */
+@media only screen and (min-width: 46.875em) {
+    /* Show the sidenav */
+    .grid-container {
+        break-inside: avoid;
+        grid-template-columns: 240px 1fr;
+        grid-template-areas:
+            "sidenav header"
+            "sidenav main"
+            "sidenav footer";
+    }
+
+    .header__search {
+        margin-left: 0;
+    }
+
+    .sidenav {
+        position: relative;
+        transform: translateX(0);
+    }
+
+    .sidenav__close-icon {
+        visibility: hidden;
+    }
+}
+
+/* Medium screens breakpoint (1050px) */
+@media only screen and (min-width: 65.625em) {
+    /* Break out main cards into two columns */
+    .main-cards {
+        column-count: 2;
+        break-inside: avoid;
+    }
+}
+
+
+
+.consultationTable {
+    width:max-content;
+
+}
+
+table {
+    margin: auto;
+    overflow-y:scroll;
+    height:400px;
+    display:inline-block;
+    border-spacing: 2px;
+}
+
+th {
+    background-color: #f5f5f5;
+    color: black;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+td {
+    background-color: #f5f5f5;
+    border: 1px solid black;
+    color: black;
+    padding: 10px;
+} 
+
+.paddedForm {
+    padding: 10px;
+}
+
+.paddedInput {
+    padding: 10px;
+}
+
+.login {     
+    height: max-content;
+    width: 35%;
     padding: 50px;
     position: absolute;
     z-index: 1;
@@ -28,93 +245,6 @@ body:before {
     overflow-y: auto;
     text-align: center;
     transform: translate(-50%, -50%);
-    color: #0b3649;
+    background-color: #ddf7fb;
 
-
-}
-
-
-.dashboard .h1 {
-    text-align: center;
-}
-
-.dashboard .h2 {
-    text-align: center;
-}
-
-.dashboard:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #e0eef5;
-    background-size: cover;
-    border-radius: 25px;   
-}
-
-.leftDiv {
-    height: 200px;
-    width:50%;
-    float:left;
-}
-
-.rightDiv {
-    height: 200px;
-    width:50%;
-    float:right;
-}
-
-.rtableDiv {
-    height: max-content;
-    width:50%;
-    float:right;
-    height:500px;
-}
-
-.ltableDiv {
-    height: max-content;
-    width:50%;
-    float:left;
-    height:500px;
-}
-
-consultationTable {
-    border-spacing: 20px;
-    width:80%;
-    height:80%;
-
-}
-table {
-    margin: auto; /* or margin: 0 auto 0 auto */
-    overflow-y:scroll;
-    height:400px;
-    display:inline-block;
-    border:none;
-}
-
-th {
-    background-color: #b8d8e6;
-    color: black;
-    padding: 10px;
-}
-
-td {
-    background-color: #b8d8e6;
-    color: black;
-    padding: 10px;
-}
-
-.login {
-    width: 30%;
-}
-
-input {
-    padding: 10px;
-}
-
-select {
-    text-align: center;
 }
