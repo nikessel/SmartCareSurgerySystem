@@ -25,6 +25,8 @@ public class myServletContextListener implements ServletContextListener {
         
         sc.setAttribute("database", database);
         
+        sc.setAttribute("message", "");
+        
     }
     
 

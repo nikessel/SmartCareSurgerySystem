@@ -10,7 +10,6 @@ import java.sql.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +18,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
 import model.*;
-
-@WebServlet("/employeeDashboard")
 
 public class EmployeeDashboard extends HttpServlet {
 
@@ -35,10 +31,12 @@ public class EmployeeDashboard extends HttpServlet {
     Database database;
     RequestDispatcher view;
     User currentUser;
+    String loggedInAs = "";
     List<Consultation> consultations;
     List<Patient> patients;
     String message = "";
     Date fromDate, toDate;
+    boolean showConsultationTable, showPatientTable;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,14 +47,28 @@ public class EmployeeDashboard extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private boolean getBoolean(HttpServletRequest request, String variableName) {
+        try {
+            if (request.getParameter(variableName).equals("true")) {
+                return true;
+            }
+        } catch (NullPointerException ex) {
+
+        }
+        return false;
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         // Set view
         view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
         //Get session
         session = request.getSession();
+
+        database = (Database) getServletContext().getAttribute("database");
 
         try {
             if (Boolean.parseBoolean(String.valueOf(request.getAttribute("resetDates")))) {
@@ -102,13 +114,14 @@ public class EmployeeDashboard extends HttpServlet {
 
         // Get attributes
         currentUserID = (int) session.getAttribute("userID");
-        database = (Database) getServletContext().getAttribute("database");
 
         // Set currentUser
         if (20000 <= currentUserID && currentUserID <= 29999) {
             currentUser = database.getDoctor(currentUserID);
+            loggedInAs = " doctor";
         } else {
             currentUser = database.getNurse(currentUserID);
+            loggedInAs = " nurse";
         }
 
         Cookie[] cookies = request.getCookies();
@@ -126,11 +139,12 @@ public class EmployeeDashboard extends HttpServlet {
             session.setAttribute("patients", patients);
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);
+            session.setAttribute("loggedInAs", loggedInAs);
 
         }
 
-        response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
-        //view.forward(request, response);
+        //response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
+        view.forward(request, response);
 
     }
 

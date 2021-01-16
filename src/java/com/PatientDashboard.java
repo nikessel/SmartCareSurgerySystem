@@ -6,7 +6,6 @@
 package com;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -17,17 +16,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.Consultation;
-import model.Database;
-import model.Patient;
-import model.User;
 
 /**
  *
- * @author patdizon
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
+import model.*;
 
-@WebServlet("/patientDashboard")
 public class PatientDashboard extends HttpServlet {
 
     int currentUserID;
@@ -35,14 +30,14 @@ public class PatientDashboard extends HttpServlet {
     Cookie cookie;
     Cookie[] cookies;
     Database database;
+    String loggedInAs = "";
     RequestDispatcher view;
     User currentUser;
     List<Consultation> consultations;
     List<Patient> patients;
     String message = "";
     Date fromDate, toDate;
-    
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -55,32 +50,35 @@ public class PatientDashboard extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            // Set view
-            RequestDispatcher view = getServletContext().getRequestDispatcher("/patientDashboard.jsp");
+        // Set view
+        view = getServletContext().getRequestDispatcher("/patientDashboard.jsp");
 
-            //Get session
-            session = request.getSession();
-            
-            currentUserID = (int) request.getAttribute("userID");
-            
-            currentUser = database.getPatient(currentUserID);
+        //Get session
+        session = request.getSession();
 
-            String username = request.getParameter("username");
-            String firstName = request.getParameter("firstName");
-            String surname = request.getParameter("Surname");
-            String patientID = request.getParameter("patientID");
-            String dateOfBirth = request.getParameter("dateOfBirth");
-            String address = request.getParameter("address");
+        // Get attributes
+        currentUserID = (int) session.getAttribute("userID");
+        database = (Database) getServletContext().getAttribute("database");
 
-            // Set / update attributes for currentSession
-            synchronized (session) {
-                session.setAttribute("currentUser", currentUser);
-                session.setAttribute("userID", currentUserID);
+        // Set currentUser
+        currentUser = database.getPatient(currentUserID);
+        loggedInAs = " patient";
+        Cookie[] cookies = request.getCookies();
 
-            }
+        // Set cookie
+        //cookie.setMaxAge(20 * 60);
+        //response.addCookie(cookie);
+        // Set / update attributes for currentSession
+        synchronized (session) {
+            session.setAttribute("currentUser", currentUser);
+            session.setAttribute("message", message);
+            session.setAttribute("loggedInAs", loggedInAs);
+
         }
+
+        //response.sendRedirect(request.getContextPath() + "/patientDashboard.jsp");
+        view.forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -96,7 +94,6 @@ public class PatientDashboard extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-
     }
 
     /**

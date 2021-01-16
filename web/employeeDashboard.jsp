@@ -3,107 +3,67 @@
     Created on : 09-Dec-2020, 20:15:47
     Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
-<%@ taglib prefix = "ex" uri = "/WEB-INF/custom.tld"%>
+
+<%@ include file = "/objects/jspHeader.jsp"%>
+
 
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Employee Dashboard Page</title>
         <style>
             <%@include file="/WEB-INF/css/style.css"%>
         </style>
     </head>
-    <body>
-        <div class="dashboard">
-            <div class="bg"></div>
-            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
-            <h2>Welcome to your personal dashboard.</h2>
-            <br>
-            <div class="leftDiv">
-                <h2>Scheduled consultations</h2>
-                <div>
-                    <form method="post" action="employeeDashboard.do" name="dateSelector">
-                        <label for="fromDate">Show from date:</label>
-                        <input type="date" id="fromDate" name="fromDate"> 
-                        <label for="toDate">to date:</label>
-                        <input type="date" id="toDate" name="toDate" onchange="this.form.submit();">
-                    </form>
-                    <br>
-                    <c:if test = "${not empty param.fromDate && not empty param.toDate}">
-                        <label for="dateButton">Displaying consultations from ${param.fromDate} to ${param.toDate}</label>
-                        <form action="employeeDashboard.do" method="post">
-                            <input type="hidden" name="resetDates" value="true">
-                            <input style="padding: 5px;" type="submit" value="Reset" />
-                        </form>
-                    </c:if>
-                        <br>
+
+    <div class="grid-container">    
+
+        <c:import url="objects/dashboardHeader.jsp"/>
+                    
+        <aside class="sidenav">
+
+        </aside>
+                     
+
+        <main class="main">
+            <div class="wide_card">
+                <div class="centerDiv">
+                    <h2>Timetabled consultations and surgeries</h2>
                 </div>
-            </div>
-            <div class="rightDiv">
-                <h2>List of patients</h2>
-                <form method="post" action="employeeDashboard.do" name="patientListSelector">
-                    <select name="insuranceSelection" onchange="this.form.submit();">
-                        <option disabled selected value> sort by insurance status </option>
-                        <option value="0">insured
-                        <option value="1">not insured
-                        <option value="2">all
-                    </select>
-                </form>
+
+                <c:import url="objects/timetable.jsp"/>
             </div>
 
-            <br>
-            <br>
-            <div class="ltableDiv" id="consultationTableDiv">
-                <table id="consultationTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Patient name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${consultations}" var="consultation">
-                            <tr>
-                                <td>${ex:formatDate(consultation["consultationDate"], "dd-MM-yyyy")}</td>
-                                <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
-                            </tr>
-                        </c:forEach>   
-                    </tbody>
-                </table>
-            </div> 
-            <div class="rtableDiv" id="patientTableDiv">
-                <table id="patientTable">
-                    <thead>
-                        <tr>
-                            <th>Patient name</th>
-                            <th>Is insured by the NHS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${patients}" var="patient">
-                            <tr>
-                                <td>${patient.firstName} ${patient.surName}</td>
-                                <td>${patient.insured ? 'Yes' : 'No'}</td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div> 
-            <br>
-            <br>
-            <form action="logout.do" method="post">
-                <input type="submit" value="Logout" />
-            </form>
-            <br>
 
-        </div>
+            <div class="main-cards">
+                <div class="card">
+                     <c:import url="objects/patientTable.jsp"/>
+                </div>
+                <div class="card">Card</div>
+            </div>
+            <!--
+                        <div class="main-overview">
+                            <div class="overviewcard">
+                                <div class="overviewcard__icon">Overview</div>
+                                <div class="overviewcard__info">Card</div>
+                            </div>
+                            <div class="overviewcard">
+                                <div class="overviewcard__icon">Overview</div>
+                                <div class="overviewcard__info">Card</div>
+                            </div>
+                            <div class="overviewcard">
+                                <div class="overviewcard__icon">Overview</div>
+                                <div class="overviewcard__info">Card</div>
+                            </div>
+                            <div class="overviewcard">
+                                <div class="overviewcard__icon">Overview</div>
+                                <div class="overviewcard__info">Card</div>
+                            </div>
+                        </div>
+                                        
+            -->
+        </main>
 
-
-    </body>
+    </div>
 </html>
 
 

@@ -4,13 +4,21 @@
         <servlet-name>ServletContextListener</servlet-name>
         <servlet-class>com.ServletContextListener</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PasswordChanger</servlet-name>
+        <servlet-class>com.PasswordChanger</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
-        <url-pattern>/Logout.do</url-pattern>
+        <url-pattern>/logout.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>TableHandler</servlet-name>
-        <url-pattern>/tableHandler.do</url-pattern>
+        <servlet-name>PasswordChanger</servlet-name>
+        <url-pattern>/passwordChanger.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddUser</servlet-name>
+        <url-pattern>/addUser.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
@@ -19,13 +27,17 @@
         <servlet-name>Logout</servlet-name>
         <servlet-class>com.Logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DashboardFilter</servlet-name>
+        <servlet-class>com.AuthorizationFilter</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextInitializer</servlet-name>
-        <url-pattern>/ServletContextInitializer</url-pattern>
+        <url-pattern>/servletContextInitializer.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletContextListener</servlet-name>
-        <url-pattern>/servlet-context-listener</url-pattern>
+        <url-pattern>/servlet-context-listener.do</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/login.jsp</welcome-file>
@@ -39,12 +51,20 @@
         <servlet-class>com.EmployeeDashboard</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AdminDashboard</servlet-name>
+        <servlet-class>com.AdminDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PatientDashboard</servlet-name>
+        <servlet-class>com.PatientDashboard</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ServletContextInitializer</servlet-name>
         <servlet-class>com.ServletContextInitializer</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>TableHandler</servlet-name>
-        <servlet-class>com.TableHandler</servlet-class>
+        <servlet-name>AddUser</servlet-name>
+        <servlet-class>com.AddUser</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -56,7 +76,15 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmployeeDashboard</servlet-name>
-        <url-pattern>/employeeDashboard.do</url-pattern>
+        <url-pattern>/protected/employeeDashboard.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboard</servlet-name>
+        <url-pattern>/protected/adminDashboard.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PatientDashboard</servlet-name>
+        <url-pattern>/protected/patientDashboard.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PatientDashboard</servlet-name>
@@ -68,4 +96,24 @@
     <listener>
         <listener-class>com.myServletAttributeListener</listener-class>
     </listener>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/errorPage.jsp</location>
+    </error-page>
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/login.do</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AuthorizationFilter</filter-name>
+        <filter-class>com.AuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthorizationFilter</filter-name>
+        <url-pattern>/protected/*</url-pattern>
+    </filter-mapping>
 </web-app>

@@ -1,13 +1,10 @@
 <%-- 
     Document   : patientDashboard
-    Created on : 15-Dec-2020, 23:22:34
-    Author     : patdizon
+    Created on : 09-Dec-2020, 20:15:47
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
+<%@ include file = "/objects/jspHeader.jsp"%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
-<%@ taglib prefix = "ex" uri = "/WEB-INF/custom.tld"%>
 
 <!DOCTYPE html>
 <html>
@@ -21,39 +18,29 @@
     <body>
         <div class="dashboard">
             <div class="bg"></div>
-            <div align="center">
-                <h1>Patient Registration Form</h1>
-                <form action="<%= request.getContextPath()%>/register" method="post">
-                    <table style="with: 80%">
-                        <tr>
-                            <td>User Name</td>
-                            <td><input type="text" name="username" /></td>
-                        </tr>
-                        <tr>
-                            <td>First Name</td>
-                            <td><input type="text" name="firstName" /></td>
-                        </tr>
-                        <tr>
-                            <td>Sur Name</td>
-                            <td><input type="text" name="surName" /></td>
-                        </tr>
-                        <tr>
-                            <td>Patient ID</td>
-                            <td><input type="text" name="patientID" /></td>
-                        </tr>
-                        <tr>
-                        <tr>
-                            <td>Date Of Birth</td>
-                            <td><input type="text" name="dateOfBirth" /></td>
-                        </tr>
-                        <tr>  
-                            <td>Address</td>
-                            <td><input type="text" name="address" /></td>
-                        </tr>
-                    </table>
-                    <input type="submit" value="Submit" />
-                </form>
-            </div>
+            <h1>Hello ${sessionScope.currentUser.firstName} ${sessionScope.currentUser.surName}.${message}</h1>
+            <h2>Welcome to your personal dashboard.</h2>
+            <br>
+            <h3>Personal information</h3>
+            <h5>Date of birth: ${sessionScope.currentUser.dateOfBirth}</h5>
+            <h5>Insured by the NHS: ${sessionScope.currentUser.insured ? 'Yes' : 'No'}</h5>
+            <h4>Address</h4>
+            <h5>${sessionScope.currentUser.address.addressLine1}</h5>
+            <h5>${sessionScope.currentUser.address.addressLine2}</h5>
+            <h5>${sessionScope.currentUser.address.postcode}</h5>
+            <h5>${sessionScope.currentUser.address.county}</h5>
+            <h5>${sessionScope.currentUser.address.town}</h5>
+            <h5>${sessionScope.currentUser.address.telephoneNumber}</h5>
+
+            <form action="${pageContext.request.contextPath}/logout.do" method="post">
+                <input type="submit" value="Logout" />
+            </form>
+            <br>
+            <p style="text-align: right">You are logged in as a ${loggedInAs}<p>
         </div>
+
+
     </body>
 </html>
+
+

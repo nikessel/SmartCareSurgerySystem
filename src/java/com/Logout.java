@@ -6,8 +6,6 @@
 package com;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +15,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
 public class Logout extends HttpServlet {
 
@@ -48,9 +45,8 @@ public class Logout extends HttpServlet {
             session.invalidate();
         }
 
-        RequestDispatcher view = getServletContext().getRequestDispatcher("/login");
-
-        view.forward(request, response);
+        request.getServletContext().setAttribute("errorMessage", "");
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
