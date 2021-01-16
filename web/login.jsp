@@ -25,7 +25,7 @@
             <form class="paddedForm" action="${pageContext.request.contextPath}/passwordChanger.jsp" method="post">
                 <input class="paddedInput" type="submit" value="Change password" />
             </form>
-            <form class="paddedForm" action="${pageContext.request.contextPath}/addUser.jsp" method="post">
+            <form class="paddedForm" action="${pageContext.request.contextPath}/chooseUser.jsp" method="post">
                 <input class="paddedInput" type="submit" value="Create a new user" />
             </form>
 

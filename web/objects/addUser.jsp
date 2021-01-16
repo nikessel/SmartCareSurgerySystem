@@ -30,8 +30,15 @@
             <input id="surName" name="surName" required="required" type="text" placeholder="Sur name" value="${sessionScope.thisPatient.surName}"/><br><br>
             <label for="dateOfBirth">Date of birth</label>
             <input id="dateOfBirth" name="dateOfBirth" required="required" type="date"/>
-            <input type="checkbox" name="insured" value="true"/>
-            <label for="insured">Insured by NHS?</label>
+            <c:if test = "${param.userType eq '1' or session.userType eq '1'}">
+                <input type="checkbox" name="insured" value="true"/>
+                <label for="insured">Insured by NHS?</label>
+            </c:if>
+
+            <c:if test = "${param.userType eq '2' or param.userType eq '3' or session.userType eq '2' or session.userType eq '3'}">
+                <input type="checkbox" name="full_time" value="true"/>
+                <label for="full_time">Add as a full-time employee?</label>
+            </c:if>
             <h4>Address</h4>
             <input id="postcode" name="postcode" required="required" type="text" placeholder="Postcode" value="${sessionScope.thisAddress.postcode}"/>
             <input id="streetNumber" name="streetNumber" required="required" type="text" placeholder="Street number" value="${sessionScope.streetNumber}"/>

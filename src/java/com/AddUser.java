@@ -119,18 +119,22 @@ public class AddUser extends HttpServlet {
 
         message = "";
         success = false;
+        headline = "";
         session = request.getSession();
         this.request = request;
 
-        view = getServletContext().getRequestDispatcher("/addUser.jsp");
+        view = getServletContext().getRequestDispatcher("/chooseUser.jsp");
         lookupPostcode = request.getParameter("lookupPostcode");
         address = new Address("", "", "", "", "", "");
 
         try {
             userType = Integer.parseInt(request.getParameter("userType"));
-        } catch (NumberFormatException ex) {
-            headline = "";
+
+        } catch (NumberFormatException ex2) {
+
         }
+
+        message = String.valueOf(userType);
 
         if (Geocoding.validateGeocode(lookupPostcode)) {
 
@@ -144,31 +148,21 @@ public class AddUser extends HttpServlet {
                 if (userType == 1) {
                     headline = "Patient";
                     getPatientAttributes();
-                }
-                else {
+                } else {
                     getEmployeeAttributes();
                 }
-                
+
                 if (userType == 2) {
                     headline = "Doctor";
-                }
-                else if (userType == 3) {
+                } else if (userType == 3) {
                     headline = "Nurse";
                 }
-                
+
                 attemptAddUser();
 
             } catch (Exception ex) {
             }
         }
-
-        session.setAttribute("address", address);
-
-
-        session.setAttribute(
-                "headline", headline);
-        session.setAttribute(
-                "message", message);
 
         if (success) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
