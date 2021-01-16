@@ -121,6 +121,33 @@ create table consultations (
             ON DELETE CASCADE
 );
 
+/* Past */
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40013, 20001, 30000, '2020-12-15 08:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40009, 20002, 30000, '2020-12-15 09:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40004, 20002, 30000, '2020-12-15 09:30:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20001, 30000, '2020-12-15 15:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40013, 20001, 30000, '2020-12-16 12:10:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40010, 20001, 30000, '2020-12-16 08:20:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40011, 20002, 30000, '2020-12-16 08:50:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40007, 20001, 30000, '2020-12-16 11:20:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20001, 30000, '2020-12-17 08:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40005, 20001, 30000, '2020-12-17 09:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20001, 30000, '2020-12-17 10:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40007, 20001, 30000, '2020-12-17 11:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40012, 20002, 30000, '2020-12-18 12:20:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40003, 20002, 30000, '2020-12-18 13:10:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40000, 20002, 30000, '2020-12-18 14:50:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40012, 20002, 30000, '2020-12-18 15:40:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40010, 20001, 30000, '2020-12-19 16:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40011, 20001, 30000, '2020-12-19 17:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40011, 20002, 30000, '2020-12-19 18:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20001, 30000, '2020-12-19 10:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20001, 30000, '2020-12-20 11:10:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40001, 20002, 30000, '2020-12-20 12:20:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40007, 20002, 30000, '2020-12-20 13:30:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40009, 20002, 30000, '2020-12-20 09:30:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40009, 20002, 30000, '2020-12-21 08:50:00', false, '', 10);
+
 
 
 /* Doctor only consultations */
@@ -219,9 +246,57 @@ create table invoices (
 );
 
 
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (5291.92, '2020-5-18', 50001, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (7747.29, '2020-2-7', 50003, false, true);
 
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1567.27, '2020-12-30', 50001, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1159.23, '2020-11-05', 50002, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1078.77, '2020-12-11', 50003, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1261.12, '2020-12-19', 50004, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1409.24, '2020-12-08', 50005, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1393.7, '2020-12-27', 50006, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1118.37, '2020-11-11', 50007, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (483.98, '2021-01-10', 50008, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (730.84, '2020-12-05', 50009, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (778.18, '2020-11-25', 50010, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (497.92, '2021-01-05', 50011, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (481.15, '2021-01-14', 50012, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (952.41, '2020-11-30', 50013, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (602.82, '2020-12-12', 50014, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1265.91, '2020-11-12', 50015, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (623.03, '2021-01-09', 50016, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1207.69, '2020-11-22', 50017, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (403.91, '2020-11-30', 50018, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (888.26, '2020-12-24', 50019, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1244.27, '2020-12-17', 50020, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (877.46, '2020-12-27', 50021, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (423.01, '2020-12-09', 50022, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1216.56, '2020-11-11', 50023, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (284.78, '2020-12-01', 50024, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (364.15, '2020-12-03', 50025, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (560.29, '2021-01-11', 50026, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (232.21, '2020-12-10', 50027, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (633.71, '2020-12-14', 50028, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (735.0, '2020-11-02', 50029, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1556.04, '2020-11-05', 50030, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (924.55, '2020-11-26', 50031, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1113.72, '2020-12-12', 50032, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1513.46, '2020-11-24', 50033, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (315.87, '2020-11-05', 50034, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1413.73, '2020-12-18', 50035, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (367.52, '2020-11-17', 50036, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1171.83, '2020-12-09', 50037, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (694.32, '2020-12-12', 50038, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (826.14, '2020-11-11', 50039, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1218.49, '2020-12-18', 50040, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1414.17, '2020-11-04', 50041, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1375.62, '2020-12-22', 50042, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1053.04, '2020-11-11', 50043, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1072.71, '2021-01-10', 50044, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (901.31, '2020-11-20', 50045, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (954.65, '2020-12-03', 50046, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (719.07, '2020-12-24', 50047, false, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (717.96, '2020-11-12', 50048, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1050.94, '2020-12-03', 50049, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1521.5, '2020-11-18', 50050, true, true);
 
 
 create table surgeries (
@@ -241,6 +316,35 @@ create table surgeries (
             ON DELETE CASCADE
 );
 
+/* Past */
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2020-12-16 08:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-12-16 09:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40004, 20002, '2020-12-16 10:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2020-12-16 11:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2020-12-17 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-12-17 13:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2020-12-17 14:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2020-12-18 15:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-12-19 16:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40005, 20001, '2020-12-20 17:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2020-12-20 18:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2020-12-20 19:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2020-12-21 20:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40003, 20002, '2020-12-21 08:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40000, 20002, '2020-12-21 09:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2020-12-22 10:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-12-22 11:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20001, '2020-12-22 12:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2020-12-24 13:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20001, '2020-12-24 14:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-12-26 15:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-12-26 16:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2020-12-26 17:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-12-28 18:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-12-29 19:00:00');
+
+
+/* Present */
 insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2021-01-16 08:00:00');
 insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2021-01-16 09:00:00');
 insert into surgeries (patient_id, doctor_id, surgery_time) values (40004, 20002, '2021-01-16 10:00:00');
