@@ -4,7 +4,9 @@
     Author     : niklas
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%@ include file = "/objects/jspHeader.jsp"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,6 +14,13 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/bookConsultation.do" name="doctorSelector">
+            <select name="selectedDoctor">
+                <c:forEach var="doctor" items="${doctors}">
+                    <option value="${doctor.firstName} ${doctor.surName}" >${doctor}</option>
+                </c:forEach>
+            </select>
+        </form>
+
     </body>
 </html>
