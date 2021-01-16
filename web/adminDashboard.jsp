@@ -29,7 +29,7 @@
                         <c:import url="objects/patientTable.jsp"/>
                     </div>
                     <div class="card">
-                        <c:import url="objects/pendingEmployeesTable.jsp"/>
+                        <c:import url="objects/pendingEmployeesConfirmer.jsp"/>
                     </div>
 
 

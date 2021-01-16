@@ -885,7 +885,7 @@ public class Database {
 
         queryString = "SELECT " + idString
                 + " FROM " + tableToGet;
-        
+
         System.out.println(queryString);
 
         ResultSet rs1 = executeQuery(queryString);
@@ -1163,7 +1163,7 @@ public class Database {
             valuesString.append("'" + perscription.getMedication() + "', ");
 
             thisID = perscription.getPerscriptionID();
-            
+
             if (thisID == -1) {
                 namesString.append("pending, ");
 
@@ -1344,6 +1344,30 @@ public class Database {
                     + "object type not found.");
             return;
         }
+
+        try {
+            tableName = TABLENAMES[id / 10000 - 1];
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.err.println("Error deleting object from database (ID not found?)");
+            return;
+        }
+        idString = getIDString(id);
+
+        queryString = "DELETE FROM " + tableName + " WHERE " + idString + " = " + id;
+
+        System.out.println(queryString);
+        try {
+            executeUpdate(queryString);
+
+        } catch (Exception e) {
+            System.err.println(e);
+            System.err.println("Error deleting object from database (ID not found?)");
+        } finally {
+            closeRSAndStatement();
+        }
+    }
+
+    public void deleteObjectFromDatabase(int id) {
 
         try {
             tableName = TABLENAMES[id / 10000 - 1];

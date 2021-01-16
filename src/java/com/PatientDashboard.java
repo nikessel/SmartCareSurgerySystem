@@ -7,7 +7,7 @@ package com;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.util.List;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,8 +33,11 @@ public class PatientDashboard extends HttpServlet {
     String loggedInAs = "";
     RequestDispatcher view;
     User currentUser;
-    List<Consultation> consultations;
-    List<Patient> patients;
+    ArrayList<Consultation> consultations;
+    ArrayList<Patient> patients;
+    ArrayList<Doctor> doctors;
+    ArrayList<Nurse> nurses;
+    ArrayList<Object> temp;
     String message = "";
     Date fromDate, toDate;
 
@@ -53,6 +56,9 @@ public class PatientDashboard extends HttpServlet {
         // Set view
         view = getServletContext().getRequestDispatcher("/patientDashboard.jsp");
 
+        doctors = new ArrayList<Doctor>();
+        nurses = new ArrayList<Nurse>();
+
         //Get session
         session = request.getSession();
 
@@ -66,12 +72,32 @@ public class PatientDashboard extends HttpServlet {
         Cookie[] cookies = request.getCookies();
 
         consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+
+        try {
+            temp = database.getAllFromDatabase("doctors");
+            temp.remove(0);
+
+            for (Object doctor : temp) {
+                doctors.add((Doctor) doctor);
+            }
+
+            temp = database.getAllFromDatabase("nurses");
+            temp.remove(0);
+
+            for (Object nurse : temp) {
+                nurses.add((Nurse) nurse);
+            }
+        } catch (Exception ex) {
+
+        }
+
         // Set cookie
         //cookie.setMaxAge(20 * 60);
         //response.addCookie(cookie);
         // Set / update attributes for currentSession
-        
         synchronized (session) {
+            session.setAttribute("doctors", doctors);
+            session.setAttribute("nurses", nurses);
             session.setAttribute("consultations", consultations);
             session.setAttribute("currentUser", currentUser);
             session.setAttribute("message", message);

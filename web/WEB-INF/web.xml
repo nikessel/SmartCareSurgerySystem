@@ -8,10 +8,6 @@
         <servlet-name>PasswordChanger</servlet-name>
         <servlet-class>com.PasswordChanger</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>BookConsultation</servlet-name>
-        <servlet-class>com.BookConsultation</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout.do</url-pattern>
@@ -23,10 +19,6 @@
     <servlet-mapping>
         <servlet-name>AddUser</servlet-name>
         <url-pattern>/addUser.do</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>BookConsultation</servlet-name>
-        <url-pattern>/bookConsultation.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>

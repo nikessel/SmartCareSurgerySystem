@@ -68,6 +68,21 @@ public class AdminDashboard extends HttpServlet {
         loggedInAs = "n admin";
         Cookie[] cookies = request.getCookies();
 
+        try {
+            int id = Integer.parseInt(request.getParameterValues("pendingEmployeeSelection")[0]);
+            boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
+
+            if (approve) {
+                database.approveEmployee(id);
+
+            } else {
+                database.deleteObjectFromDatabase(id);
+            }
+
+        } catch (Exception ex) {
+            message = "";
+        }
+
         pendingEmployeeIDs = database.getPendingUsers();
         pendingEmployees = new ArrayList<Employee>();
 
