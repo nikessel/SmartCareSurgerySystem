@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644 *
+ * @author Niklas Sarup-Lytzen ID: 18036644
  */
 import model.*;
 
@@ -36,7 +36,6 @@ public class EmployeeDashboard extends HttpServlet {
     List<Patient> patients;
     String message = "";
     Date fromDate, toDate;
-    boolean showConsultationTable, showPatientTable;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -93,22 +92,22 @@ public class EmployeeDashboard extends HttpServlet {
 
         try {
             int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
-            boolean insured = true;
 
             switch (choice) {
-                case 2:
-                    session.setAttribute("patients", database.getAllPatients());
+                case 0:
+                    patients = database.getAllPatientsWhereIs("insured", "true");
                     break;
                 case 1:
-                    insured = false;
+                    patients = database.getAllPatientsWhereIs("insured", "false");
+                    break;
                 default:
-                    session.setAttribute("patients", database.getAllPatientsWhereIs("insured", String.valueOf(insured)));
+                    patients = database.getAllPatients();
             }
 
             session.setAttribute("insuranceSelection", null);
-            view.forward(request, response);
 
         } catch (Exception ex) {
+            patients = database.getAllPatients();
             message = "";
         }
 
@@ -131,7 +130,6 @@ public class EmployeeDashboard extends HttpServlet {
         //response.addCookie(cookie);
         // Get database lists
         consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-        patients = database.getAllPatients();
 
         // Set / update attributes for currentSession
         synchronized (session) {
