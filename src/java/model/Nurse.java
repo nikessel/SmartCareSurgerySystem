@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
@@ -18,15 +20,17 @@ public class Nurse extends Employee {
 
     }
 
-    public Nurse(String username, String firstName, String surName, boolean isFullTime) {
+    public Nurse(String username, String firstName, String surName, Date dateOfBirth, Address address, boolean isFullTime) {
         this.username = username;
         this.firstName = firstName;
         this.surName = surName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
         this.fullTime = isFullTime;
         this.nurseID = -1;
     }
 
-    protected Nurse(String username, String firstName, String surName, boolean isFullTime, int nurseID) {
+    protected Nurse(String username, String firstName, String surName, Date dateOfBirth, Address address, boolean isFullTime, int nurseID) {
         boolean isDatabase = false;
 
         try {
@@ -41,6 +45,8 @@ public class Nurse extends Employee {
             this.username = username;
             this.firstName = firstName;
             this.surName = surName;
+            this.dateOfBirth = dateOfBirth;
+            this.address = address;
             this.fullTime = isFullTime;
             this.nurseID = nurseID;
         } else {
@@ -52,14 +58,14 @@ public class Nurse extends Employee {
     public int getNurseID() {
         return nurseID;
     }
-    
+
     public int getID() {
         return nurseID;
     }
 
     @Override
     public String toString() {
-        return "Nurse{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", nurseID=" + nurseID + '}';
+        return "Nurse{" + "nurseID=" + nurseID + ", username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", dateOfBirth=" + dateOfBirth + ", address=" + address + "fullTime=" + fullTime + '}';
     }
 
 }

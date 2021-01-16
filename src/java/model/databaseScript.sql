@@ -21,11 +21,13 @@ create table admins (
 	salt VARCHAR(64),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
+	date_of_birth DATE,
+	address VARCHAR(100),
         is_full_time boolean
 );
-insert into admins (username, password_hash, salt, first_name, sur_name, is_full_time) values ('admin', 'faf7cf536b8a1ab503a61371a565d96bf5c365d7662dc5804a3225a5222dc2093dadecd7ec040d9ceb2c5cf0913b29c93ec842e9191d6d404d8e6efa67745f95', '9cd160915b63412ad6a09d8adf0ccc3e4b05401bacc8c2c64189a5573001cf0e', 'TestAdminFirstName', 'TestAdminSurName', true);
-/* insert into admins (username, password_hash, salt, first_name, sur_name, is_full_time) values ('kmurrigans0', '9d40b3fda46e036504262a13f49e99a2606a3abcba868e34c523edfd2a05b2ec864b30528e29ca462df0ec04dffcef832f8364b99777a72d1365c0f59cc3f292', 'cc20e3b462e5a10db9bdcc6f1417da951a748eae5352efaf7f1a2155242b63c0', 'Kiele', 'Murrigans', true);
-*/
+insert into admins (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time) values ('admin', 'faf7cf536b8a1ab503a61371a565d96bf5c365d7662dc5804a3225a5222dc2093dadecd7ec040d9ceb2c5cf0913b29c93ec842e9191d6d404d8e6efa67745f95', '9cd160915b63412ad6a09d8adf0ccc3e4b05401bacc8c2c64189a5573001cf0e', 'Admin', 'First', '1960-10-10', '6 Holy Cross Parkway--BY52 1KU-testCounty-testTown-482929999332', true);
+insert into admins (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time) values ('kmurrigans0', '9d40b3fda46e036504262a13f49e99a2606a3abcba868e34c523edfd2a05b2ec864b30528e29ca462df0ec04dffcef832f8364b99777a72d1365c0f59cc3f292', 'cc20e3b462e5a10db9bdcc6f1417da951a748eae5352efaf7f1a2155242b63c0', 'Kiele', 'Murrigans', '1980-04-07', '22967 Arrowood Trail--KW32 1OW-testCounty5-testTown5-381247472228', true);
+
 
 
 create table doctors (
@@ -35,13 +37,15 @@ create table doctors (
 	salt VARCHAR(64),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
+	date_of_birth DATE,
+	address VARCHAR(100),
         is_full_time boolean,
         pending boolean
 );
 
-insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time, pending) values ('none', '0000', '0000', 'none', 'none', false, false);
-insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time, pending) values ('doctor', '3f0b2e0146d963bb497234ee5cd9dbd27e9c5833ceb9e907740223ac4e900620be03918d2bf4cac30fb6e3cb32e8d47a1557491fc6616cc54cd6269f703bbfb5', '6c841a9111f318ae744388a15de475df47c04b9981cc341434fbeda8b985d8a6', 'TestDoctorFirstName', 'TestDoctorSurName', false, false);
-insert into doctors (username, password_hash, salt, first_name, sur_name, is_full_time, pending) values ('gbuckoke0', '5f8ce858e7556d9d83bc959cd9adcf312f04077319d4442dcdff5f7f46d2d1c3e7b9354b16b83b7a2ea3404d03859f6a76e4bd11447c82c5c4a2016b95c23e4c', '6e84653e4d316083180d95b617af8f07eaadc87bfb160d209ccdc15024633640', 'Bob', 'Buckoke', true, false);
+insert into doctors (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('none', '0000', '0000', 'none', 'none','1970-01-01', '1 Test Avenue--TE00 0ST-testCounty-TestTown-999999999999', false, false);
+insert into doctors (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('doctor', '3f0b2e0146d963bb497234ee5cd9dbd27e9c5833ceb9e907740223ac4e900620be03918d2bf4cac30fb6e3cb32e8d47a1557491fc6616cc54cd6269f703bbfb5', '6c841a9111f318ae744388a15de475df47c04b9981cc341434fbeda8b985d8a6', 'Dr', 'First', '1970-02-02', '83 Weeping Birch Alley--KU154 1YR-testCounty2-testTown2-948320200333', false, false);
+insert into doctors (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('gbuckoke0', '5f8ce858e7556d9d83bc959cd9adcf312f04077319d4442dcdff5f7f46d2d1c3e7b9354b16b83b7a2ea3404d03859f6a76e4bd11447c82c5c4a2016b95c23e4c', '6e84653e4d316083180d95b617af8f07eaadc87bfb160d209ccdc15024633640', 'Bob', 'Buckoke', '1977-11-03', '22967 Arrowood Trail--OI153 1ZO-testCounty4-testTown4-48120484442234',  true, false);
 
 
 create table nurses (
@@ -51,12 +55,14 @@ create table nurses (
 	salt VARCHAR(64),
 	first_name VARCHAR(50),
 	sur_name VARCHAR(50),
+	date_of_birth DATE,
+	address VARCHAR(100),
         is_full_time boolean,
         pending boolean
 );
 
-insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time, pending) values ('none', '0000', '0000', 'none', 'none', false, false);
-insert into nurses (username, password_hash, salt, first_name, sur_name, is_full_time, pending) values ('nurse', '77027f84aa6f001db0b0d44b253f23e906615843bc06cff3acedfe939cb2556a1ad4d144d95276b23228df0decfc3478c1eb5ab4792b5cad23de90448756c9af', 'a94ed051440a587c411ca18c6b74315878e31733c93900e9b511013aa0844dc6', 'TestNurseFirstName', 'TestNurseSurName', false, false);
+insert into nurses (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('none', '0000', '0000', 'none', 'none', '1970-01-01', '1 Test Avenue--TE00 0ST-testCounty-TestTown-999999999999', false, false);
+insert into nurses (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('nurse', '77027f84aa6f001db0b0d44b253f23e906615843bc06cff3acedfe939cb2556a1ad4d144d95276b23228df0decfc3478c1eb5ab4792b5cad23de90448756c9af', 'a94ed051440a587c411ca18c6b74315878e31733c93900e9b511013aa0844dc6', 'Nurse', 'First', '1980-05-02', '1177 Maple Drive--IW213 9LO-testCounty3-testTown3-5235443444322', false, false);
 
 
 create table patients (

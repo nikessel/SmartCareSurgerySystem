@@ -5,7 +5,6 @@
  */
 package model;
 
-import com.mysql.cj.x.protobuf.MysqlxExpect;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -18,7 +17,8 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        Database database = new Database();
+
+             Database database = new Database();
 
         database.connect();
         
@@ -32,7 +32,8 @@ public class TestMain {
         
         System.out.println(database.getPrice("consultation"));
         
-        
+        database.printDatabaseTable("all");
+           
 
 
     }

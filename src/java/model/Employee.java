@@ -21,6 +21,11 @@ public abstract class Employee extends User {
     public void setFullTime(boolean fullTime) {
         this.fullTime = fullTime;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" + "fullTime=" + fullTime + '}';
+    }
     
     
     

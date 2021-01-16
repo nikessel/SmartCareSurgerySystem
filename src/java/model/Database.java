@@ -250,6 +250,14 @@ public class Database {
 
     }
 
+    public boolean isUser(int thisID) {
+        return 10000 <= thisID && thisID <= 49999;
+    }
+
+    public boolean isEmployee(int thisID) {
+        return 10000 <= thisID && thisID <= 39999;
+    }
+
     public boolean isAdmin(int thisID) {
         return 10000 <= thisID && thisID <= 19999;
     }
@@ -262,12 +270,20 @@ public class Database {
         return 30000 <= thisID && thisID <= 39999;
     }
 
-    public boolean isEmployee(int thisID) {
-        return 20000 <= thisID && thisID <= 39999;
-    }
-
     public boolean isPatient(int thisID) {
         return 40000 <= thisID && thisID <= 49999;
+    }
+
+    public boolean isConsultation(int thisID) {
+        return 50000 <= thisID && thisID <= 59999;
+    }
+
+    public boolean isInvoice(int thisID) {
+        return 60000 <= thisID && thisID <= 69999;
+    }
+
+    public boolean isSurgery(int thisID) {
+        return 70000 <= thisID && thisID <= 79999;
     }
 
     public int getUserID(String username, String password) {
@@ -455,11 +471,8 @@ public class Database {
 
     private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
 
-        boolean isUser, isEmployee, isAdmin, isDoctor, isNurse, isPatient,
-                isConsultation, isInvoice, isSurgery, paid, insured, isFullTime;
-        isUser = isEmployee = isAdmin = isDoctor = isNurse = isPatient
-                = isConsultation = isInvoice = isSurgery = paid = insured
-                = isFullTime = false;
+        boolean paid, insured, isFullTime;
+        paid = insured = isFullTime = false;
 
         int id, duration;
 
@@ -475,13 +488,11 @@ public class Database {
         Timestamp consultationTime, surgeryTime;
         consultationTime = surgeryTime = new Timestamp(0);
 
-        Invoice invoice = new Invoice();
         Address address = new Address();
         Patient patient = new Patient();
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
         Consultation consultation = new Consultation();
-        Surgery surgery = new Surgery();
 
         // Get ID
         try {
@@ -497,31 +508,7 @@ public class Database {
             }
         }
 
-        if (10000 <= id && id <= 49999) {
-            isUser = true;
-
-            if (10000 <= id && id <= 39999) {
-                isEmployee = true;
-
-                if (10000 <= id && id <= 19999) {
-                    isAdmin = true;
-                } else if (20000 <= id && id <= 29999) {
-                    isDoctor = true;
-                } else if (30000 <= id && id <= 39999) {
-                    isNurse = true;
-                }
-            } else if (40000 <= id && id <= 49999) {
-                isPatient = true;
-            }
-        } else if (50000 <= id && id <= 59999) {
-            isConsultation = true;
-        } else if (60000 <= id && id <= 69999) {
-            isInvoice = true;
-        } else if (70000 <= id && id <= 79999) {
-            isSurgery = true;
-        }
-
-        if (isUser) {
+        if (isUser(id)) {
             try {
                 rs.beforeFirst();
 
@@ -534,34 +521,32 @@ public class Database {
 
                     firstName = rs.getString("first_name");
                     surName = rs.getString("sur_name");
-                }
-
-            } catch (SQLException ex) {
-                System.err.println(ex);
-            }
-        }
-
-        if (isEmployee) {
-            try {
-                rs.beforeFirst();
-
-                if (rs.next()) {
-                    isFullTime = rs.getBoolean("is_full_time");
-                }
-
-            } catch (SQLException ex) {
-                System.err.println(ex);
-            }
-        }
-
-        if (isPatient) {
-            try {
-                rs.beforeFirst();
-
-                if (rs.next()) {
                     address = convertStringToAddress(rs.getString("address"));
                     dateOfBirth = rs.getDate("date_of_birth");
-                    insured = rs.getBoolean("insured");
+                }
+
+                if (isEmployee(id)) {
+                    try {
+                        rs.beforeFirst();
+
+                        if (rs.next()) {
+                            isFullTime = rs.getBoolean("is_full_time");
+                        }
+
+                    } catch (SQLException ex) {
+                        System.err.println(ex);
+                    }
+                } else if (isPatient(id)) {
+                    try {
+                        rs.beforeFirst();
+
+                        if (rs.next()) {
+                            insured = rs.getBoolean("insured");
+                        }
+
+                    } catch (SQLException ex) {
+                        System.err.println(ex);
+                    }
                 }
 
             } catch (SQLException ex) {
@@ -569,7 +554,7 @@ public class Database {
             }
         }
 
-        if (isConsultation) {
+        else if (isConsultation(id)) {
             try {
                 rs.beforeFirst();
 
@@ -587,7 +572,7 @@ public class Database {
             }
         }
 
-        if (isInvoice) {
+        else if (isInvoice(id)) {
             try {
                 rs.beforeFirst();
 
@@ -603,7 +588,7 @@ public class Database {
             }
         }
 
-        if (isSurgery) {
+        else if (isSurgery(id)) {
             try {
                 rs.beforeFirst();
 
@@ -618,23 +603,23 @@ public class Database {
             }
         }
 
-        if (isUser) {
-            if (isEmployee) {
-                if (isAdmin) {
-                    return new Admin(username, firstName, surName, isFullTime, id);
-                } else if (isDoctor) {
-                    return new Doctor(username, firstName, surName, isFullTime, id);
-                } else if (isNurse) {
-                    return new Nurse(username, firstName, surName, isFullTime, id);
+        if (isUser(id)) {
+            if (isEmployee(id)) {
+                if (isAdmin(id)) {
+                    return new Admin(username, firstName, surName, dateOfBirth, address, isFullTime, id);
+                } else if (isDoctor(id)) {
+                    return new Doctor(username, firstName, surName, dateOfBirth, address, isFullTime, id);
+                } else if (isNurse(id)) {
+                    return new Nurse(username, firstName, surName, dateOfBirth, address, isFullTime, id);
                 }
-            } else if (isPatient) {
+            } else if (isPatient(id)) {
                 return new Patient(username, firstName, surName, id, dateOfBirth, address, insured);
             }
-        } else if (isConsultation) {
+        } else if (isConsultation(id)) {
             return new Consultation(patient, doctor, nurse, consultationTime, note, duration, id);
-        } else if (isInvoice) {
+        } else if (isInvoice(id)) {
             return new Invoice(consultation, price, invoiceDate, paid, insured, id);
-        } else if (isSurgery) {
+        } else if (isSurgery(id)) {
             return new Surgery(patient, doctor, surgeryTime, id);
         }
 
@@ -1003,11 +988,13 @@ public class Database {
         if (object instanceof User) {
             User user = (User) object;
 
-            namesString.append("username, first_name, sur_name, ");
+            namesString.append("username, first_name, sur_name, date_of_birth, address, ");
 
             valuesString.append("'" + user.getUsername() + "', ");
             valuesString.append("'" + user.getFirstName() + "', ");
             valuesString.append("'" + user.getSurName() + "', ");
+            valuesString.append("'" + user.getDateOfBirth() + "', ");
+            valuesString.append("'" + convertAddressToString(user.getAddress()) + "', ");
 
             if (user instanceof Employee) {
                 Employee employee = (Employee) object;
@@ -1042,10 +1029,8 @@ public class Database {
             } else if (object instanceof Patient) {
                 Patient patient = (Patient) object;
                 tableName = TABLENAMES[3];
-                namesString.append("date_of_birth, address, insured, ");
+                namesString.append("insured, ");
 
-                valuesString.append("'" + patient.getDateOfBirth() + "', ");
-                valuesString.append("'" + convertAddressToString(patient.getAddress()) + "', ");
                 valuesString.append(patient.isInsured() + ", ");
 
                 thisID = patient.getPatientID();
