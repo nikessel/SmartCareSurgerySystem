@@ -21,9 +21,9 @@ public final class DateFormatter {
     }
 
     public static String formatDate(Date date, String pattern) {
-        pattern = "dd-MM-yyyy";
         return new SimpleDateFormat(pattern).format(date);
     }
+    
 
     public Date getDate() {
         return date;

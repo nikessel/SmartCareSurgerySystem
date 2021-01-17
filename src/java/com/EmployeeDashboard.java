@@ -7,6 +7,7 @@ package com;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,17 +25,21 @@ import model.*;
 
 public class EmployeeDashboard extends HttpServlet {
 
-    int currentUserID;
+    int currentUserID, checkID;
     HttpSession session;
+    boolean isDoctor;
     Cookie cookie;
     Cookie[] cookies;
     Database database;
     RequestDispatcher view;
     User currentUser;
     String loggedInAs = "";
-    List<Consultation> consultations;
-    List<Patient> patients;
-    String message = "";
+    ArrayList<Consultation> consultations;
+    ArrayList<Patient> patients;
+    ArrayList<Consultation> pendingConsultations;
+    ArrayList<Integer> pendingConsultationIDs;
+    Consultation temp;
+    String message;
     Date fromDate, toDate;
 
     /**
@@ -69,26 +74,58 @@ public class EmployeeDashboard extends HttpServlet {
 
         database = (Database) getServletContext().getAttribute("database");
 
+        // Get attributes
+        currentUserID = (int) session.getAttribute("userID");
+
+        // Set currentUser
+        if (database.isDoctor(currentUserID)) {
+            currentUser = database.getDoctor(currentUserID);
+            isDoctor = true;
+            loggedInAs = " doctor";
+        } else {
+            currentUser = database.getNurse(currentUserID);
+            isDoctor = false;
+            loggedInAs = " nurse";
+        }
+
         try {
-            if (Boolean.parseBoolean(String.valueOf(request.getAttribute("resetDates")))) {
-                consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-                fromDate = null;
-                toDate = null;
+            int id = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
+            boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
+
+            if (approve) {
+                database.approveConsultation(id);
+
             } else {
-
-                fromDate = Date.valueOf(request.getParameter("fromDate"));
-                toDate = Date.valueOf(request.getParameter("toDate"));
-
-                consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
-
+                database.deleteObjectFromDatabase(id);
             }
 
-            session.setAttribute("consultations", consultations);
-            view.forward(request, response);
+        } catch (Exception ex) {
+        }
 
-        } catch (Exception e) {
+        pendingConsultationIDs = database.getPendingConsultations();
+        pendingConsultations = new ArrayList<Consultation>();
+
+        try {
+
+            for (int id : pendingConsultationIDs) {
+                temp = database.getConsultation(id);
+
+                if (isDoctor) {
+                    checkID = temp.getDoctor().getDoctorID();
+                } else {
+                    checkID = temp.getNurse().getNurseID();
+                }
+
+                if (checkID == currentUserID) {
+                    pendingConsultations.add(temp);
+                }
+            }
+
+        } catch (Exception ex) {
 
         }
+
+        message = String.valueOf(currentUserID) + "es " + String.valueOf(checkID);
 
         try {
             int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
@@ -108,19 +145,6 @@ public class EmployeeDashboard extends HttpServlet {
 
         } catch (Exception ex) {
             patients = database.getAllPatients();
-            message = "";
-        }
-
-        // Get attributes
-        currentUserID = (int) session.getAttribute("userID");
-
-        // Set currentUser
-        if (20000 <= currentUserID && currentUserID <= 29999) {
-            currentUser = database.getDoctor(currentUserID);
-            loggedInAs = " doctor";
-        } else {
-            currentUser = database.getNurse(currentUserID);
-            loggedInAs = " nurse";
         }
 
         Cookie[] cookies = request.getCookies();
@@ -133,6 +157,7 @@ public class EmployeeDashboard extends HttpServlet {
 
         // Set / update attributes for currentSession
         synchronized (session) {
+            session.setAttribute("pendingConsultations", pendingConsultations);
             session.setAttribute("consultations", consultations);
             session.setAttribute("patients", patients);
             session.setAttribute("currentUser", currentUser);

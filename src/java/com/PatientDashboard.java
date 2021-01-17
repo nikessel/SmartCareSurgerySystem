@@ -7,6 +7,7 @@ package com;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,7 +26,8 @@ import model.*;
 
 public class PatientDashboard extends HttpServlet {
 
-    int currentUserID;
+    int currentUserID, selectedConsultatantID, selectedHour, selectedMinute,
+            selectedYear, selectedMonth, selectedDayOfMonth;
     HttpSession session;
     Cookie cookie;
     Cookie[] cookies;
@@ -38,8 +40,9 @@ public class PatientDashboard extends HttpServlet {
     ArrayList<Doctor> doctors;
     ArrayList<Nurse> nurses;
     ArrayList<Object> temp;
-    String message = "";
-    Date fromDate, toDate;
+    Timestamp timestamp;
+    String message, note;
+    String[] selectedDate;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,6 +53,43 @@ public class PatientDashboard extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private Boolean requestConsultation(HttpServletRequest request) {
+
+        try {
+            String[] selectedTime = request.getParameter("selectedTime").split(":");
+            selectedDate = request.getParameter("selectedDate").split("-");
+            selectedConsultatantID = Integer.parseInt(request.getParameterValues("selectedConsultatantID")[0]);
+            note = request.getParameter("note");
+
+            selectedYear = Integer.parseInt(selectedDate[0]);
+            selectedMonth = Integer.parseInt(selectedDate[1]);
+            selectedDayOfMonth = Integer.parseInt(selectedDate[2]);
+            selectedHour = Integer.parseInt(selectedTime[0]);
+            selectedMinute = Integer.parseInt(selectedTime[1]);
+
+            timestamp = new Timestamp(selectedYear, selectedMonth, selectedDayOfMonth, selectedHour, selectedMinute);
+
+            Patient patient = (Patient) currentUser;
+            Doctor doctor;
+            Nurse nurse;
+
+            if (database.isDoctor(selectedConsultatantID)) {
+                doctor = database.getDoctor(selectedConsultatantID);
+                nurse = database.getNurse(30000);
+            } else {
+                doctor = database.getDoctor(20000);
+                nurse = database.getNurse(selectedConsultatantID);
+            }
+
+            Consultation consultation = new Consultation(patient, doctor, nurse, timestamp, note, 10);
+
+            database.addObjectToDatabase(consultation);
+
+        } catch (Exception ex) {
+        }
+        return false;
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -70,6 +110,8 @@ public class PatientDashboard extends HttpServlet {
         currentUser = database.getPatient(currentUserID);
         loggedInAs = " patient";
         Cookie[] cookies = request.getCookies();
+
+        requestConsultation(request);
 
         consultations = database.getAllConsultationsWhereIDIs(currentUserID);
 

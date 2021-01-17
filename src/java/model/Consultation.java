@@ -112,6 +112,10 @@ public class Consultation extends DatabaseObject {
         this.duration = duration;
     }
     
+    public int getID() {
+        return consultationID;
+    }
+    
     
 
     @Override

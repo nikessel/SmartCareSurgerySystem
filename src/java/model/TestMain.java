@@ -22,8 +22,28 @@ public class TestMain {
 
         database.connect();
         
-        database.printDatabaseTable("doctors");
-  
+        
+        Timestamp timestamp = new Timestamp(2021, 6, 15, 15, 11);
+        
+        System.out.println(timestamp);
+        
+        System.exit(0);
+
+        ArrayList<Integer> pendingConsultationIDs = database.getPendingConsultations();
+        ArrayList<Consultation> pendingConsultations = new ArrayList<Consultation>();
+
+        try {
+
+            for (int id : pendingConsultationIDs) {
+                pendingConsultations.add(database.getConsultation(id));
+            }
+
+        } catch (Exception ex) {
+
+        }
+        
+        System.out.println(pendingConsultations.get(0));
+
         System.exit(0);
         Patient patient = database.getPatient(40012);
         Doctor doctor = database.getDoctor(20001);

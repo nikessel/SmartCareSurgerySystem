@@ -19,21 +19,13 @@
                 <tr>
                     <th>Date</th>
                     <th>Patient name</th>
-                    <th>Week number</th>
-                    <th>Day of week</th>
-                    <th>Hour of day</th>
-                    <th>Minute of day</th>
                 </tr>
             </thead>
             <tbody>
                 <c:forEach items="${consultations}" var="consultation">
                     <tr>
-                        <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy")}</td>
+                        <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy HH:mm")}</td>
                         <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
-                        <td>${consultation.consultationTime.weekNumber}</td>
-                        <td>${consultation.consultationTime.day}</td>
-                        <td>${consultation.consultationTime.hours}</td>
-                        <td>${consultation.consultationTime.minutes}</td>
                     </tr>
                 </c:forEach>   
             </tbody>

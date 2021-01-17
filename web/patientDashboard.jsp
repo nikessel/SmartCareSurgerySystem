@@ -38,6 +38,7 @@
                      <c:import url="objects/personalInfo.jsp"/>
                 </div>
                 <div class="card">
+                    <h3>${message}</h3>
                     <c:import url="objects/bookConsultation.jsp"/>
                 </div>
             </div>

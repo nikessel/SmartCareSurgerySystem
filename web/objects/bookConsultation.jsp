@@ -15,18 +15,18 @@
     </head>
     <body>
         <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/patientDashboard.do" name="consultationBooker">
-            <select name="selectedDoctor">
+            <select name="selectedConsultatantID">
                 <c:forEach var="doctor" items="${doctors}">
-                    <option value="${doctor}" >${doctor.firstName} ${doctor.surName}</option>
+                    <option value="${doctor.ID}" >${doctor.firstName} ${doctor.surName}</option>
                 </c:forEach>
-            </select>
-            <select name="selectedNurse">
                 <c:forEach var="nurse" items="${nurses}">
-                    <option value="${nurse}" >${nurse.firstName} ${nurse.surName}</option>
+                    <option value="${nurse.ID}" >${nurse.firstName} ${nurse.surName}</option>
                 </c:forEach>
             </select>
+            <input name="selectedDate" required="required" type="date"/>
+            <input name="selectedTime" required="required" type="time"/>
+            <input name="note" type="text"/>
+            <input type="submit" value="Book consultation"/>
         </form>
-
-
     </body>
 </html>

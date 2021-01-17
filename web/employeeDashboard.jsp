@@ -18,13 +18,15 @@
     <div class="grid-container">    
 
         <c:import url="objects/dashboardHeader.jsp"/>
-                    
+
         <aside class="sidenav">
 
         </aside>
-                     
+
 
         <main class="main">
+            <h3>dsad${message}</h3>
+
             <div class="wide_card">
                 <div class="centerDiv">
                     <h2>Timetabled consultations and surgeries</h2>
@@ -36,10 +38,18 @@
 
             <div class="main-cards">
                 <div class="card">
-                     <c:import url="objects/patientTable.jsp"/>
+                    <c:import url="objects/patientTable.jsp"/>
                 </div>
                 <div class="card">
                     <c:import url="objects/personalInfo.jsp"/>
+                </div>
+            </div>
+
+            <div class="main-cards">
+                <div class="card">
+                    <c:import url="objects/pendingConsultationsConfirmer.jsp"/>
+                </div>
+                <div class="card">
                 </div>
             </div>
             <!--
