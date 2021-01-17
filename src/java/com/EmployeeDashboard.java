@@ -125,8 +125,6 @@ public class EmployeeDashboard extends HttpServlet {
 
         }
 
-        message = String.valueOf(currentUserID) + "es " + String.valueOf(checkID);
-
         try {
             int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
 
