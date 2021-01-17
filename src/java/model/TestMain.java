@@ -21,6 +21,8 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
+        
+        database.printDatabaseTable("doctors");
   
         System.exit(0);
         Patient patient = database.getPatient(40012);

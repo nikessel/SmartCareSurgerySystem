@@ -249,6 +249,10 @@ public class Database {
         return "SELECT " + idString + ", username, password_hash, salt FROM " + tableName;
 
     }
+    
+    private String getTableName(int id) {
+        return TABLENAMES[(int) id / 10000 - 1];
+    }
 
     public boolean isUser(int thisID) {
         return 10000 <= thisID && thisID <= 49999;
@@ -679,9 +683,24 @@ public class Database {
         return new DatabaseObject();
     }
 
+    private Boolean isPending(int id) {
+        tableName = getTableName(id);
+        idString = getIDString(id);
+        
+        try {
+            ResultSet rs1 = selectFromWhere("*", tableName, idString, String.valueOf(id));
+            rs1.next();
+            return rs1.getBoolean("pending");
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return false;
+        }
+    }
+
     public ArrayList<Object> getListFromDatabase(ResultSet rs) throws ArrayIndexOutOfBoundsException {
 
         ArrayList<Object> outputList = new ArrayList();
+        Boolean pending;
         int id = -1;
 
         // Get ID
@@ -706,6 +725,11 @@ public class Database {
             rs.beforeFirst();
             while (rs.next()) {
                 int thisID = rs.getInt(1);
+                
+                if (isPending(thisID)) {
+                    rs.next();
+                    continue;
+                }
 
                 switch (name) {
                     case "admins":
