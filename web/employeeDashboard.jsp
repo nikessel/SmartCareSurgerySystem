@@ -15,26 +15,22 @@
         </style>
     </head>
 
-    <div class="grid-container">    
 
+    <div class="grid-container">  
+
+        <c:import url="objects/keepScrollPosition.html"/>
         <c:import url="objects/dashboardHeader.jsp"/>
 
         <aside class="sidenav">
 
         </aside>
 
-
+        <h3>${filterMessage}</h3>
         <main class="main">
-            <h3>dsad${message}</h3>
 
             <div class="wide_card">
-                <div class="centerDiv">
-                    <h2>Timetabled consultations and surgeries</h2>
-                </div>
-
                 <c:import url="objects/timetable.jsp"/>
             </div>
-
 
             <div class="main-cards">
                 <div class="card">

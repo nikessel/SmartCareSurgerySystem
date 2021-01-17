@@ -21,6 +21,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -243,13 +244,26 @@ public class Database {
 
     }
 
+    private String formatSQLTimestamp(Timestamp thisTimestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String string = dateFormat.format(this);
+
+        String[] strArr = string.split("-");
+
+        strArr[0] = String.valueOf(thisTimestamp.getYear());
+
+        string = String.join("-", strArr);
+
+        return string;
+    }
+
     private String getCredentialsSQLString(String tableName) {
         idString = getIDString(tableName);
 
         return "SELECT " + idString + ", username, password_hash, salt FROM " + tableName;
 
     }
-    
+
     private String getTableName(int id) {
         return TABLENAMES[(int) id / 10000 - 1];
     }
@@ -686,7 +700,7 @@ public class Database {
     private Boolean isPending(int id) {
         tableName = getTableName(id);
         idString = getIDString(id);
-        
+
         try {
             ResultSet rs1 = selectFromWhere("*", tableName, idString, String.valueOf(id));
             rs1.next();
@@ -725,7 +739,7 @@ public class Database {
             rs.beforeFirst();
             while (rs.next()) {
                 int thisID = rs.getInt(1);
-                
+
                 if (isPending(thisID)) {
                     rs.next();
                     continue;
@@ -1141,7 +1155,7 @@ public class Database {
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
-            valuesString.append(consultation.getConsultationTime() + "', ");
+            valuesString.append(formatSQLTimestamp(consultation.getConsultationTime()) + "', ");
 
             if (thisID == -1) {
                 namesString.append("pending, ");

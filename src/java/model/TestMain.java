@@ -23,10 +23,10 @@ public class TestMain {
         database.connect();
         
         
-        Timestamp timestamp = new Timestamp(2021, 6, 15, 15, 11);
-        
-        System.out.println(timestamp);
-        
+        for (int i : database.getPendingConsultations()) {
+            System.out.println(database.getConsultation(i));
+        }
+
         System.exit(0);
 
         ArrayList<Integer> pendingConsultationIDs = database.getPendingConsultations();

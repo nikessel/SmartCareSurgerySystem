@@ -27,17 +27,18 @@ public class EmployeeDashboard extends HttpServlet {
 
     int currentUserID, checkID;
     HttpSession session;
-    boolean isDoctor;
+    boolean isDoctor, redirect;
     Cookie cookie;
     Cookie[] cookies;
     Database database;
     RequestDispatcher view;
     User currentUser;
-    String loggedInAs = "";
+    String loggedInAs, redirectTo;
     ArrayList<Consultation> consultations;
     ArrayList<Patient> patients;
     ArrayList<Consultation> pendingConsultations;
     ArrayList<Integer> pendingConsultationIDs;
+
     Consultation temp;
     String message;
     Date fromDate, toDate;
@@ -69,102 +70,8 @@ public class EmployeeDashboard extends HttpServlet {
         // Set view
         view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
-        //Get session
-        session = request.getSession();
 
-        database = (Database) getServletContext().getAttribute("database");
 
-        // Get attributes
-        currentUserID = (int) session.getAttribute("userID");
-
-        // Set currentUser
-        if (database.isDoctor(currentUserID)) {
-            currentUser = database.getDoctor(currentUserID);
-            isDoctor = true;
-            loggedInAs = " doctor";
-        } else {
-            currentUser = database.getNurse(currentUserID);
-            isDoctor = false;
-            loggedInAs = " nurse";
-        }
-
-        try {
-            int id = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
-            boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
-
-            if (approve) {
-                database.approveConsultation(id);
-
-            } else {
-                database.deleteObjectFromDatabase(id);
-            }
-
-        } catch (Exception ex) {
-        }
-
-        pendingConsultationIDs = database.getPendingConsultations();
-        pendingConsultations = new ArrayList<Consultation>();
-
-        try {
-
-            for (int id : pendingConsultationIDs) {
-                temp = database.getConsultation(id);
-
-                if (isDoctor) {
-                    checkID = temp.getDoctor().getDoctorID();
-                } else {
-                    checkID = temp.getNurse().getNurseID();
-                }
-
-                if (checkID == currentUserID) {
-                    pendingConsultations.add(temp);
-                }
-            }
-
-        } catch (Exception ex) {
-
-        }
-
-        try {
-            int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
-
-            switch (choice) {
-                case 0:
-                    patients = database.getAllPatientsWhereIs("insured", "true");
-                    break;
-                case 1:
-                    patients = database.getAllPatientsWhereIs("insured", "false");
-                    break;
-                default:
-                    patients = database.getAllPatients();
-            }
-
-            session.setAttribute("insuranceSelection", null);
-
-        } catch (Exception ex) {
-            patients = database.getAllPatients();
-        }
-
-        Cookie[] cookies = request.getCookies();
-
-        // Set cookie
-        //cookie.setMaxAge(20 * 60);
-        //response.addCookie(cookie);
-        // Get database lists
-        consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-
-        // Set / update attributes for currentSession
-        synchronized (session) {
-            session.setAttribute("pendingConsultations", pendingConsultations);
-            session.setAttribute("consultations", consultations);
-            session.setAttribute("patients", patients);
-            session.setAttribute("currentUser", currentUser);
-            session.setAttribute("message", message);
-            session.setAttribute("loggedInAs", loggedInAs);
-
-        }
-
-        //response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
         view.forward(request, response);
 
     }

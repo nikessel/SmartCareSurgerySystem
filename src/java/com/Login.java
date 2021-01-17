@@ -44,6 +44,8 @@ public class Login extends HttpServlet {
             currentUserID = (int) request.getAttribute("userID");
             session = request.getSession();
             session.setAttribute("userID", currentUserID);
+            Refresh refresh = new Refresh();
+            refresh.initialise(currentUserID, session, request);
 
             // username password validation 
             if (database.isAdmin(currentUserID)) {

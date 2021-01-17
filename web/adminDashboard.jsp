@@ -17,6 +17,7 @@
     <body>
         <div class="grid-container">    
 
+            <c:import url="objects/keepScrollPosition.html"/>
             <c:import url="objects/dashboardHeader.jsp"/>
 
             <aside class="sidenav">
@@ -40,7 +41,7 @@
                         <c:import url="objects/personalInfo.jsp"/>
                     </div>
                     <div class="card">
-                        
+
                     </div>
                 </div>
 

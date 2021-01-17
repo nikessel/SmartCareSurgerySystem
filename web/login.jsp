@@ -15,6 +15,7 @@
             <h2>Login</h2>
             <br>
             <form class="paddedForm" action="${pageContext.request.contextPath}/login.do" method="post">
+                <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
                 <input class="paddedInput" id="username" name="username" required="required" type="text" placeholder="Username"/>
                 <input class="paddedInput" id="password" name="password" required="required" type="password" placeholder="Password" />
                 <input class="paddedInput" type="submit" value="Submit" />

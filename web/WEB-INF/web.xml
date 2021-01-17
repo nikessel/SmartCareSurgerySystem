@@ -8,6 +8,10 @@
         <servlet-name>PasswordChanger</servlet-name>
         <servlet-class>com.PasswordChanger</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Refresh</servlet-name>
+        <servlet-class>com.Refresh</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout.do</url-pattern>
@@ -19,6 +23,10 @@
     <servlet-mapping>
         <servlet-name>AddUser</servlet-name>
         <url-pattern>/addUser.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Refresh</servlet-name>
+        <url-pattern>/refresh.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
@@ -92,9 +100,6 @@
     </servlet-mapping>
     <listener>
         <listener-class>com.myServletContextListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>com.myServletAttributeListener</listener-class>
     </listener>
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
