@@ -22,6 +22,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -246,7 +247,7 @@ public class Database {
 
     private String formatSQLTimestamp(Timestamp thisTimestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String string = dateFormat.format(this);
+        String string = dateFormat.format(thisTimestamp);
 
         String[] strArr = string.split("-");
 
@@ -1156,7 +1157,9 @@ public class Database {
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
             valuesString.append(formatSQLTimestamp(consultation.getConsultationTime()) + "', ");
-
+            System.out.println(formatSQLTimestamp(consultation.getConsultationTime()));
+            
+            
             if (thisID == -1) {
                 namesString.append("pending, ");
 

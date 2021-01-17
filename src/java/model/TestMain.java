@@ -21,12 +21,19 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
-        
-        
+
+        Patient patient = database.getPatient(40014);
+        Doctor doctor = database.getDoctor(20001);
+
+        Nurse nurse = database.getNurse(30000);
+
+        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(2021, 10, 10, 2, 2), "2344", 0);
+
+        database.addObjectToDatabase(consultation);
+
         for (int i : database.getPendingConsultations()) {
             System.out.println(database.getConsultation(i));
         }
-
         System.exit(0);
 
         ArrayList<Integer> pendingConsultationIDs = database.getPendingConsultations();
@@ -41,12 +48,12 @@ public class TestMain {
         } catch (Exception ex) {
 
         }
-        
+
         System.out.println(pendingConsultations.get(0));
 
         System.exit(0);
-        Patient patient = database.getPatient(40012);
-        Doctor doctor = database.getDoctor(20001);
+   //     Patient patient = database.getPatient(40012);
+     //   Doctor doctor = database.getDoctor(20001);
 
         database.addObjectToDatabase(doctor);
 

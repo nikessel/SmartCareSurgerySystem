@@ -57,12 +57,6 @@ public class Timestamp extends java.sql.Timestamp {
     public String toString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String string = dateFormat.format(this);
-        
-        String[] strArr = string.split("-");
-        
-        strArr[0] = String.valueOf(this.getYear());
-        
-        string = String.join("-", strArr);
 
         return string;
     }
