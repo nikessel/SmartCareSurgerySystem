@@ -16,7 +16,7 @@
     <body>
 
         <h3>Pending new employee requests</h3>
-        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/adminDashboard.do" name="pendingEmployeeConfirmer">
+        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/refresh.do" name="pendingEmployeeConfirmer">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <select name="pendingEmployeeSelection">
                 <c:forEach var="pendingEmployee" items="${pendingEmployees}">

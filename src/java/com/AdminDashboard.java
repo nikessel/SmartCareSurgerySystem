@@ -56,63 +56,6 @@ public class AdminDashboard extends HttpServlet {
         // Set view
         view = getServletContext().getRequestDispatcher("/adminDashboard.jsp");
 
-        //Get session
-        session = request.getSession();
-
-        // Get attributes
-        currentUserID = (int) session.getAttribute("userID");
-        database = (Database) getServletContext().getAttribute("database");
-
-        // Set currentUser
-        currentUser = database.getAdmin(currentUserID);
-        loggedInAs = "n admin";
-        Cookie[] cookies = request.getCookies();
-
-        try {
-            int id = Integer.parseInt(request.getParameterValues("pendingEmployeeSelection")[0]);
-            boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
-
-            if (approve) {
-                database.approveEmployee(id);
-
-            } else {
-                database.deleteObjectFromDatabase(id);
-            }
-
-        } catch (Exception ex) {
-            message = "";
-        }
-
-        pendingEmployeeIDs = database.getPendingUsers();
-        pendingEmployees = new ArrayList<Employee>();
-
-        try {
-
-            for (int i : pendingEmployeeIDs) {
-                if (database.isNurse(i)) {
-                    pendingEmployees.add(database.getNurse(i));
-                } else if (database.isDoctor(i)) {
-                    pendingEmployees.add(database.getDoctor(i));
-                }
-            }
-
-        } catch (Exception ex) {
-
-        }
-
-        // Set cookie
-        //cookie.setMaxAge(20 * 60);
-        //response.addCookie(cookie);
-        // Get database lists
-        // Set / update attributes for currentSession
-        synchronized (session) {
-            session.setAttribute("currentUser", currentUser);
-            session.setAttribute("message", message);
-            session.setAttribute("loggedInAs", loggedInAs);
-            session.setAttribute("pendingEmployees", pendingEmployees);
-
-        }
-
         //response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
         view.forward(request, response);
 

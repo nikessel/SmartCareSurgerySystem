@@ -21,6 +21,9 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
+        
+        System.out.println(database.getUserID("admin", "admin"));
+           System.exit(0);
 
         Patient patient = database.getPatient(40014);
         Doctor doctor = database.getDoctor(20001);
