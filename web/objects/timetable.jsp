@@ -42,6 +42,7 @@
                 <tr>
                     <th>Date</th>
                     <th>Patient name</th>
+                    <th>Issue</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,7 @@
                     <tr>
                         <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy HH:mm")}</td>
                         <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
+                        <td>${consultation.note}</td>
                     </tr>
                 </c:forEach>   
             </tbody>
