@@ -14,10 +14,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        
-        <c:if test="${database.admin}">
-            <h3>Hello</h3>
-        </c:if>
 
         <h3>Pending new employee requests</h3>
         <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="pendingEmployeeConfirmer">

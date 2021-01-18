@@ -11,6 +11,13 @@
             String formatDate(java.util.Date, java.lang.String)
         </function-signature>
     </function>
+    <function>
+        <name>isInThePast</name>
+        <function-class>com.DateFormatter</function-class>
+        <function-signature>
+            Boolean isInThePast(java.util.Date)
+        </function-signature>
+    </function>
        
 
 </taglib>

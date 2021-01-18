@@ -14,7 +14,6 @@ import java.util.Date;
  */
 public class Invoice extends DatabaseObject {
 
-    private Consultation consultation;
     private Patient patient;
     private double price;
     private Date dateOfInvoice;
@@ -26,7 +25,7 @@ public class Invoice extends DatabaseObject {
 
     }
 
-    protected Invoice(Consultation consultation, Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
+    protected Invoice(Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
         boolean isDatabase = false;
 
         try {
@@ -38,7 +37,6 @@ public class Invoice extends DatabaseObject {
         }
 
         if (isDatabase) {
-            this.consultation = consultation;
             this.patient = patient;
             this.price = price;
             this.dateOfInvoice = dateOfInvoice;
@@ -50,8 +48,7 @@ public class Invoice extends DatabaseObject {
         }
     }
 
-    public Invoice(Consultation consultation, Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured) {
-        this.consultation = consultation;
+    public Invoice(Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured) {
         this.patient = patient;
         this.price = price;
         this.dateOfInvoice = dateOfInvoice;
@@ -70,14 +67,6 @@ public class Invoice extends DatabaseObject {
 
     public void setInvoiceID(int invoiceID) {
         this.invoiceID = invoiceID;
-    }
-
-    public Consultation getConsultation() {
-        return consultation;
-    }
-
-    public void setConsultation(Consultation consultation) {
-        this.consultation = consultation;
     }
 
     public double getPrice() {
@@ -123,7 +112,7 @@ public class Invoice extends DatabaseObject {
 
     @Override
     public String toString() {
-        return "Invoice{" + "invoiceID=" + invoiceID + ", consultationID=" + consultation.getConsultationID() + ", patient_id=" + patient.getPatientID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
+        return "Invoice{" + "invoiceID=" + invoiceID + ", patient_id=" + patient.getPatientID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
     }
 
 }

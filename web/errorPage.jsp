@@ -16,7 +16,7 @@
     <body>
         <div class="login">
             <h1>Error page</h1>
-            <h2>${message}${pageContext.exception}</h2>
+            <h2>${message}${pageContext.exception}${filterMessage}</h2>
             <form action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Return to login" />
             </form>

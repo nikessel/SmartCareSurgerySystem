@@ -25,11 +25,18 @@ public class TestMain {
 
         database.connect();
         
+        ArrayList<Prescription> arr = database.getAllPrescriptionsWhereIDIs(40000);
+        
+        for (Prescription pre : arr) {
+             System.out.println(pre);
+        }
         
 
-        //database.printDatabaseTable("invoices");
+        System.out.println(database.getPrescription(80001));
+        
+        database.setPending(80001);
 
-
+        System.exit(0);
         Patient patient = database.getPatient(40014);
         Doctor doctor = database.getDoctor(20001);
 
@@ -38,24 +45,72 @@ public class TestMain {
         Consultation consultation = database.getConsultation(50077);
         double price = (database.getPrice("consultation") / 60) * consultation.getDuration();
 
-        Invoice invoice = new Invoice(consultation, patient, price,
+        Prescription perscript = new Prescription(patient, doctor, "2132131321", Date.valueOf("2021-02-02"));
+
+        database.addObjectToDatabase(perscript);
+
+        database.printDatabaseTable("prescriptions");
+
+        database.approve(90001);
+
+        database.printDatabaseTable("prescriptions");
+
+        database.deleteObjectFromDatabase(database.getPrescription(80000));
+
+
+        ArrayList<Integer> gg = database.getPending("surgeries");
+
+        for (int i : gg) {
+            System.out.println(database.getSurgery(i));
+        }
+
+        database.printDatabaseTable("invoices");
+
+        Invoice invoice = new Invoice(patient, price,
                 Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
                 false, consultation.getPatient().isInsured());
 
         database.addObjectToDatabase(invoice);
-        
+
         database.printDatabaseTable("invoices");
-        
+        database.printDatabaseTable("surgeries");
+        System.out.println(database.getSurgery(70075));
+
         ArrayList<Invoice> invoices = database.getAllInvoicesWhereIDIs(40000);
-        
+
         for (Invoice i : invoices) {
             System.out.println(i);
         }
+        Timestamp timestamp = new Timestamp(2021, 11, 11, 11, 11, 0, 0);
 
-        System.out.println(database.hasInvoice(50088));
-        System.exit(0);
+        int selectedConsultatantID = 20001;
+        boolean bookConsultation = false;
 
-        ArrayList<Integer> pendingConsultationIDs = database.getPendingConsultations();
+        if (database.isDoctor(selectedConsultatantID)) {
+            doctor = database.getDoctor(selectedConsultatantID);
+
+            if (bookConsultation) {
+                nurse = database.getNurse(30000);
+            }
+        } else {
+            doctor = database.getDoctor(20000);
+            nurse = database.getNurse(selectedConsultatantID);
+        }
+
+        if (bookConsultation) {
+
+            consultation = new Consultation(patient, doctor, nurse, timestamp, "dd", 10);
+            database.addObjectToDatabase(consultation);
+        } else {
+            Surgery surgery = new Surgery(patient, doctor, timestamp, 10);
+            database.addObjectToDatabase(surgery);
+
+        }
+
+        database.printDatabaseTable("surgeries");
+        database.printDatabaseTable("consultations");
+
+        ArrayList<Integer> pendingConsultationIDs = database.getPending("consultations");
         ArrayList<Consultation> pendingConsultations = new ArrayList<Consultation>();
 
         try {
@@ -68,12 +123,8 @@ public class TestMain {
 
         }
 
-        System.out.println(pendingConsultations.get(0));
-
-        System.exit(0);
         //     Patient patient = database.getPatient(40012);
         //   Doctor doctor = database.getDoctor(20001);
-
         database.addObjectToDatabase(doctor);
 
         System.out.println(database.getPrice("consultation"));
@@ -83,18 +134,16 @@ public class TestMain {
         System.out.println(database.getPrice("consultation"));
 
         database.printDatabaseTable("all");
-
-        Perscription perscript = new Perscription(patient, doctor, "2132131321");
-
+    
         database.addObjectToDatabase(perscript);
 
-        database.printDatabaseTable("perscriptions");
+        database.printDatabaseTable("prescriptions");
 
-        database.approvePerscription(90001);
+        database.approve(80001);
 
-        database.printDatabaseTable("perscriptions");
+        database.printDatabaseTable("prescriptions");
 
-        database.deleteObjectFromDatabase(database.getPerscription(90000));
+        database.deleteObjectFromDatabase(database.getPrescription(80001));
 
     }
 }

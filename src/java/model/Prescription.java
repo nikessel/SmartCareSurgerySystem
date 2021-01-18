@@ -5,29 +5,33 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author niklas
  */
-public class Perscription extends DatabaseObject {
+public class Prescription extends DatabaseObject {
 
     private Patient patient;
     private Doctor doctor;
     private String medication;
-    private int perscriptionID;
+    private Date expirationDate;
+    private int prescriptionID;
 
-    public Perscription() {
-        
+    public Prescription() {
+
     }
-    
-    public Perscription(Patient patient, Doctor doctor, String medication) {
+
+    public Prescription(Patient patient, Doctor doctor, String medication, Date expirationDate) {
         this.patient = patient;
         this.doctor = doctor;
         this.medication = medication;
-        this.perscriptionID = -1;
+        this.expirationDate = expirationDate;
+        this.prescriptionID = -1;
     }
 
-    public Perscription(Patient patient, Doctor doctor, String medication, int perscriptionID) {
+    public Prescription(Patient patient, Doctor doctor, String medication, Date expirationDate, int prescriptionID) {
         boolean isDatabase = false;
 
         try {
@@ -39,10 +43,11 @@ public class Perscription extends DatabaseObject {
         }
 
         if (isDatabase) {
-            this.perscriptionID = perscriptionID;
+            this.prescriptionID = prescriptionID;
             this.patient = patient;
             this.doctor = doctor;
             this.medication = medication;
+            this.expirationDate = expirationDate;
         } else {
             System.out.println("Constructor with ID can only be called by the Database class");
         }
@@ -73,19 +78,29 @@ public class Perscription extends DatabaseObject {
         this.medication = medication;
     }
 
-    public int getPerscriptionID() {
-        return perscriptionID;
+    public int getID() {
+        return prescriptionID;
     }
 
-    public void setPerscriptionID(int perscriptionID) {
-        this.perscriptionID = perscriptionID;
+    public int getPrescriptionID() {
+        return prescriptionID;
+    }
+
+    public void setPrescriptionID(int prescriptionID) {
+        this.prescriptionID = prescriptionID;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     @Override
     public String toString() {
-        return "Perscription{" + "patient=" + patient + ", doctor=" + doctor + ", medication=" + medication + ", perscriptionID=" + perscriptionID + '}';
+        return "Prescription{" + "patient=" + patient + ", doctor=" + doctor + ", medication=" + medication + ", expirationDate=" + expirationDate + ", prescriptionID=" + prescriptionID + '}';
     }
-    
-    
 
 }

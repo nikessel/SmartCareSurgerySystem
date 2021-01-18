@@ -4,8 +4,8 @@
  *
  */
 
-DROP TABLE perscriptions;
 DROP TABLE prices;
+DROP TABLE prescriptions;
 DROP TABLE surgeries;
 DROP TABLE invoices;
 DROP TABLE consultations;
@@ -235,15 +235,9 @@ create table invoices (
         invoice_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 60000, INCREMENT BY 1) primary key,
 	price DECIMAL(7,2),
 	date_of_invoice DATE,
-	consultation_id INT,
         patient_id INT,
         paid boolean,
         insured boolean,
-        CONSTRAINT fk_consultation_invoice
-        FOREIGN KEY (consultation_id) 
-        REFERENCES consultations(consultation_id)
-            ON UPDATE RESTRICT
-            ON DELETE CASCADE,
         CONSTRAINT fk_patient_invoice
         FOREIGN KEY (patient_id) 
         REFERENCES patients(patient_id)
@@ -253,17 +247,17 @@ create table invoices (
 
 
 
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1567.27, '2020-12-30', 50001, 40000, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1159.23, '2020-11-05', 50002, 40001, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1078.77, '2020-12-11', 50003, 40002, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1261.12, '2020-12-19', 50004, 40003, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1409.24, '2020-12-08', 50005, 40004, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1393.7, '2020-12-27', 50006, 40005, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1118.37, '2020-11-11', 50007, 40006, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (483.98, '2021-01-10', 50008, 40007, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (730.84, '2020-12-05', 50009, 40008, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (778.18, '2020-11-25', 50010, 40009, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (497.92, '2021-01-05', 50011, 40010, true, true);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1567.27, '2020-12-30', 40000, true, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1159.23, '2020-11-05', 40001, true, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1078.77, '2020-12-11', 40002, false, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1261.12, '2020-12-19', 40003, true, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1409.24, '2020-12-08', 40004, true, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1393.7, '2020-12-27', 40005, false, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (1118.37, '2020-11-11', 40006, true, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (483.98, '2021-01-10', 40007, true, true);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (730.84, '2020-12-05', 40008, true, true);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (778.18, '2020-11-25', 40009, false, false);
+insert into invoices (price, date_of_invoice, patient_id, paid, insured) values (497.92, '2021-01-05', 40010, true, true);
 
 
 create table surgeries (
@@ -271,6 +265,8 @@ create table surgeries (
 	patient_id INT,
 	doctor_id INT,
 	surgery_time TIMESTAMP,
+        duration int,
+        pending boolean,
         CONSTRAINT fk_doctor_surgery
         FOREIGN KEY (doctor_id) 
         REFERENCES doctors(doctor_id)
@@ -284,85 +280,112 @@ create table surgeries (
 );
 
 /* Past */
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2020-12-16 08:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-12-16 09:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40004, 20002, '2020-12-16 10:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2020-12-16 11:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2020-12-17 12:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-12-17 13:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2020-12-17 14:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2020-12-18 15:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-12-19 16:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40005, 20001, '2020-12-20 17:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2020-12-20 18:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2020-12-20 19:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2020-12-21 20:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40003, 20002, '2020-12-21 08:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40000, 20002, '2020-12-21 09:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2020-12-22 10:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2020-12-22 11:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20001, '2020-12-22 12:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2020-12-24 13:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20001, '2020-12-24 14:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2020-12-26 15:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2020-12-26 16:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2020-12-26 17:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-12-28 18:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2020-12-29 19:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40013, 20001, '2020-12-16 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2020-12-16 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40004, 20002, '2020-12-16 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20001, '2020-12-16 11:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40013, 20001, '2020-12-17 12:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2020-12-17 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20002, '2020-12-17 14:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20001, '2020-12-18 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2020-12-19 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40005, 20001, '2020-12-20 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20001, '2020-12-20 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20001, '2020-12-20 19:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40012, 20002, '2020-12-21 20:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40003, 20002, '2020-12-21 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40000, 20002, '2020-12-21 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40012, 20002, '2020-12-22 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2020-12-22 11:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20001, '2020-12-22 12:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20002, '2020-12-24 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40002, 20001, '2020-12-24 14:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2020-12-26 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2020-12-26 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20002, '2020-12-26 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2020-12-28 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2020-12-29 19:00:00', 10, false);
 
 
 /* Present */
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2021-01-16 08:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2021-01-16 09:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40004, 20002, '2021-01-16 10:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2021-01-16 11:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40013, 20001, '2021-01-17 12:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2021-01-17 13:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2021-01-17 14:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2021-01-18 15:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2021-01-19 16:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40005, 20001, '2021-01-20 17:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20001, '2021-01-20 18:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20001, '2021-01-20 19:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2021-01-21 20:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40003, 20002, '2021-01-21 08:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40000, 20002, '2021-01-21 09:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40012, 20002, '2021-01-22 10:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2021-01-22 11:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20001, '2021-01-22 12:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2021-01-24 13:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20001, '2021-01-24 14:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2021-01-26 15:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2021-01-26 16:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2021-01-26 17:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2021-01-28 18:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20002, '2021-01-29 19:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40013, 20001, '2021-01-16 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-16 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40004, 20002, '2021-01-16 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20001, '2021-01-16 11:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40013, 20001, '2021-01-17 12:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2021-01-17 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20002, '2021-01-17 14:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20001, '2021-01-18 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-01-19 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40005, 20001, '2021-01-20 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20001, '2021-01-20 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20001, '2021-01-20 19:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40012, 20002, '2021-01-21 20:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40003, 20002, '2021-01-21 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40000, 20002, '2021-01-21 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40012, 20002, '2021-01-22 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2021-01-22 11:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20001, '2021-01-22 12:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20002, '2021-01-24 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40002, 20001, '2021-01-24 14:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-01-26 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-01-26 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20002, '2021-01-26 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-28 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-29 19:00:00', 10, false);
 
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40008, 20002, '2021-02-01 08:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2021-02-02 09:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20001, '2021-02-02 10:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20001, '2021-02-02 11:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20001, '2021-02-02 12:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20002, '2021-02-05 13:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2021-02-05 14:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2021-02-05 15:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20001, '2021-02-05 16:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2021-02-06 17:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20001, '2021-02-06 18:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2021-02-06 19:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20002, '2021-02-08 20:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40002, 20001, '2021-02-10 08:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40001, 20002, '2021-02-11 09:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20002, '2021-02-12 10:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20001, '2021-02-12 11:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40003, 20002, '2021-02-12 12:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40009, 20001, '2021-02-12 13:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40010, 20002, '2021-02-14 14:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40006, 20001, '2021-02-14 15:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40000, 20001, '2021-02-14 16:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40014, 20001, '2021-02-16 17:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40007, 20002, '2021-02-16 18:00:00');
-insert into surgeries (patient_id, doctor_id, surgery_time) values (40011, 20002, '2021-02-16 19:00:00');
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20002, '2021-02-01 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-02-02 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20001, '2021-02-02 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20001, '2021-02-02 11:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2021-02-02 12:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20002, '2021-02-05 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-02-05 14:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-02-05 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40014, 20001, '2021-02-05 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-02-06 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20001, '2021-02-06 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-02-06 19:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40002, 20002, '2021-02-08 20:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40002, 20001, '2021-02-10 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-02-11 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40014, 20002, '2021-02-12 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20001, '2021-02-12 11:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40003, 20002, '2021-02-12 12:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20001, '2021-02-12 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20002, '2021-02-14 14:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-02-14 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40000, 20001, '2021-02-14 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40014, 20001, '2021-02-16 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20002, '2021-02-16 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20002, '2021-02-16 19:00:00', 10, false);
+
+
+create table prescriptions (
+        prescription_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 80000, INCREMENT BY 1) primary key,
+        patient_id INT,
+	doctor_id INT,
+        medication VARCHAR(100),
+        expiration_date DATE,
+        pending boolean,
+        CONSTRAINT fk_doctor_prescription
+        FOREIGN KEY (doctor_id) 
+        REFERENCES doctors(doctor_id)
+            ON UPDATE RESTRICT
+            ON DELETE CASCADE,
+        CONSTRAINT fk_patient_prescription
+        FOREIGN KEY (patient_id) 
+        REFERENCES patients(patient_id)
+            ON UPDATE RESTRICT
+            ON DELETE CASCADE
+
+);
+
+insert into prescriptions (patient_id, doctor_id, medication, expiration_date, pending) values (40000, 20001, 'Fluoxetine', '2021-01-18', false);
+insert into prescriptions (patient_id, doctor_id, medication, expiration_date, pending) values (40001, 20002, 'Adderall', '2021-03-30', false);
+insert into prescriptions (patient_id, doctor_id, medication, expiration_date, pending) values (40002, 20001, 'OxyContin', '2021-06-30', false);
+insert into prescriptions (patient_id, doctor_id, medication, expiration_date, pending) values (40003, 20001, 'Baclofen', '2021-02-12', false);
+
 
 
 create table prices (
@@ -373,24 +396,3 @@ create table prices (
 );
 
 insert into prices (surgery_hourly, consultation_hourly, consultation_nurse_hourly) values (1000.00, 100.00, 50.00);
-
-create table perscriptions (
-        perscription_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 90000, INCREMENT BY 1) primary key,
-        patient_id INT,
-	doctor_id INT,
-        medication VARCHAR(100),
-        pending boolean,
-        CONSTRAINT fk_doctor_perscription
-        FOREIGN KEY (doctor_id) 
-        REFERENCES doctors(doctor_id)
-            ON UPDATE RESTRICT
-            ON DELETE CASCADE,
-        CONSTRAINT fk_patient_perscription
-        FOREIGN KEY (patient_id) 
-        REFERENCES patients(patient_id)
-            ON UPDATE RESTRICT
-            ON DELETE CASCADE
-
-);
-
-insert into perscriptions (patient_id, doctor_id, medication, pending) values (40001, 20001, 'Fluoxetine', false);

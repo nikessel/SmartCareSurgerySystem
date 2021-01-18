@@ -35,7 +35,7 @@
                     <c:import url="objects/personalInfo.jsp"/>
                 </div>
                 <div class="card">
-                    <c:import url="objects/bookConsultation.jsp"/>
+                    <c:import url="objects/requester.jsp"/>
                 </div>
             </div>
 

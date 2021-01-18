@@ -79,7 +79,8 @@ public class AuthorizationFilter implements Filter {
 
         try {
 
-            if (isUser && requestURI.endsWith(protectedUrlPatterns[0])) {
+            if ((isUser && requestURI.endsWith(protectedUrlPatterns[0])) ||
+                    isUser && requestURI.contains("/objects/")) {
 
             } else if (isAdmin && requestURI.endsWith(protectedUrlPatterns[1])) {
 
@@ -97,7 +98,8 @@ public class AuthorizationFilter implements Filter {
 
         } catch (Exception e) {
 
-            session.setAttribute("message", "You are not allowed to access this resource");
+            //session.setAttribute("message", "You are not allowed to access this resource");
+            session.setAttribute("message", e.toString());
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);

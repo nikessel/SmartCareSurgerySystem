@@ -36,52 +36,26 @@
         </form>
         <br>
 
-        <table class="consultationTable">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                        <c:if test="${not empty isPatient}">
-                        <th>Doctor name</th>
-                        <th>Nurse name</th>
-                        </c:if>
-                        <c:if test="${empty isPatient}">
-                        <th>Patient name</th>
-                        </c:if>
-                    <th>Issue</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${consultations}" var="consultation">
-                    <tr>
-                        <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy HH:mm")}</td>
-                        <c:if test="${not empty isPatient}">
-                            <c:choose>  
-                                <c:when test = "${consultation.doctor.ID == '20000'}">
-                                    <td> </td>
-                                </c:when>
-                                <c:otherwise> 
-                                    <td>${consultation.doctor.firstName} ${consultation.doctor.surName}</td>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:choose>  
-                                <c:when test = "${consultation.nurse.ID == '30000'}">
-                                    <td> </td>
-                                </c:when>
-                                <c:otherwise> 
-                                    <td>${consultation.nurse.firstName} ${consultation.nurse.surName}</td>
-                                </c:otherwise>  
-                            </c:choose>  
+        <c:if test="${empty isNurse}">
+            <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="timeTableSelector">
+                <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
+                <select name="timeTableSelection" onchange="this.form.submit();">
+                    <option disabled selected value>Choose events to display </option>
+                    <option value="0">Consultations
+                    <option value="1">Surgeries
+                </select>
+            </form>
+        </c:if>
 
-                        </c:if>
-                        <c:if test="${empty isPatient}">
-                            <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
-                        </c:if>
 
-                        <td>${consultation.note}</td>
-                    </tr>
-                </c:forEach>   
-            </tbody>
-        </table>
+        <c:if test="${selectedTimeTable == '0'}">
+            <h5>Consultation timetable</h5>
+            <c:import url="/objects/consultationTable.jsp"/>
+        </c:if>
 
+        <c:if test="${selectedTimeTable == '1'}">
+            <h5>Surgery timetable</h5>
+            <c:import url="objects/surgeryTable.jsp"/>
+        </c:if>
     </body>
 </html>

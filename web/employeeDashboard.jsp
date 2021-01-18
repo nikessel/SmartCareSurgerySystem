@@ -51,7 +51,7 @@
 
             <div class="main-cards">
                 <div class="card">
-                    <c:import url="objects/pendingConsultationsConfirmer.jsp"/>
+                    <c:import url="objects/pendingConfirmer.jsp"/>
                 </div>
                 <div class="card">
 

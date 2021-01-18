@@ -40,7 +40,7 @@ public class Database {
     private final String DATABASEPATH = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private final String USERNAME = "databaseUser";
     private final String PASSWORD = "password";
-    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries", "prices", "perscriptions"};
+    private final String[] TABLENAMES = {"admins", "doctors", "nurses", "patients", "consultations", "invoices", "surgeries", "prescriptions", "prices"};
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
@@ -194,7 +194,7 @@ public class Database {
     }
 
     private String getIDString(int id) {
-        if (id == -1) {
+        if (id <= 0) {
             return "";
         }
 
@@ -306,8 +306,8 @@ public class Database {
         return 70000 <= thisID && thisID <= 79999;
     }
 
-    public boolean isPerscription(int thisID) {
-        return 90000 <= thisID && thisID <= 99999;
+    public boolean isPrescription(int thisID) {
+        return 80000 <= thisID && thisID <= 89999;
     }
 
     public int getUserID(String username, String password) {
@@ -393,11 +393,10 @@ public class Database {
         return output;
     }
 
-    public ArrayList<Integer> getPendingConsultations() {
+    public ArrayList<Integer> getPending(String tableName) {
         ArrayList<Integer> output = new ArrayList();
 
         try {
-            tableName = TABLENAMES[4];
             idString = getIDString(tableName);
             ResultSet rs1 = selectFromWhere("*", tableName, "pending", "true");
 
@@ -414,29 +413,23 @@ public class Database {
         return output;
     }
 
-    public ArrayList<Integer> getPendingPerscriptions() {
-        ArrayList<Integer> output = new ArrayList();
+    public void setPending(int id) {
+        idString = getIDString(id);
+        tableName = getTableName(id);
 
         try {
-            tableName = TABLENAMES[8];
-            idString = getIDString(tableName);
-            ResultSet rs1 = selectFromWhere("*", tableName, "pending", "true");
+            queryString = "UPDATE " + tableName + " SET pending=true WHERE " + idString + "=" + id;
 
-            while (rs1.next()) {
-                thisID = rs1.getInt(idString);
-
-                output.add(thisID);
-            }
+            executeUpdate(queryString);
 
         } catch (SQLException ex) {
             System.err.println(ex);
         }
 
-        return output;
     }
 
     public int getPrice(String of) {
-        tableName = TABLENAMES[7];
+        tableName = TABLENAMES[8];
 
         try {
             ResultSet rs1 = executeQuery("SELECT " + of + "_hourly FROM prices");
@@ -471,53 +464,10 @@ public class Database {
         return false;
     }
 
-    public void approveEmployee(int id) {
+    public void approve(int id) {
         idString = getIDString(id);
+        tableName = getTableName(id);
 
-        if (isDoctor(id)) {
-            tableName = USERTABLENAMES[1];
-        } else if (isNurse(id)) {
-            tableName = USERTABLENAMES[2];
-        }
-
-        try {
-
-            queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
-
-            System.out.println(queryString);
-            executeUpdate(queryString);
-
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        } finally {
-            closeRSAndStatement();
-        }
-
-    }
-
-    public void approveConsultation(int id) {
-        idString = getIDString(id);
-
-        tableName = TABLENAMES[4];
-        try {
-
-            queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
-
-            System.out.println(queryString);
-            executeUpdate(queryString);
-
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        } finally {
-            closeRSAndStatement();
-        }
-
-    }
-
-    public void approvePerscription(int id) {
-        idString = getIDString(id);
-
-        tableName = TABLENAMES[8];
         try {
 
             queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
@@ -546,8 +496,8 @@ public class Database {
         String username, firstName, surName, note, medication;
         username = firstName = surName = note = medication = "";
 
-        java.util.Date dateOfBirth, invoiceDate;
-        dateOfBirth = invoiceDate = new java.util.Date();
+        java.util.Date dateOfBirth, invoiceDate, expirationDate;
+        dateOfBirth = invoiceDate = expirationDate = new java.util.Date();
 
         Timestamp consultationTime, surgeryTime;
         consultationTime = surgeryTime = new Timestamp(0);
@@ -556,7 +506,6 @@ public class Database {
         Patient patient = new Patient();
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
-        Consultation consultation = new Consultation();
 
         // Get ID
         try {
@@ -639,7 +588,6 @@ public class Database {
                 if (rs.next()) {
                     price = rs.getDouble("price");
                     invoiceDate = rs.getDate("date_of_invoice");
-                    consultation = getConsultation(rs.getInt("consultation_id"));
                     patient = getPatient(rs.getInt("patient_id"));
                     paid = rs.getBoolean("paid");
                     insured = rs.getBoolean("insured");
@@ -655,12 +603,13 @@ public class Database {
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     patient = getPatient(rs.getInt("patient_id"));
                     surgeryTime = rs.getTimestamp("surgery_time");
+                    duration = rs.getInt("duration");
 
                 }
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
-        } else if (isPerscription(id)) {
+        } else if (isPrescription(id)) {
             try {
                 rs.beforeFirst();
 
@@ -668,6 +617,7 @@ public class Database {
                     patient = getPatient(rs.getInt("patient_id"));
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     medication = rs.getString("medication");
+                    expirationDate = rs.getDate("expiration_date");
 
                 }
             } catch (SQLException ex) {
@@ -690,11 +640,16 @@ public class Database {
         } else if (isConsultation(id)) {
             return new Consultation(patient, doctor, nurse, consultationTime, note, duration, id);
         } else if (isInvoice(id)) {
-            return new Invoice(consultation, patient, price, invoiceDate, paid, insured, id);
+            return new Invoice(patient, price, invoiceDate, paid, insured, id);
         } else if (isSurgery(id)) {
-            return new Surgery(patient, doctor, surgeryTime, id);
-        } else if (isPerscription(id)) {
-            return new Perscription(patient, doctor, medication, id);
+            return new Surgery(patient, doctor, surgeryTime, duration, id);
+        } else if (isPrescription(id)) {
+            System.out.println(patient);
+            System.out.println(doctor);
+            System.out.println(medication);
+            System.out.println(expirationDate);
+            System.out.println(id);
+            return new Prescription(patient, doctor, medication, expirationDate, id);
         }
 
         return new DatabaseObject();
@@ -711,22 +666,6 @@ public class Database {
         } catch (SQLException ex) {
             return false;
         }
-    }
-
-    public Boolean hasInvoice(int id) {
-        idString = getIDString(id);
-        tableName = "invoices";
-
-        try {
-            ResultSet rs1 = selectFromWhere("*", tableName, idString, String.valueOf(id));
-
-            rs1.next();
-            rs1.getInt(idString);
-            return true;
-
-        } catch (SQLException ex) {
-        }
-        return false;
     }
 
     public ArrayList<Object> getListFromDatabase(ResultSet rs) throws ArrayIndexOutOfBoundsException {
@@ -776,9 +715,6 @@ public class Database {
                         outputList.add(getPatient(thisID));
                         break;
                     case "consultations":
-                        if (hasInvoice(thisID)) {
-                            continue;
-                        }
                         outputList.add(getConsultation(thisID));
                         break;
                     case "invoices":
@@ -787,8 +723,8 @@ public class Database {
                     case "surgeries":
                         outputList.add(getSurgery(thisID));
                         break;
-                    case "perscriptions":
-                        outputList.add(getPerscription(thisID));
+                    case "prescriptions":
+                        outputList.add(getPrescription(thisID));
                         break;
 
                 }
@@ -829,7 +765,6 @@ public class Database {
 
         String queryString = "SELECT " + whatToSelect + " FROM " + fromTable + " WHERE " + where + isString;
 
-        System.out.println(queryString);
         return executeQuery(queryString);
     }
 
@@ -918,24 +853,26 @@ public class Database {
             return (Surgery) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
             System.out.println(ex);
+
             System.err.println("Error getting surgery from database (Invalid id?)");
         }
 
         return new Surgery();
     }
 
-    public Perscription getPerscription(int perscriptionID) {
+    public Prescription getPrescription(int prescriptionID) {
 
-        ResultSet rs1 = selectFromWhere("*", "perscriptions", "perscription_id", String.valueOf(perscriptionID));
+        ResultSet rs1 = selectFromWhere("*", "prescriptions", "prescription_id", String.valueOf(prescriptionID));
 
+        System.out.println(prescriptionID);
         try {
-            return (Perscription) getDatabaseObject(rs1);
+            return (Prescription) getDatabaseObject(rs1);
         } catch (ClassCastException ex) {
             System.out.println(ex);
-            System.err.println("Error getting surgery from database (Invalid id?)");
+            System.err.println("Error getting prescription from database (Invalid id?)");
         }
 
-        return new Perscription();
+        return new Prescription();
     }
 
     public ArrayList<Object> getAllFromDatabase(String tableToGet) {
@@ -1042,6 +979,20 @@ public class Database {
 
         objects.forEach((obj) -> {
             output.add((Invoice) obj);
+        });
+
+        return output;
+    }
+
+    public ArrayList<Prescription> getAllPrescriptionsWhereIDIs(int id) {
+
+        idString = getIDString(id);
+
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("prescriptions", idString, String.valueOf(id));
+        ArrayList<Prescription> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            output.add((Prescription) obj);
         });
 
         return output;
@@ -1194,35 +1145,43 @@ public class Database {
             Invoice invoice = (Invoice) object;
             tableName = TABLENAMES[5];
 
-            namesString.append("consultation_id, patient_id, price, date_of_invoice, paid, insured, ");
-            valuesString.append(invoice.getConsultation().getConsultationID() + ", ");
-            valuesString.append(invoice.getConsultation().getPatient().getPatientID() + ", ");
+            namesString.append("patient_id, price, date_of_invoice, paid, insured, ");
+            valuesString.append(invoice.getPatient().getPatientID() + ", ");
             valuesString.append(invoice.getPrice() + ", ");
             valuesString.append("'" + invoice.getDateOfInvoice() + "', ");
             valuesString.append(invoice.isPaid() + ", ");
             valuesString.append(invoice.isInsured() + ", ");
 
             thisID = invoice.getInvoiceID();
+
         } else if (object instanceof Surgery) {
             Surgery surgery = (Surgery) object;
             tableName = TABLENAMES[6];
 
-            namesString.append("doctor_id, patient_id, surgery_time, ");
+            namesString.append("doctor_id, patient_id, surgery_time, duration, ");
             valuesString.append(surgery.getDoctor().getDoctorID() + ", ");
             valuesString.append(surgery.getPatient().getPatientID() + ", ");
             valuesString.append("'" + formatSQLTimestamp(surgery.getSurgeryTime()) + "', ");
+            valuesString.append(surgery.getDuration() + ", ");
 
             thisID = surgery.getSurgeryID();
-        } else if (object instanceof Perscription) {
-            Perscription perscription = (Perscription) object;
-            tableName = TABLENAMES[8];
 
-            namesString.append("doctor_id, patient_id, medication, ");
-            valuesString.append(perscription.getDoctor().getDoctorID() + ", ");
-            valuesString.append(perscription.getPatient().getPatientID() + ", ");
-            valuesString.append("'" + perscription.getMedication() + "', ");
+            if (thisID == -1) {
+                namesString.append("pending, ");
 
-            thisID = perscription.getPerscriptionID();
+                valuesString.append("true, ");
+            }
+        } else if (object instanceof Prescription) {
+            Prescription prescription = (Prescription) object;
+            tableName = TABLENAMES[7];
+
+            namesString.append("doctor_id, patient_id, medication, expiration_date, ");
+            valuesString.append(prescription.getDoctor().getDoctorID() + ", ");
+            valuesString.append(prescription.getPatient().getPatientID() + ", ");
+            valuesString.append("'" + prescription.getMedication() + "', ");
+            valuesString.append("'" + prescription.getExpirationDate() + "', ");
+
+            thisID = prescription.getPrescriptionID();
 
             if (thisID == -1) {
                 namesString.append("pending, ");
@@ -1396,8 +1355,8 @@ public class Database {
         } else if (object instanceof Surgery) {
             id = ((Surgery) object).getSurgeryID();
 
-        } else if (object instanceof Perscription) {
-            id = ((Perscription) object).getPerscriptionID();
+        } else if (object instanceof Prescription) {
+            id = ((Prescription) object).getPrescriptionID();
 
         } else {
             System.err.println("Error writing object to database, "

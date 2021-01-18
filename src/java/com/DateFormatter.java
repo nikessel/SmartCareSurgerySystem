@@ -7,15 +7,12 @@ package com;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ * @author Niklas Sarup-Lytzen ID: 18036644 *
  */
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public final class DateFormatter {
-
-    Date date;
 
     private DateFormatter() {
     }
@@ -23,14 +20,12 @@ public final class DateFormatter {
     public static String formatDate(Date date, String pattern) {
         return new SimpleDateFormat(pattern).format(date);
     }
-    
 
-    public Date getDate() {
-        return date;
+    public static boolean isInThePast(Date date) {
+        Date currentDate = new Date();  
+        
+        return date.before(currentDate);
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
 }

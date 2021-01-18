@@ -16,12 +16,13 @@ public class Surgery extends DatabaseObject {
     private Doctor doctor;
     private Timestamp surgeryTime;
     private int surgeryID;
+    private int duration;
 
     public Surgery() {
 
     }
 
-    protected Surgery(Patient patient, Doctor doctor, Timestamp surgeryTime, int surgeryID) {
+    protected Surgery(Patient patient, Doctor doctor, Timestamp surgeryTime, int duration, int surgeryID) {
         boolean isDatabase = false;
 
         try {
@@ -36,6 +37,7 @@ public class Surgery extends DatabaseObject {
             this.patient = patient;
             this.doctor = doctor;
             this.surgeryTime = surgeryTime;
+            this.duration = duration;
             this.surgeryID = surgeryID;
         } else {
             System.out.println("Constructor with ID can only be called by the Database class");
@@ -44,10 +46,13 @@ public class Surgery extends DatabaseObject {
         
     }
 
-    public Surgery(Patient patient, Doctor doctor, Timestamp surgeryTime) {
+    public Surgery(Patient patient, Doctor doctor, Timestamp surgeryTime, int duration) {
         this.patient = patient;
         this.doctor = doctor;
         this.surgeryTime = surgeryTime;
+        this.duration = duration;
+        this.surgeryID = -1;
+                
     }
 
     public Patient getPatient() {
@@ -57,6 +62,10 @@ public class Surgery extends DatabaseObject {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
+    
+    public int getID() {
+        return surgeryID;
+    }
 
     public Doctor getDoctor() {
         return doctor;
@@ -64,6 +73,14 @@ public class Surgery extends DatabaseObject {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public Timestamp getSurgeryTime() {
@@ -80,7 +97,7 @@ public class Surgery extends DatabaseObject {
 
     @Override
     public String toString() {
-        return "Surgery{" + "patient=" + patient + ", doctor=" + doctor + ", surgeryTime=" + surgeryTime + ", surgeryID=" + surgeryID + '}';
+        return "Surgery{" + "patient=" + patient + ", doctor=" + doctor + ", surgeryTime=" + surgeryTime + ", duration=" + duration + ", surgeryID=" + surgeryID + '}';
     }
 
     
