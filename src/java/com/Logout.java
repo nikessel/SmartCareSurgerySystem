@@ -46,7 +46,7 @@ public class Logout extends HttpServlet {
         }
 
         request.getServletContext().setAttribute("errorMessage", "");
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/login.do");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

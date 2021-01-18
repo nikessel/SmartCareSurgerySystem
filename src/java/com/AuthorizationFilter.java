@@ -52,6 +52,19 @@ public class AuthorizationFilter implements Filter {
 
         response.setContentType("text/html;charset=UTF-8");
 
+        boolean isPublic = false;
+
+        String[] publicUrlPatterns = {"/addUser.do",
+            "/login.do", "/passwordChanger.do", "/errorPage.jsp", "/addUser.do",
+            "/logout.do"};
+
+        for (int i = 0; i < publicUrlPatterns.length; i++) {
+            if (requestURI.endsWith(publicUrlPatterns[i])) {
+                chain.doFilter(httpRequest, response);
+                return;
+            }
+        }
+
         String[] protectedUrlPatterns = {"/protected/adminDashboard.do",
             "/protected/employeeDashboard.do", "/protected/patientDashboard.do"};
 
@@ -79,6 +92,7 @@ public class AuthorizationFilter implements Filter {
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);
         }
+
     }
 
     @Override

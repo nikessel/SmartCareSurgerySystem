@@ -22,9 +22,6 @@
         <aside class="sidenav">
 
         </aside>
-        
-        <h1>${filterMessage}</h1>
-
 
         <main class="main">
             <div class="wide_card">
