@@ -28,10 +28,30 @@ public class AuthorizationFilter implements Filter {
     private int currentUserID;
     private HttpSession session;
     private Database database;
+    private boolean isUser, isAdmin, isEmployee, isPatient;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.fc = filterConfig;
+    }
+
+    private void setBooleans() {
+        isUser = isAdmin = isEmployee = isPatient = false;
+
+        if (session.getAttribute("isUser") != null) {
+            isUser = true;
+
+            if (session.getAttribute("isEmployee") != null) {
+                isEmployee = true;
+
+                if (session.getAttribute("isAdmin") != null) {
+                    isAdmin = true;
+
+                }
+            } else {
+                isPatient = true;
+            }
+        }
     }
 
     @Override
@@ -39,7 +59,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         session = httpRequest.getSession(false);
         String requestURI = httpRequest.getRequestURI();
-        database = (Database) request.getServletContext().getAttribute("database");
+        setBooleans();
 
         response.setContentType("text/html;charset=UTF-8");
 
@@ -54,17 +74,18 @@ public class AuthorizationFilter implements Filter {
             }
         }
 
-        String[] protectedUrlPatterns = {"/protected/adminDashboard.do",
+        String[] protectedUrlPatterns = {"/protected/refresh.do", "/protected/adminDashboard.do",
             "/protected/employeeDashboard.do", "/protected/patientDashboard.do"};
 
         try {
-            currentUserID = (int) session.getAttribute("userID");
 
-            if (database.isAdmin(currentUserID) && requestURI.endsWith(protectedUrlPatterns[0])) {
+            if (isUser && requestURI.endsWith(protectedUrlPatterns[0])) {
 
-            } else if (database.isEmployee(currentUserID) && requestURI.endsWith(protectedUrlPatterns[1])) {
+            } else if (isAdmin && requestURI.endsWith(protectedUrlPatterns[1])) {
 
-            } else if (database.isPatient(currentUserID) && requestURI.endsWith(protectedUrlPatterns[2])) {
+            } else if (isEmployee && requestURI.endsWith(protectedUrlPatterns[2])) {
+
+            } else if (isPatient && requestURI.endsWith(protectedUrlPatterns[3])) {
 
             } else {
                 throw new Exception();

@@ -26,7 +26,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Refresh</servlet-name>
-        <url-pattern>/refresh.do</url-pattern>
+        <url-pattern>/protected/refresh.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>

@@ -15,7 +15,7 @@
     </head>
     <body>
         <h3>Pending new consultation requests${message}</h3>
-        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/refresh.do" name="pendingConsultationConfirmer">
+        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="pendingConsultationConfirmer">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <select name="pendingConsultationSelection">
                 <c:forEach var="pendingConsultation" items="${pendingConsultations}">

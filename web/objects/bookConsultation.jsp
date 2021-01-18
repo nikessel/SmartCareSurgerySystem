@@ -14,7 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/refresh.do" name="consultationBooker">
+        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="consultationBooker">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <select name="selectedConsultatantID">
                 <c:forEach var="doctor" items="${doctors}">

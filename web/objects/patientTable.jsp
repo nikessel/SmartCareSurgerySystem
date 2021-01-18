@@ -16,7 +16,7 @@
     <body>
         
         <h3>Patient table</h3> <br>
-        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/employeeDashboard.do" name="patientListSelector">
+        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="patientListSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <select name="insuranceSelection" onchange="this.form.submit();">
                 <option disabled selected value> sort by insurance status </option>

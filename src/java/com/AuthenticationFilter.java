@@ -28,6 +28,7 @@ public class AuthenticationFilter implements Filter {
     private int currentUserID;
     private boolean isPending;
     private HttpSession session;
+    private Database database;
 
     private boolean wrongUsername() {
         return currentUserID == -2;
@@ -35,6 +36,27 @@ public class AuthenticationFilter implements Filter {
 
     private boolean wrongPassword() {
         return currentUserID == -1;
+    }
+
+    private void setBooleans() {
+
+        if (database.isUser(currentUserID)) {
+            session.setAttribute("isUser", "1");
+            
+            if (database.isEmployee(currentUserID)) {
+                session.setAttribute("isEmployee", "1");
+
+                if (database.isAdmin(currentUserID)) {
+                    session.setAttribute("isAdmin", "1");
+                } else if (database.isDoctor(currentUserID)) {
+                    session.setAttribute("isDoctor", "1");
+                } else if (database.isNurse(currentUserID)) {
+                    session.setAttribute("isNurse", "1");
+                }
+            } else {
+                session.setAttribute("isPatient", "1");
+            }
+        }
     }
 
     @Override
@@ -50,7 +72,7 @@ public class AuthenticationFilter implements Filter {
         String username = httpRequest.getParameter("username");
         String password = httpRequest.getParameter("password");
         session = httpRequest.getSession();
-        Database database = (Database) httpRequest.getServletContext().getAttribute("database");
+        database = (Database) httpRequest.getServletContext().getAttribute("database");
 
         errorMessage = "";
 
@@ -64,6 +86,7 @@ public class AuthenticationFilter implements Filter {
 
                 if (currentUserID >= 0) {
                     httpRequest.setAttribute("userID", currentUserID);
+                    setBooleans();
                     chain.doFilter(httpRequest, response);
                 } else {
                     throw new NullPointerException();

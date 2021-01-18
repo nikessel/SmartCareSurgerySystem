@@ -20,7 +20,7 @@
 
         <h3>${filterMessage}</h3>
 
-        <form method="post" action="${pageContext.request.contextPath}/refresh.do" name="dateSelector">
+        <form method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="dateSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <label for="fromDate">Show from date:</label>
             <input type="date" id="fromDate" name="fromDate"> 
@@ -29,7 +29,7 @@
         </form>
 
 
-        <form method="post" action="${pageContext.request.contextPath}/refresh.do" name="dateSelector">
+        <form method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="dateSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <input type="hidden" name="fromDate" value=""> 
             <input type="hidden" name="toDate" value="">

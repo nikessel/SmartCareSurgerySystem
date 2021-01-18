@@ -55,7 +55,7 @@ public class Refresh extends HttpServlet {
     ArrayList<Doctor> doctors;
     ArrayList<Nurse> nurses;
     Timestamp timestamp;
-    String[] selectedDate;
+    String[] selectedDate, selectedTime;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,14 +70,14 @@ public class Refresh extends HttpServlet {
 
         isEmployee = isAdmin = isDoctor = isPatient = false;
 
-        if (database.isEmployee(currentUserID)) {
+        if (session.getAttribute("isEmployee") != null) {
             isEmployee = true;
 
-            if (database.isAdmin(currentUserID)) {
+            if (session.getAttribute("isAdmin") != null) {
                 isAdmin = true;
-            } else if (database.isDoctor(currentUserID)) {
+            } else if (session.getAttribute("isDoctor") != null) {
                 isDoctor = true;
-            } else if (database.isNurse(currentUserID)) {
+            } else if (session.getAttribute("isNurse") != null) {
                 isNurse = true;
             }
         } else {
@@ -87,7 +87,7 @@ public class Refresh extends HttpServlet {
 
     private void setPendingConsulations() {
         pendingConsultationIDs = database.getPendingConsultations();
-        pendingConsultations = new ArrayList<Consultation>();
+        pendingConsultations = new ArrayList<>();
         Consultation tempConsultation;
 
         try {
@@ -174,10 +174,15 @@ public class Refresh extends HttpServlet {
     private Boolean requestConsultation(HttpServletRequest request) {
 
         try {
-            String[] selectedTime = request.getParameter("selectedTime").split(":");
+            selectedTime = request.getParameter("selectedTime").split(":");
             selectedDate = request.getParameter("selectedDate").split("-");
             selectedConsultatantID = Integer.parseInt(request.getParameterValues("selectedConsultatantID")[0]);
-            note = request.getParameter("note");
+
+            if (request.getParameter("note") != null) {
+                note = request.getParameter("note");
+            } else {
+                note = "";
+            }
 
             selectedYear = Integer.parseInt(selectedDate[0]);
             selectedMonth = Integer.parseInt(selectedDate[1]);
@@ -210,29 +215,30 @@ public class Refresh extends HttpServlet {
 
     protected void initialise(int id, HttpSession thisSession, HttpServletRequest request) {
         database = (Database) request.getServletContext().getAttribute("database");
+        session = thisSession;
         currentUserID = id;
         setBooleans();
 
         if (!isAdmin) {
             consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-            thisSession.setAttribute("consultations", consultations);
+            session.setAttribute("consultations", consultations);
         }
 
         if (isEmployee) {
             patients = database.getAllPatients();
-            thisSession.setAttribute("patients", patients);
+            session.setAttribute("patients", patients);
         }
 
         if (isAdmin || isPatient) {
             setDoctorsAndNurses();
-            thisSession.setAttribute("doctors", doctors);
-            thisSession.setAttribute("nurses", nurses);
+            session.setAttribute("doctors", doctors);
+            session.setAttribute("nurses", nurses);
 
             if (isAdmin) {
                 currentUser = database.getAdmin(currentUserID);
                 loggedInAs = "n admin";
                 setPendingEmployees();
-                thisSession.setAttribute("pendingEmployees", pendingEmployees);
+                session.setAttribute("pendingEmployees", pendingEmployees);
             } else {
                 currentUser = database.getPatient(currentUserID);
                 loggedInAs = " patient";
@@ -241,7 +247,7 @@ public class Refresh extends HttpServlet {
 
         if (isDoctor || isNurse) {
             setPendingConsulations();
-            thisSession.setAttribute("pendingConsultations", pendingConsultations);
+            session.setAttribute("pendingConsultations", pendingConsultations);
 
             if (isDoctor) {
                 currentUser = database.getDoctor(currentUserID);
@@ -251,9 +257,9 @@ public class Refresh extends HttpServlet {
                 loggedInAs = " nurse";
             }
         }
-        
-        thisSession.setAttribute("currentUser", currentUser);
-        thisSession.setAttribute("loggedInAs", loggedInAs);
+
+        session.setAttribute("currentUser", currentUser);
+        session.setAttribute("loggedInAs", loggedInAs);
 
     }
 
@@ -266,6 +272,8 @@ public class Refresh extends HttpServlet {
         currentUserID = (Integer) session.getAttribute("userID");
         currentUser = (User) session.getAttribute("currentUser");
         jspContext = String.valueOf(request.getParameter("jspName"));
+
+        setBooleans();
 
         if (jspContext.contains("timetable")) {
             try {
@@ -331,11 +339,11 @@ public class Refresh extends HttpServlet {
 
         session.setAttribute("filterMessage", message);
 
-        if (database.isEmployee(currentUserID)) {
+        if (isEmployee) {
             viewString = "/protected/employeeDashboard.do";
-        } else if (database.isAdmin(currentUserID)) {
+        } else if (isAdmin) {
             viewString = "/protected/adminDashboard.do";
-        } else if (database.isPatient(currentUserID)) {
+        } else if (isPatient) {
             viewString = "/protected/patientDashboard.do";
         }
 
