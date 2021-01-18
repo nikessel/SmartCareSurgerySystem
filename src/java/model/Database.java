@@ -21,6 +21,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -243,19 +244,6 @@ public class Database {
                 + thisAddress.getTown() + "-"
                 + thisAddress.getTelephoneNumber();
 
-    }
-
-    private String formatSQLTimestamp(Timestamp thisTimestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String string = dateFormat.format(thisTimestamp);
-
-        String[] strArr = string.split("-");
-
-        strArr[0] = String.valueOf(thisTimestamp.getYear());
-
-        string = String.join("-", strArr);
-
-        return string;
     }
 
     private String getCredentialsSQLString(String tableName) {
@@ -623,7 +611,7 @@ public class Database {
                     patient = getPatient(rs.getInt("patient_id"));
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     nurse = getNurse(rs.getInt("nurse_id"));
-                    consultationTime = Timestamp.convertToMyTimestamp(rs.getTimestamp("consultation_time"));
+                    consultationTime = rs.getTimestamp("consultation_time");
                     note = rs.getString("note");
                     duration = rs.getInt("duration");
                 }
@@ -652,7 +640,7 @@ public class Database {
                 if (rs.next()) {
                     doctor = getDoctor(rs.getInt("doctor_id"));
                     patient = getPatient(rs.getInt("patient_id"));
-                    surgeryTime = Timestamp.convertToMyTimestamp(rs.getTimestamp("surgery_time"));
+                    surgeryTime = rs.getTimestamp("surgery_time");
 
                 }
             } catch (SQLException ex) {
@@ -1156,8 +1144,7 @@ public class Database {
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
-            valuesString.append(formatSQLTimestamp(consultation.getConsultationTime()) + "', ");
-            System.out.println(formatSQLTimestamp(consultation.getConsultationTime()));
+            valuesString.append(consultation.getConsultationTime() + "', ");
             
             
             if (thisID == -1) {

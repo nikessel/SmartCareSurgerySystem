@@ -6,6 +6,7 @@
 package model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +22,14 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
-        
-        System.out.println(database.getUserID("admin", "admin"));
-           System.exit(0);
+
 
         Patient patient = database.getPatient(40014);
         Doctor doctor = database.getDoctor(20001);
 
         Nurse nurse = database.getNurse(30000);
 
-        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(2021, 10, 10, 2, 2), "2344", 0);
+        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(2021, 10, 10, 2, 2, 0, 0), "2344", 0);
 
         database.addObjectToDatabase(consultation);
 

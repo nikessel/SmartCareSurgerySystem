@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author niklas

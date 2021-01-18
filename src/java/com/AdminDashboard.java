@@ -6,39 +6,20 @@
 package com;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644 *
+ * @author Niklas Sarup-Lytzen ID: 18036644
  */
-import model.*;
 
 public class AdminDashboard extends HttpServlet {
 
-    int currentUserID;
-    HttpSession session;
-    Cookie cookie;
-    Cookie[] cookies;
-    Database database;
-    String loggedInAs = "";
     RequestDispatcher view;
-    User currentUser;
-    List<Consultation> consultations;
-    List<Patient> patients;
-    String message = "";
-    Date fromDate, toDate;
-    ArrayList<Employee> pendingEmployees;
-    ArrayList<Integer> pendingEmployeeIDs;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

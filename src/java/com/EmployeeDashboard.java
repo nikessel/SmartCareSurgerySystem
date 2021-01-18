@@ -8,7 +8,6 @@ package com;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -25,23 +24,7 @@ import model.*;
 
 public class EmployeeDashboard extends HttpServlet {
 
-    int currentUserID, checkID;
-    HttpSession session;
-    boolean isDoctor, redirect;
-    Cookie cookie;
-    Cookie[] cookies;
-    Database database;
     RequestDispatcher view;
-    User currentUser;
-    String loggedInAs, redirectTo;
-    ArrayList<Consultation> consultations;
-    ArrayList<Patient> patients;
-    ArrayList<Consultation> pendingConsultations;
-    ArrayList<Integer> pendingConsultationIDs;
-
-    Consultation temp;
-    String message;
-    Date fromDate, toDate;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -52,16 +35,6 @@ public class EmployeeDashboard extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private boolean getBoolean(HttpServletRequest request, String variableName) {
-        try {
-            if (request.getParameter(variableName).equals("true")) {
-                return true;
-            }
-        } catch (NullPointerException ex) {
-
-        }
-        return false;
-    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -69,8 +42,6 @@ public class EmployeeDashboard extends HttpServlet {
 
         // Set view
         view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
-
-
 
         view.forward(request, response);
 

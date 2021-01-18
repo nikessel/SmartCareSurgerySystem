@@ -10,7 +10,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Employee Dashboard Page</title>
         <style>
+
             <%@include file="/WEB-INF/css/style.css"%>
         </style>
     </head>

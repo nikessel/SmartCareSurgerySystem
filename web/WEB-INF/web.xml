@@ -36,13 +36,9 @@
         <servlet-class>com.Logout</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>DashboardFilter</servlet-name>
+        <servlet-name>AuthorizationFilter</servlet-name>
         <servlet-class>com.AuthorizationFilter</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>ServletContextInitializer</servlet-name>
-        <url-pattern>/servletContextInitializer.do</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletContextListener</servlet-name>
         <url-pattern>/servlet-context-listener.do</url-pattern>
@@ -65,10 +61,6 @@
     <servlet>
         <servlet-name>PatientDashboard</servlet-name>
         <servlet-class>com.PatientDashboard</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ServletContextInitializer</servlet-name>
-        <servlet-class>com.ServletContextInitializer</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddUser</servlet-name>
@@ -94,10 +86,6 @@
         <servlet-name>PatientDashboard</servlet-name>
         <url-pattern>/protected/patientDashboard.do</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PatientDashboard</servlet-name>
-        <url-pattern>/patientDashboard.do</url-pattern>
-    </servlet-mapping>
     <listener>
         <listener-class>com.myServletContextListener</listener-class>
     </listener>
@@ -120,5 +108,6 @@
     <filter-mapping>
         <filter-name>AuthorizationFilter</filter-name>
         <url-pattern>/protected/*</url-pattern>
+        <url-pattern>/objects/*</url-pattern>
     </filter-mapping>
 </web-app>
