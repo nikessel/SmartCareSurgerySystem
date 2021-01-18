@@ -15,6 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import model.Database;
 
 /**
  *
@@ -26,22 +27,11 @@ public class AuthorizationFilter implements Filter {
     private String errorMessage;
     private int currentUserID;
     private HttpSession session;
+    private Database database;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.fc = filterConfig;
-    }
-
-    private boolean isAdmin() {
-        return 10000 <= currentUserID && currentUserID <= 19999;
-    }
-
-    private boolean isEmployee() {
-        return 20000 <= currentUserID && currentUserID <= 39999;
-    }
-
-    private boolean isPatient() {
-        return 40000 <= currentUserID && currentUserID <= 49999;
     }
 
     @Override
@@ -49,10 +39,9 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         session = httpRequest.getSession(false);
         String requestURI = httpRequest.getRequestURI();
+        database = (Database) request.getServletContext().getAttribute("database");
 
         response.setContentType("text/html;charset=UTF-8");
-
-        boolean isPublic = false;
 
         String[] publicUrlPatterns = {"/addUser.do",
             "/login.do", "/passwordChanger.do", "/errorPage.jsp", "/addUser.do",
@@ -71,11 +60,11 @@ public class AuthorizationFilter implements Filter {
         try {
             currentUserID = (int) session.getAttribute("userID");
 
-            if (isAdmin() && requestURI.endsWith(protectedUrlPatterns[0])) {
+            if (database.isAdmin(currentUserID) && requestURI.endsWith(protectedUrlPatterns[0])) {
 
-            } else if (isEmployee() && requestURI.endsWith(protectedUrlPatterns[1])) {
+            } else if (database.isEmployee(currentUserID) && requestURI.endsWith(protectedUrlPatterns[1])) {
 
-            } else if (isPatient() && requestURI.endsWith(protectedUrlPatterns[2])) {
+            } else if (database.isPatient(currentUserID) && requestURI.endsWith(protectedUrlPatterns[2])) {
 
             } else {
                 throw new Exception();
