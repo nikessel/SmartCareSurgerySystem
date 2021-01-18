@@ -4,6 +4,7 @@
     Author     : niklas
 --%>
 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file = "/objects/jspHeader.jsp"%>
 
 
@@ -17,8 +18,6 @@
         <div class="centerDiv">
             <h2>Timetabled consultations and surgeries</h2>
         </div>
-
-        <h3>${filterMessage}</h3>
 
         <form method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="dateSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
@@ -41,7 +40,13 @@
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Patient name</th>
+                        <c:if test="${not empty isPatient}">
+                        <th>Doctor name</th>
+                        <th>Nurse name</th>
+                        </c:if>
+                        <c:if test="${empty isPatient}">
+                        <th>Patient name</th>
+                        </c:if>
                     <th>Issue</th>
                 </tr>
             </thead>
@@ -49,11 +54,34 @@
                 <c:forEach items="${consultations}" var="consultation">
                     <tr>
                         <td>${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy HH:mm")}</td>
-                        <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
+                        <c:if test="${not empty isPatient}">
+                            <c:choose>  
+                                <c:when test = "${consultation.doctor.ID == '20000'}">
+                                    <td> </td>
+                                </c:when>
+                                <c:otherwise> 
+                                    <td>${consultation.doctor.firstName} ${consultation.doctor.surName}</td>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>  
+                                <c:when test = "${consultation.nurse.ID == '30000'}">
+                                    <td> </td>
+                                </c:when>
+                                <c:otherwise> 
+                                    <td>${consultation.nurse.firstName} ${consultation.nurse.surName}</td>
+                                </c:otherwise>  
+                            </c:choose>  
+
+                        </c:if>
+                        <c:if test="${empty isPatient}">
+                            <td>${consultation.patient.firstName} ${consultation.patient.surName}</td>
+                        </c:if>
+
                         <td>${consultation.note}</td>
                     </tr>
                 </c:forEach>   
             </tbody>
         </table>
+
     </body>
 </html>

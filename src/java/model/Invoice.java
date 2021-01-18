@@ -15,6 +15,7 @@ import java.util.Date;
 public class Invoice extends DatabaseObject {
 
     private Consultation consultation;
+    private Patient patient;
     private double price;
     private Date dateOfInvoice;
     private boolean paid;
@@ -25,7 +26,7 @@ public class Invoice extends DatabaseObject {
 
     }
 
-    protected Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
+    protected Invoice(Consultation consultation, Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
         boolean isDatabase = false;
 
         try {
@@ -38,6 +39,7 @@ public class Invoice extends DatabaseObject {
 
         if (isDatabase) {
             this.consultation = consultation;
+            this.patient = patient;
             this.price = price;
             this.dateOfInvoice = dateOfInvoice;
             this.paid = paid;
@@ -48,8 +50,9 @@ public class Invoice extends DatabaseObject {
         }
     }
 
-    public Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured) {
+    public Invoice(Consultation consultation, Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured) {
         this.consultation = consultation;
+        this.patient = patient;
         this.price = price;
         this.dateOfInvoice = dateOfInvoice;
         this.paid = paid;
@@ -58,6 +61,10 @@ public class Invoice extends DatabaseObject {
     }
 
     public int getInvoiceID() {
+        return invoiceID;
+    }
+    
+    public int getID() {
         return invoiceID;
     }
 
@@ -76,6 +83,15 @@ public class Invoice extends DatabaseObject {
     public double getPrice() {
         return price;
     }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+    
 
     public void setPrice(double price) {
         this.price = price;
@@ -107,7 +123,7 @@ public class Invoice extends DatabaseObject {
 
     @Override
     public String toString() {
-        return "Invoice{" + "invoiceID=" + invoiceID + ", consultationID=" + consultation.getConsultationID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
+        return "Invoice{" + "invoiceID=" + invoiceID + ", consultationID=" + consultation.getConsultationID() + ", patient_id=" + patient.getPatientID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
     }
 
 }

@@ -18,7 +18,9 @@
     </head>
 
 
+
     <div class="grid-container">  
+
 
         <c:import url="objects/keepScrollPosition.html"/>
         <c:import url="objects/dashboardHeader.jsp"/>
@@ -27,11 +29,15 @@
 
         </aside>
 
-        <h3>${filterMessage}</h3>
+
         <main class="main">
 
+
             <div class="wide_card">
+                
+            <h3>${filterMessage}</h3>
                 <c:import url="objects/timetable.jsp"/>
+                <c:import url="objects/invoiceIssuer.jsp"/>
             </div>
 
             <div class="main-cards">
@@ -48,6 +54,7 @@
                     <c:import url="objects/pendingConsultationsConfirmer.jsp"/>
                 </div>
                 <div class="card">
+
                 </div>
             </div>
             <!--

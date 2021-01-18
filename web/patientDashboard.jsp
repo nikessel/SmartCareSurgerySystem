@@ -26,6 +26,7 @@
         <main class="main">
             <div class="wide_card">
                 <c:import url="objects/timetable.jsp"/>
+                <c:import url="objects/invoicePayer.jsp"/>
             </div>
 
 

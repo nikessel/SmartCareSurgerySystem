@@ -5,8 +5,10 @@
  */
 package model;
 
+import com.DateFormatter;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,10 @@ public class TestMain {
         Database database = new Database();
 
         database.connect();
+        
+        
+
+        //database.printDatabaseTable("invoices");
 
 
         Patient patient = database.getPatient(40014);
@@ -29,13 +35,24 @@ public class TestMain {
 
         Nurse nurse = database.getNurse(30000);
 
-        Consultation consultation = new Consultation(patient, doctor, nurse, new Timestamp(2021, 10, 10, 2, 2, 0, 0), "2344", 0);
+        Consultation consultation = database.getConsultation(50077);
+        double price = (database.getPrice("consultation") / 60) * consultation.getDuration();
 
-        database.addObjectToDatabase(consultation);
+        Invoice invoice = new Invoice(consultation, patient, price,
+                Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
+                false, consultation.getPatient().isInsured());
 
-        for (int i : database.getPendingConsultations()) {
-            System.out.println(database.getConsultation(i));
+        database.addObjectToDatabase(invoice);
+        
+        database.printDatabaseTable("invoices");
+        
+        ArrayList<Invoice> invoices = database.getAllInvoicesWhereIDIs(40000);
+        
+        for (Invoice i : invoices) {
+            System.out.println(i);
         }
+
+        System.out.println(database.hasInvoice(50088));
         System.exit(0);
 
         ArrayList<Integer> pendingConsultationIDs = database.getPendingConsultations();
@@ -54,8 +71,8 @@ public class TestMain {
         System.out.println(pendingConsultations.get(0));
 
         System.exit(0);
-   //     Patient patient = database.getPatient(40012);
-     //   Doctor doctor = database.getDoctor(20001);
+        //     Patient patient = database.getPatient(40012);
+        //   Doctor doctor = database.getDoctor(20001);
 
         database.addObjectToDatabase(doctor);
 

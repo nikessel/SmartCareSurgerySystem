@@ -78,7 +78,7 @@ create table patients (
         insured boolean
 );
 
-insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('patient', '15c127f33ee049cdbae94a0e2f5d4f8538b2d51e360f08b4bfc9122dadffcc536c919ed226cf5c1395ca01d204f324b0784da81ffc16bb15e9b95a3ced6a9d34', '96281e7c67a008d2a809186e64c74a027916b07436cb9cd4cce915bc8035867d', 'TestPatientFirstName', 'TestPatientSurName', '1992-03-14', '1 Test Avenue--TE00 0ST-testCounty-TestTown-999999999999', true);
+insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('patient', '15c127f33ee049cdbae94a0e2f5d4f8538b2d51e360f08b4bfc9122dadffcc536c919ed226cf5c1395ca01d204f324b0784da81ffc16bb15e9b95a3ced6a9d34', '96281e7c67a008d2a809186e64c74a027916b07436cb9cd4cce915bc8035867d', 'Patient', 'First', '1992-03-14', '1 Test Avenue--TE00 0ST-testCounty-TestTown-999999999999', true);
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('robsmith', 'f32c2199f1cd692585200f12be9a3a4c071ed15aa995da91da11582ceee2983683a8f59301c4e96e9bee20c58926d742073edef560c62d0b8002dacd6b5e2c96', '3580fbfbf8e10cd224f1ae15d71ee098a963808c3e86a926d9efd5ec407a8f6c', 'Rob', 'Smith', '1992-03-14', '1 Melby Parkway--BE16 3LO-county-Bristol-958297970322', true);
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('lizbrown', '34ec15c07558111e9905ab9a9c86facf92a353b744ddb0502a5cf58034a9aab993d4e8f5203fb29e85a39894ef8f09bc9a3f5971a61ff21dd7ce5372fd9ede79', '2d50fda7c9df60eac536b6619ceb3f2524d13ddb7153098dd8eb351a8433161f', 'Liz', 'Brown', '1934-01-17', '773 Bowman Lane--BE16 3LO-county-Bristol-958297970322', true);
 insert into patients (username, password_hash, salt, first_name, sur_name, date_of_birth, address, insured) values ('mrhesitant', '7d2b7e7e75e3e250db2dca4f81cd3a25e27e04263147ccd1c9371a3a36d41aea4b90cb4fb32bc57dcbda4ee735f190ecef349720cb553794aa835452dc7d79a5', '2f61a044d9a13413e8ad4b8b131b22b6251ae38554110d85d2db4fbb5d04033f', 'Mr', 'Hesitant', '1931-02-09', '54 Prairie Rose Terrace--BE16 3LO-county-Bristol-958297970322', true);
@@ -236,67 +236,34 @@ create table invoices (
 	price DECIMAL(7,2),
 	date_of_invoice DATE,
 	consultation_id INT,
+        patient_id INT,
         paid boolean,
         insured boolean,
-        CONSTRAINT fk_consultation
+        CONSTRAINT fk_consultation_invoice
         FOREIGN KEY (consultation_id) 
         REFERENCES consultations(consultation_id)
+            ON UPDATE RESTRICT
+            ON DELETE CASCADE,
+        CONSTRAINT fk_patient_invoice
+        FOREIGN KEY (patient_id) 
+        REFERENCES patients(patient_id)
             ON UPDATE RESTRICT
             ON DELETE CASCADE
 );
 
 
 
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1567.27, '2020-12-30', 50001, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1159.23, '2020-11-05', 50002, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1078.77, '2020-12-11', 50003, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1261.12, '2020-12-19', 50004, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1409.24, '2020-12-08', 50005, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1393.7, '2020-12-27', 50006, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1118.37, '2020-11-11', 50007, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (483.98, '2021-01-10', 50008, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (730.84, '2020-12-05', 50009, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (778.18, '2020-11-25', 50010, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (497.92, '2021-01-05', 50011, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (481.15, '2021-01-14', 50012, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (952.41, '2020-11-30', 50013, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (602.82, '2020-12-12', 50014, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1265.91, '2020-11-12', 50015, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (623.03, '2021-01-09', 50016, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1207.69, '2020-11-22', 50017, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (403.91, '2020-11-30', 50018, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (888.26, '2020-12-24', 50019, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1244.27, '2020-12-17', 50020, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (877.46, '2020-12-27', 50021, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (423.01, '2020-12-09', 50022, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1216.56, '2020-11-11', 50023, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (284.78, '2020-12-01', 50024, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (364.15, '2020-12-03', 50025, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (560.29, '2021-01-11', 50026, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (232.21, '2020-12-10', 50027, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (633.71, '2020-12-14', 50028, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (735.0, '2020-11-02', 50029, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1556.04, '2020-11-05', 50030, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (924.55, '2020-11-26', 50031, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1113.72, '2020-12-12', 50032, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1513.46, '2020-11-24', 50033, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (315.87, '2020-11-05', 50034, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1413.73, '2020-12-18', 50035, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (367.52, '2020-11-17', 50036, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1171.83, '2020-12-09', 50037, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (694.32, '2020-12-12', 50038, true, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (826.14, '2020-11-11', 50039, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1218.49, '2020-12-18', 50040, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1414.17, '2020-11-04', 50041, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1375.62, '2020-12-22', 50042, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1053.04, '2020-11-11', 50043, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1072.71, '2021-01-10', 50044, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (901.31, '2020-11-20', 50045, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (954.65, '2020-12-03', 50046, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (719.07, '2020-12-24', 50047, false, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (717.96, '2020-11-12', 50048, true, true);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1050.94, '2020-12-03', 50049, false, false);
-insert into invoices (price, date_of_invoice, consultation_id, paid, insured) values (1521.5, '2020-11-18', 50050, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1567.27, '2020-12-30', 50001, 40000, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1159.23, '2020-11-05', 50002, 40001, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1078.77, '2020-12-11', 50003, 40002, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1261.12, '2020-12-19', 50004, 40003, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1409.24, '2020-12-08', 50005, 40004, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1393.7, '2020-12-27', 50006, 40005, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (1118.37, '2020-11-11', 50007, 40006, true, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (483.98, '2021-01-10', 50008, 40007, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (730.84, '2020-12-05', 50009, 40008, true, true);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (778.18, '2020-11-25', 50010, 40009, false, false);
+insert into invoices (price, date_of_invoice, consultation_id, patient_id, paid, insured) values (497.92, '2021-01-05', 50011, 40010, true, true);
 
 
 create table surgeries (

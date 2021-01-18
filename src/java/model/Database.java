@@ -246,6 +246,19 @@ public class Database {
 
     }
 
+    private String formatSQLTimestamp(Timestamp thisTimestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String string = dateFormat.format(thisTimestamp);
+
+        String[] strArr = string.split("-");
+
+        strArr[0] = String.valueOf(thisTimestamp.getYear());
+
+        string = String.join("-", strArr);
+
+        return string;
+    }
+
     private String getCredentialsSQLString(String tableName) {
         idString = getIDString(tableName);
 
@@ -627,6 +640,7 @@ public class Database {
                     price = rs.getDouble("price");
                     invoiceDate = rs.getDate("date_of_invoice");
                     consultation = getConsultation(rs.getInt("consultation_id"));
+                    patient = getPatient(rs.getInt("patient_id"));
                     paid = rs.getBoolean("paid");
                     insured = rs.getBoolean("insured");
                 }
@@ -676,7 +690,7 @@ public class Database {
         } else if (isConsultation(id)) {
             return new Consultation(patient, doctor, nurse, consultationTime, note, duration, id);
         } else if (isInvoice(id)) {
-            return new Invoice(consultation, price, invoiceDate, paid, insured, id);
+            return new Invoice(consultation, patient, price, invoiceDate, paid, insured, id);
         } else if (isSurgery(id)) {
             return new Surgery(patient, doctor, surgeryTime, id);
         } else if (isPerscription(id)) {
@@ -695,15 +709,29 @@ public class Database {
             rs1.next();
             return rs1.getBoolean("pending");
         } catch (SQLException ex) {
-            System.out.println(ex);
             return false;
         }
+    }
+
+    public Boolean hasInvoice(int id) {
+        idString = getIDString(id);
+        tableName = "invoices";
+
+        try {
+            ResultSet rs1 = selectFromWhere("*", tableName, idString, String.valueOf(id));
+
+            rs1.next();
+            rs1.getInt(idString);
+            return true;
+
+        } catch (SQLException ex) {
+        }
+        return false;
     }
 
     public ArrayList<Object> getListFromDatabase(ResultSet rs) throws ArrayIndexOutOfBoundsException {
 
         ArrayList<Object> outputList = new ArrayList();
-        Boolean pending;
         int id = -1;
 
         // Get ID
@@ -748,6 +776,9 @@ public class Database {
                         outputList.add(getPatient(thisID));
                         break;
                     case "consultations":
+                        if (hasInvoice(thisID)) {
+                            continue;
+                        }
                         outputList.add(getConsultation(thisID));
                         break;
                     case "invoices":
@@ -798,6 +829,7 @@ public class Database {
 
         String queryString = "SELECT " + whatToSelect + " FROM " + fromTable + " WHERE " + where + isString;
 
+        System.out.println(queryString);
         return executeQuery(queryString);
     }
 
@@ -1071,7 +1103,7 @@ public class Database {
         return output;
     }
 
-    public void addObjectToDatabase(Object object) {
+    public String addObjectToDatabase(Object object) {
         StringBuilder namesString = new StringBuilder();
         StringBuilder valuesString = new StringBuilder();
         StringBuilder updateString = new StringBuilder();
@@ -1144,9 +1176,8 @@ public class Database {
             valuesString.append(consultation.getPatient().getPatientID() + ", ");
             valuesString.append(consultation.getDoctor().getDoctorID() + ", ");
             valuesString.append(consultation.getNurse().getNurseID() + ", '");
-            valuesString.append(consultation.getConsultationTime() + "', ");
-            
-            
+            valuesString.append(formatSQLTimestamp(consultation.getConsultationTime()) + "', ");
+
             if (thisID == -1) {
                 namesString.append("pending, ");
 
@@ -1163,8 +1194,9 @@ public class Database {
             Invoice invoice = (Invoice) object;
             tableName = TABLENAMES[5];
 
-            namesString.append("consultation_id, price, date_of_invoice, paid, insured, ");
+            namesString.append("consultation_id, patient_id, price, date_of_invoice, paid, insured, ");
             valuesString.append(invoice.getConsultation().getConsultationID() + ", ");
+            valuesString.append(invoice.getConsultation().getPatient().getPatientID() + ", ");
             valuesString.append(invoice.getPrice() + ", ");
             valuesString.append("'" + invoice.getDateOfInvoice() + "', ");
             valuesString.append(invoice.isPaid() + ", ");
@@ -1178,7 +1210,7 @@ public class Database {
             namesString.append("doctor_id, patient_id, surgery_time, ");
             valuesString.append(surgery.getDoctor().getDoctorID() + ", ");
             valuesString.append(surgery.getPatient().getPatientID() + ", ");
-            valuesString.append("'" + surgery.getSurgeryTime() + "', ");
+            valuesString.append("'" + formatSQLTimestamp(surgery.getSurgeryTime()) + "', ");
 
             thisID = surgery.getSurgeryID();
         } else if (object instanceof Perscription) {
@@ -1218,7 +1250,7 @@ public class Database {
             try {
                 executeUpdate(queryString);
             } catch (SQLException ex) {
-                System.err.println(ex);
+                return ex.toString();
             }
         } else {
 
@@ -1244,10 +1276,10 @@ public class Database {
             try {
                 executeUpdate(queryString);
             } catch (SQLException ex) {
-                System.err.println(ex);
+                return ex.toString();
             }
         }
-
+        return "";
     }
 
     public void addPasswordToUser(User user, String password) {

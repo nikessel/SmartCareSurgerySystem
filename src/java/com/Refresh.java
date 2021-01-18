@@ -8,6 +8,7 @@ package com;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -21,6 +22,7 @@ import model.Consultation;
 import model.Database;
 import model.Doctor;
 import model.Employee;
+import model.Invoice;
 import model.Nurse;
 import model.Patient;
 import model.User;
@@ -34,8 +36,11 @@ public class Refresh extends HttpServlet {
     int currentUserID, selectedConsultatantID, selectedHour, selectedMinute,
             selectedYear, selectedMonth, selectedDayOfMonth, checkID;
 
-    boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient;
+    double price;
+
+    boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient, deleteConsultation, issueInvoice;
     HttpSession session;
+    HttpServletRequest request;
     Cookie cookie;
     Cookie[] cookies;
     Database database;
@@ -50,8 +55,12 @@ public class Refresh extends HttpServlet {
     ArrayList<Integer> pendingEmployeeIDs;
     ArrayList<Consultation> pendingConsultations;
     ArrayList<Integer> pendingConsultationIDs;
+    ArrayList<Invoice> invoices;
     ArrayList<Object> temps;
     Object temp;
+    Invoice invoice;
+    Patient patient;
+    Consultation consultation;
     ArrayList<Doctor> doctors;
     ArrayList<Nurse> nurses;
     Timestamp timestamp;
@@ -85,7 +94,7 @@ public class Refresh extends HttpServlet {
         }
     }
 
-    private void setPendingConsulations() {
+    private void setPendingConsultations() {
         pendingConsultationIDs = database.getPendingConsultations();
         pendingConsultations = new ArrayList<>();
         Consultation tempConsultation;
@@ -113,17 +122,17 @@ public class Refresh extends HttpServlet {
 
     private void setPendingEmployees() {
         pendingEmployeeIDs = database.getPendingUsers();
-        pendingEmployees = new ArrayList<Employee>();
+        pendingEmployees = new ArrayList<>();
 
         try {
 
-            for (int i : pendingEmployeeIDs) {
+            pendingEmployeeIDs.forEach((i) -> {
                 if (database.isNurse(i)) {
                     pendingEmployees.add(database.getNurse(i));
                 } else if (database.isDoctor(i)) {
                     pendingEmployees.add(database.getDoctor(i));
                 }
-            }
+            });
 
         } catch (Exception ex) {
 
@@ -131,7 +140,7 @@ public class Refresh extends HttpServlet {
 
     }
 
-    private void approveEmployee(HttpServletRequest request) {
+    private void approveEmployee() {
         try {
             int id = Integer.parseInt(request.getParameterValues("pendingEmployeeSelection")[0]);
             boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
@@ -156,22 +165,22 @@ public class Refresh extends HttpServlet {
             temps = database.getAllFromDatabase("doctors");
             temps.remove(0);
 
-            for (Object doctor : temps) {
+            temps.forEach((doctor) -> {
                 doctors.add((Doctor) doctor);
-            }
+            });
 
             temps = database.getAllFromDatabase("nurses");
             temps.remove(0);
 
-            for (Object nurse : temps) {
+            temps.forEach((nurse) -> {
                 nurses.add((Nurse) nurse);
-            }
+            });
         } catch (Exception ex) {
 
         }
     }
 
-    private Boolean requestConsultation(HttpServletRequest request) {
+    private Boolean requestConsultation() {
 
         try {
             selectedTime = request.getParameter("selectedTime").split(":");
@@ -205,18 +214,136 @@ public class Refresh extends HttpServlet {
 
             Consultation consultation = new Consultation((Patient) currentUser, tempDoctor, tempNurse, timestamp, note, 10);
 
-            message = consultation.toString();
             database.addObjectToDatabase(consultation);
 
-        } catch (Exception ex) {
+        } catch (NumberFormatException ex) {
         }
         return false;
     }
 
-    protected void initialise(int id, HttpSession thisSession, HttpServletRequest request) {
+    private boolean approvePendingConsultation() {
+        try {
+            int id = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
+            boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
+
+            if (approve) {
+                database.approveConsultation(id);
+                return true;
+
+            } else {
+                database.deleteObjectFromDatabase(id);
+            }
+
+        } catch (NumberFormatException ex) {
+        }
+        return false;
+    }
+
+    private void refreshConsultations() {
+        try {
+
+            fromDate = Date.valueOf(request.getParameter("fromDate"));
+            toDate = Date.valueOf(request.getParameter("toDate"));
+
+            consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
+
+        } catch (Exception e) {
+            consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+        }
+        session.setAttribute("consultations", consultations);
+
+    }
+
+    private void setInvoice() {
+
+        try {
+            int id = Integer.parseInt(request.getParameterValues("consultationSelection")[0]);
+            consultation = database.getConsultation(id);
+            patient = consultation.getPatient();
+            price = database.getPrice("consultation") / 60 * consultation.getDuration();
+
+            invoice = new Invoice(consultation, patient, price,
+                    Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
+                    false, consultation.getPatient().isInsured());
+
+            database.addObjectToDatabase(invoice);
+
+            message = invoice.toString();
+        } catch (Exception ex) {
+            message = ex.toString();
+        }
+
+    }
+
+    private void refreshInvoices() {
+
+        try {
+            invoices = database.getAllInvoicesWhereIDIs(currentUserID);
+            
+            session.setAttribute("invoices", invoices);
+        } catch (Exception ex) {
+            message = ex.toString();
+        }
+
+    }
+
+    private void payInvoice() {
+        try {
+            int id = Integer.parseInt(request.getParameterValues("invoiceSelection")[0]);
+            invoice = database.getInvoice(id);
+
+            invoice.setPaid(true);
+            
+            database.addObjectToDatabase(invoice);
+
+            message = invoice.toString();
+        } catch (Exception ex) {
+            message = ex.toString();
+        }
+
+    }
+
+    private boolean removeConsultation() {
+        try {
+
+            int id = Integer.parseInt(request.getParameterValues("consultationSelection")[0]);
+
+            database.deleteObjectFromDatabase(id);
+
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
+
+    private void setPatientTable() {
+        try {
+            int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
+
+            switch (choice) {
+                case 0:
+                    patients = database.getAllPatientsWhereIs("insured", "true");
+                    break;
+                case 1:
+                    patients = database.getAllPatientsWhereIs("insured", "false");
+                    break;
+                default:
+                    patients = database.getAllPatients();
+            }
+
+            session.setAttribute("insuranceSelection", null);
+
+        } catch (NumberFormatException ex) {
+            patients = database.getAllPatients();
+        }
+    }
+
+    protected void initialise(int currentUserID, HttpSession session, HttpServletRequest request) {
         database = (Database) request.getServletContext().getAttribute("database");
-        session = thisSession;
-        currentUserID = id;
+        this.request = request;
+        this.session = session;
+        this.currentUserID = currentUserID;
         setBooleans();
 
         if (!isAdmin) {
@@ -241,12 +368,13 @@ public class Refresh extends HttpServlet {
                 session.setAttribute("pendingEmployees", pendingEmployees);
             } else {
                 currentUser = database.getPatient(currentUserID);
+                refreshInvoices();
                 loggedInAs = " patient";
             }
         }
 
         if (isDoctor || isNurse) {
-            setPendingConsulations();
+            setPendingConsultations();
             session.setAttribute("pendingConsultations", pendingConsultations);
 
             if (isDoctor) {
@@ -272,69 +400,41 @@ public class Refresh extends HttpServlet {
         currentUserID = (Integer) session.getAttribute("userID");
         currentUser = (User) session.getAttribute("currentUser");
         jspContext = String.valueOf(request.getParameter("jspName"));
+        this.request = request;
 
         setBooleans();
 
         if (jspContext.contains("timetable")) {
-            try {
-
-                fromDate = Date.valueOf(request.getParameter("fromDate"));
-                toDate = Date.valueOf(request.getParameter("toDate"));
-
-                consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
-
-            } catch (Exception e) {
-                consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-            }
-            session.setAttribute("consultations", consultations);
+            refreshConsultations();
 
         } else if (jspContext.contains("pendingConsultations")) {
 
-            try {
-                int id = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
-                boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
-
-                if (approve) {
-                    database.approveConsultation(id);
-
-                } else {
-                    database.deleteObjectFromDatabase(id);
-                }
-
-            } catch (Exception ex) {
+            if (approvePendingConsultation()) {
+                refreshConsultations();
             }
 
-            setPendingConsulations();
+            setPendingConsultations();
+
             session.setAttribute("pendingConsultations", pendingConsultations);
 
         } else if (jspContext.contains("patientTable")) {
-            try {
-                int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
-
-                switch (choice) {
-                    case 0:
-                        patients = database.getAllPatientsWhereIs("insured", "true");
-                        break;
-                    case 1:
-                        patients = database.getAllPatientsWhereIs("insured", "false");
-                        break;
-                    default:
-                        patients = database.getAllPatients();
-                }
-
-                session.setAttribute("insuranceSelection", null);
-
-            } catch (Exception ex) {
-                patients = database.getAllPatients();
-            }
+            setPatientTable();
 
             session.setAttribute("patients", patients);
+
         } else if (jspContext.contains("bookConsultation")) {
-            requestConsultation(request);
+            requestConsultation();
         } else if (jspContext.contains("pendingEmployees")) {
-            approveEmployee(request);
+            approveEmployee();
             setPendingEmployees();
             session.setAttribute("pendingEmployees", pendingEmployees);
+        } else if (jspContext.contains("invoiceIssuer")) {
+            setInvoice();
+            refreshConsultations();
+        } else if (jspContext.contains("invoicePayer")) {
+            payInvoice();
+            refreshInvoices();
+            
         }
 
         session.setAttribute("filterMessage", message);

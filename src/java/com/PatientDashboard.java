@@ -24,23 +24,8 @@ import model.*;
 
 public class PatientDashboard extends HttpServlet {
 
-    int currentUserID, selectedConsultatantID, selectedHour, selectedMinute,
-            selectedYear, selectedMonth, selectedDayOfMonth;
-    HttpSession session;
-    Cookie cookie;
-    Cookie[] cookies;
-    Database database;
-    String loggedInAs = "";
     RequestDispatcher view;
-    User currentUser;
-    ArrayList<Consultation> consultations;
-    ArrayList<Patient> patients;
-    ArrayList<Doctor> doctors;
-    ArrayList<Nurse> nurses;
-    ArrayList<Object> temp;
-    Timestamp timestamp;
-    String message, note;
-    String[] selectedDate;
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
