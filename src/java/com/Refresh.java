@@ -719,12 +719,26 @@ public class Refresh extends HttpServlet {
 
                 if (currentUserID != newUserID) {
                     currentUserID = newUserID;
+
+                    session.setAttribute("isDoctor", null);
+                    session.setAttribute("isNurse", null);
+                    session.setAttribute("isPatient", null);
+
+                    if (database.isDoctor(currentUserID)) {
+                        session.setAttribute("isDoctor", "1");
+                    } else if (database.isNurse(currentUserID)) {
+                        session.setAttribute("isNurse", "1");
+                    } else if (database.isPatient(currentUserID)) {
+                        session.setAttribute("isPatient", "1");
+                    }
+
                 }
                 success = true;
             } catch (Exception ex) {
                 currentUserID = Integer.valueOf(request.getParameterValues("userSelection")[0]);
                 success = true;
                 session.setAttribute("adminSelectedID", currentUserID);
+
             }
 
             if (database.isDoctor(currentUserID)) {
@@ -737,6 +751,7 @@ public class Refresh extends HttpServlet {
                 currentUser = database.getPatient(currentUserID);
                 session.setAttribute("isPatient", "1");
             }
+            session.setAttribute("adminSelectedUser", currentUser);
 
         } catch (Exception ex) {
 
@@ -745,17 +760,6 @@ public class Refresh extends HttpServlet {
     }
 
     private void adminRevertUser() {
-
-        if (database.isDoctor(currentUserID)) {
-            currentUser = database.getDoctor(currentUserID);
-            session.setAttribute("isDoctor", null);
-        } else if (database.isNurse(currentUserID)) {
-            currentUser = database.getNurse(currentUserID);
-            session.setAttribute("isNurse", null);
-        } else if (database.isPatient(currentUserID)) {
-            currentUser = database.getPatient(currentUserID);
-            session.setAttribute("isPatient", null);
-        }
 
         currentUserID = previousUserID;
         currentUser = previousUser;

@@ -20,6 +20,10 @@
         </div>
 
         <c:if test="${not empty isAdmin}">
+
+            <c:if test="${not empty adminSelectedID}">
+                <h4>Selected user: ${adminSelectedUser.firstName} ${adminSelectedUser.surName}</h4>
+            </c:if>
             <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="userSelector">
                 <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
                 <select name="userSelection">
