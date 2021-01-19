@@ -19,6 +19,27 @@
             <h2>Timetabled consultations and surgeries</h2>
         </div>
 
+        <c:if test="${not empty isAdmin}">
+            <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="userSelector">
+                <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
+                <select name="userSelection">
+                    <c:forEach var="patient" items="${patients}">
+                        <option value="${patient.ID}" >${patient.firstName} ${patient.surName}</option>
+                    </c:forEach>
+                    <c:forEach var="doctor" items="${doctors}">
+                        <option value="${doctor.ID}" >${doctor.firstName} ${doctor.surName}</option>
+                    </c:forEach>
+                    <c:forEach var="nurse" items="${nurses}">
+                        <option value="${nurse.ID}" >${nurse.firstName} ${nurse.surName}</option>
+                    </c:forEach>
+                </select>
+
+                <input class="paddedInput" type="submit" value="Select user" />
+            </form>
+        </c:if>
+
+
+
         <form method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="dateSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <label for="fromDate">Show from date:</label>

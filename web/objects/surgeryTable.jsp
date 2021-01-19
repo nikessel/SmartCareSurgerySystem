@@ -24,7 +24,6 @@
                         <c:if test="${empty isPatient}">
                         <th>Patient name</th>
                         </c:if>
-                    <th>Issue</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +42,6 @@
                     </tr>
                 </c:forEach>   
             </tbody>
-    </table>
-</body>
+        </table>
+    </body>
 </html>

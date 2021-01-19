@@ -25,6 +25,11 @@
             </aside>                  
 
             <main class="main">
+                <div class="wide_card">
+                    <c:import url="objects/timetable.jsp"/>
+                    <c:import url="objects/appointmentRemover.jsp"/>
+                </div>
+
                 <div class="main-cards">
                     <div class="card">
                         <c:import url="objects/patientTable.jsp"/>

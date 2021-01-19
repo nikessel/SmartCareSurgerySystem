@@ -115,8 +115,6 @@ public class Consultation extends DatabaseObject {
     public int getID() {
         return consultationID;
     }
-    
-    
 
     @Override
     public String toString() {
@@ -125,5 +123,6 @@ public class Consultation extends DatabaseObject {
                 ", note:" + note + ", duration:" + duration +
                 ", consulationID=" + consultationID + '}';
     }
+
 
 }

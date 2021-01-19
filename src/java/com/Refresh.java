@@ -29,7 +29,7 @@ public class Refresh extends HttpServlet {
 
     int currentUserID, selectedConsultatantID, selectedHour, selectedMinute,
             selectedYear, selectedMonth, selectedDayOfMonth, checkID, selectedTimetable,
-            requestType, choice, selectedPrice;
+            requestType, choice, selectedPrice, previousUserID;
 
     double price, turnoverPaid, turnoverUnpaid, newPrice;
 
@@ -41,7 +41,7 @@ public class Refresh extends HttpServlet {
     Database database;
     String loggedInAs, jspContext, viewString;
     RequestDispatcher view;
-    User currentUser;
+    User currentUser, previousUser;
     List<Consultation> consultations;
     List<Patient> patients;
     String message, note, medication, of, setPriceFor;
@@ -705,6 +705,62 @@ public class Refresh extends HttpServlet {
 
     }
 
+    private boolean adminSetUser() {
+        boolean success = false;
+
+        try {
+            previousUserID = currentUserID;
+            previousUser = currentUser;
+
+            try {
+                currentUserID = (Integer) session.getAttribute("adminSelectedID");
+
+                int newUserID = Integer.valueOf(request.getParameterValues("userSelection")[0]);
+
+                if (currentUserID != newUserID) {
+                    currentUserID = newUserID;
+                }
+                success = true;
+            } catch (Exception ex) {
+                currentUserID = Integer.valueOf(request.getParameterValues("userSelection")[0]);
+                success = true;
+                session.setAttribute("adminSelectedID", currentUserID);
+            }
+
+            if (database.isDoctor(currentUserID)) {
+                currentUser = database.getDoctor(currentUserID);
+                session.setAttribute("isDoctor", "1");
+            } else if (database.isNurse(currentUserID)) {
+                currentUser = database.getNurse(currentUserID);
+                session.setAttribute("isNurse", "1");
+            } else if (database.isPatient(currentUserID)) {
+                currentUser = database.getPatient(currentUserID);
+                session.setAttribute("isPatient", "1");
+            }
+
+        } catch (Exception ex) {
+
+        }
+        return success;
+    }
+
+    private void adminRevertUser() {
+
+        if (database.isDoctor(currentUserID)) {
+            currentUser = database.getDoctor(currentUserID);
+            session.setAttribute("isDoctor", null);
+        } else if (database.isNurse(currentUserID)) {
+            currentUser = database.getNurse(currentUserID);
+            session.setAttribute("isNurse", null);
+        } else if (database.isPatient(currentUserID)) {
+            currentUser = database.getPatient(currentUserID);
+            session.setAttribute("isPatient", null);
+        }
+
+        currentUserID = previousUserID;
+        currentUser = previousUser;
+    }
+
     protected void initialise(int currentUserID, HttpSession session, HttpServletRequest request) {
         database = (Database) request.getServletContext().getAttribute("database");
         this.request = request;
@@ -714,13 +770,14 @@ public class Refresh extends HttpServlet {
         setBooleans();
 
         if (!isAdmin) {
-            consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+            refreshConsultations();
+        } else {
+            consultations = new ArrayList<>();
             session.setAttribute("consultations", consultations);
         }
 
         if (isEmployee) {
-            patients = database.getAllPatients();
-            session.setAttribute("patients", patients);
+            refreshPatients();
         }
 
         if (isAdmin || isPatient) {
@@ -774,12 +831,23 @@ public class Refresh extends HttpServlet {
         setBooleans();
 
         if (jspContext.contains("timetable")) {
+            if (isAdmin) {
+                adminSetUser();
+            }
 
             setTimeTable();
             refreshConsultations();
-            refreshSurgeries();
 
-        } else if (jspContext.contains("pendingConfirmer")) {
+            if (!database.isNurse(currentUserID)) {
+                refreshSurgeries();
+            }
+
+            if (isAdmin) {
+                adminRevertUser();
+            }
+
+        } else if (jspContext.contains(
+                "pendingConfirmer")) {
 
             if (approvePendingConsultation()) {
                 refreshConsultations();
@@ -799,39 +867,63 @@ public class Refresh extends HttpServlet {
 
             }
 
-        } else if (jspContext.contains("patientTable")) {
+        } else if (jspContext.contains(
+                "patientTable")) {
             setPatientTable();
 
             session.setAttribute("patients", patients);
 
-        } else if (jspContext.contains("requester")) {
+        } else if (jspContext.contains(
+                "requester")) {
             setRequestType();
             makeRequest();
 
-        } else if (jspContext.contains("pendingEmployees")) {
+        } else if (jspContext.contains(
+                "pendingEmployees")) {
             approveEmployee();
             setPendingEmployees();
-        } else if (jspContext.contains("invoiceIssuer")) {
+        } else if (jspContext.contains(
+                "invoiceIssuer")) {
             issueInvoice();
             refreshConsultations();
-        } else if (jspContext.contains("invoicePayer")) {
+        } else if (jspContext.contains(
+                "invoicePayer")) {
             payInvoice();
             refreshInvoices();
-        } else if (jspContext.contains("prescriptionIssuer")) {
+        } else if (jspContext.contains(
+                "prescriptionIssuer")) {
             addNewPrescription();
-        } else if (jspContext.contains("turnoverCalculator")) {
+        } else if (jspContext.contains(
+                "turnoverCalculator")) {
             refreshInvoices();
-        } else if (jspContext.contains("priceSetter")) {
+        } else if (jspContext.contains(
+                "priceSetter")) {
             setPrice();
-        } else if (jspContext.contains("userRemover")) {
+        } else if (jspContext.contains(
+                "userRemover")) {
             removeUser();
-        } else if (jspContext.contains("appointmentRemover")) {
+        } else if (jspContext.contains(
+                "appointmentRemover")) {
+
+            if (isAdmin) {
+                adminSetUser();
+            }
+
             removeAppointment();
             refreshConsultations();
-            refreshSurgeries();
+
+            if (!database.isNurse(currentUserID)) {
+                refreshSurgeries();
+            }
+
+            if (isAdmin) {
+                adminRevertUser();
+            }
+
         }
 
-        session.setAttribute("filterMessage", message);
+        session.setAttribute(
+                "filterMessage", message);
 
         if (isAdmin) {
             viewString = "/protected/adminDashboard.do";
