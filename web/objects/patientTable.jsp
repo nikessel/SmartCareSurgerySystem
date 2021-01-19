@@ -14,7 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        
+
         <h3>Patient table</h3> <br>
         <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="patientListSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />

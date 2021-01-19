@@ -51,6 +51,7 @@
                         <c:import url="objects/priceSetter.jsp"/>
                     </div>
                     <div class="card">
+                        <c:import url="objects/userRemover.jsp"/>
                     </div>
                 </div>
             </main>

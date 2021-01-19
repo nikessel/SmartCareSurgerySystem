@@ -404,6 +404,8 @@ public class Refresh extends HttpServlet {
         } catch (Exception e) {
             consultations = database.getAllConsultationsWhereIDIs(currentUserID);
         }
+        
+        session.setAttribute("consultations", consultations);
 
     }
 
@@ -606,8 +608,7 @@ public class Refresh extends HttpServlet {
 
             if (session.getAttribute("selectedPrice") == null) {
                 choice = Integer.parseInt(request.getParameterValues("priceSelection")[0]);
-            }
-            else {
+            } else {
                 choice = (Integer) session.getAttribute("selectedPrice");
             }
 
@@ -650,6 +651,29 @@ public class Refresh extends HttpServlet {
         } catch (Exception ex) {
 
         }
+    }
+
+    private void refreshPatients() {
+        patients = database.getAllPatients();
+        session.setAttribute("patients", patients);
+    }
+
+    private void removeUser() {
+        try {
+
+            int id = Integer.valueOf(request.getParameterValues("removeUserSelection")[0]);
+
+            database.deleteObjectFromDatabase(id);
+
+            if (database.isDoctor(id)) {
+                setDoctorsAndNurses();
+            } else {
+                refreshPatients();
+            }
+        } catch (Exception ex) {
+
+        }
+
     }
 
     protected void initialise(int currentUserID, HttpSession session, HttpServletRequest request) {
@@ -769,6 +793,11 @@ public class Refresh extends HttpServlet {
             refreshInvoices();
         } else if (jspContext.contains("priceSetter")) {
             setPrice();
+        } else if (jspContext.contains("userRemover")) {
+            removeUser();
+        } else if (jspContext.contains("consultationRemover")) {
+            removeConsultation();
+            refreshConsultations();
         }
 
         session.setAttribute("filterMessage", message);

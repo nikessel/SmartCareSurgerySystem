@@ -26,7 +26,7 @@
         <main class="main">
             <div class="wide_card">
                 <c:import url="objects/timetable.jsp"/>
-                <c:import url="objects/invoicePayer.jsp"/>
+                <c:import url="objects/consultationRemover.jsp"/>
             </div>
 
 
@@ -36,6 +36,15 @@
                 </div>
                 <div class="card">
                     <c:import url="objects/requester.jsp"/>
+                </div>
+            </div>
+
+            <div class="main-cards">
+                <div class="card">
+                    <c:import url="objects/invoicePayer.jsp"/>
+                </div>
+                <div class="card">
+
                 </div>
             </div>
 
