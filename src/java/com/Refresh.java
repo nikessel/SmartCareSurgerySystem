@@ -428,7 +428,7 @@ public class Refresh extends HttpServlet {
 
             database.addObjectToDatabase(invoice);
 
-            removeConsultation();
+            removeAppointment();
         } catch (Exception ex) {
             message = ex.toString();
         }
@@ -521,10 +521,10 @@ public class Refresh extends HttpServlet {
 
     }
 
-    private boolean removeConsultation() {
+    private boolean removeAppointment() {
         try {
 
-            int id = Integer.parseInt(request.getParameterValues("consultationSelection")[0]);
+            int id = Integer.parseInt(request.getParameterValues("removeAppointmentID")[0]);
 
             database.deleteObjectFromDatabase(id);
 
@@ -795,9 +795,10 @@ public class Refresh extends HttpServlet {
             setPrice();
         } else if (jspContext.contains("userRemover")) {
             removeUser();
-        } else if (jspContext.contains("consultationRemover")) {
-            removeConsultation();
+        } else if (jspContext.contains("appointmentRemover")) {
+            removeAppointment();
             refreshConsultations();
+            refreshSurgeries();
         }
 
         session.setAttribute("filterMessage", message);
