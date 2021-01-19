@@ -66,6 +66,10 @@ public class Patient extends User {
     public void setPatientID(int patientID) {
         this.patientID = patientID;
     }
+    
+    public int getID() {
+        return patientID;
+    }
 
     public boolean isInsured() {
         return insured;

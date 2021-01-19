@@ -395,4 +395,4 @@ create table prices (
         consultation_nurse_hourly DECIMAL(7,2)
 );
 
-insert into prices (surgery_hourly, consultation_hourly, consultation_nurse_hourly) values (1000.00, 100.00, 50.00);
+insert into prices (surgery_hourly, consultation_hourly, consultation_nurse_hourly) values (1000.00, 200.50, 100.00);

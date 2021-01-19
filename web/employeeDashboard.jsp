@@ -34,8 +34,8 @@
 
 
             <div class="wide_card">
-                
-            <h3>${filterMessage}</h3>
+
+                <h3>${filterMessage}</h3>
                 <c:import url="objects/timetable.jsp"/>
                 <c:import url="objects/invoiceIssuer.jsp"/>
             </div>
@@ -53,10 +53,15 @@
                 <div class="card">
                     <c:import url="objects/pendingConfirmer.jsp"/>
                 </div>
-                <div class="card">
 
+                <div class="card">
+                    <c:if test="${not empty isDoctor}">
+                        <c:import url="objects/prescriptionIssuer.jsp"/>
+                    </c:if>
                 </div>
             </div>
+                
+                
             <!--
                         <div class="main-overview">
                             <div class="overviewcard">

@@ -428,14 +428,14 @@ public class Database {
 
     }
 
-    public int getPrice(String of) {
+    public double getPrice(String of) {
         tableName = TABLENAMES[8];
 
         try {
             ResultSet rs1 = executeQuery("SELECT " + of + "_hourly FROM prices");
 
             while (rs1.next()) {
-                return rs1.getInt(1);
+                return rs1.getDouble(1);
             }
         } catch (SQLException ex) {
             System.out.println("Unable to get surgery price");
@@ -909,6 +909,18 @@ public class Database {
 
     }
 
+    public ArrayList<Invoice> getAllInvoices() {
+        ArrayList<Invoice> output = new ArrayList();
+        ArrayList<Object> temps = getAllFromDatabase("invoices");
+
+        temps.forEach((obj) -> {
+            output.add((Invoice) obj);
+        });
+
+        return output;
+
+    }
+
     public ArrayList<Object> getAllFromDatabaseWhereIs(String tableToGet, String where, String is) {
         ResultSet rs1 = selectFromWhere("*", tableToGet, where, is);
 
@@ -949,6 +961,24 @@ public class Database {
             if (thisConsultation.getConsultationTime().after(fromDate)
                     && thisConsultation.getConsultationTime().before(toDate)) {
                 output.add(thisConsultation);
+            }
+
+        });
+
+        return output;
+    }
+
+    public ArrayList<Invoice> getAllInvoicesFromTo(Date fromDate, Date toDate) {
+
+        ArrayList<Object> objects = getAllFromDatabase("invoices");
+        ArrayList<Invoice> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            Invoice thisInvoice = (Invoice) obj;
+
+            if (thisInvoice.getDateOfInvoice().after(fromDate)
+                    && thisInvoice.getDateOfInvoice().before(toDate)) {
+                output.add(thisInvoice);
             }
 
         });
@@ -1054,7 +1084,7 @@ public class Database {
         return output;
     }
 
-    public String addObjectToDatabase(Object object) {
+    public int addObjectToDatabase(Object object) {
         StringBuilder namesString = new StringBuilder();
         StringBuilder valuesString = new StringBuilder();
         StringBuilder updateString = new StringBuilder();
@@ -1208,8 +1238,10 @@ public class Database {
         if (thisID == -1) {
             try {
                 executeUpdate(queryString);
+                return getLastEntryID(tableName);
             } catch (SQLException ex) {
-                return ex.toString();
+                System.out.println(ex);
+                return -1;
             }
         } else {
 
@@ -1234,11 +1266,13 @@ public class Database {
             System.out.println(queryString);
             try {
                 executeUpdate(queryString);
+
             } catch (SQLException ex) {
-                return ex.toString();
+                System.out.println(ex);
+                return -1;
             }
         }
-        return "";
+        return 0;
     }
 
     public void addPasswordToUser(User user, String password) {

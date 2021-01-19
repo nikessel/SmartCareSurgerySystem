@@ -2,26 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/WEB-INF/css/style.css</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/myServletContextListener.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/TestMain.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/objects/invoicePayer.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Database.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/employeeDashboard.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/Refresh.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/com/DateFormatter.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/objects/patientTable.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/errorPage.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/patientDashboard.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/objects/pendingEmployeesConfirmer.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/databaseScript.sql</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Surgery.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/objects/requester.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/Prescription.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/src/java/model/DatabaseObject.java</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/objects/pendingConfirmer.jsp</file>
-            <file>file:/home/niklas/Documents/UWE/3rdYear/github/enterpriseSystems/assignment/SmartCareSurgerySystem/web/WEB-INF/custom.tld</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

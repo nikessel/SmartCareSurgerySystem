@@ -41,10 +41,18 @@
                         <c:import url="objects/personalInfo.jsp"/>
                     </div>
                     <div class="card">
-
+                        <h3>${filterMessage}</h3>
+                        <c:import url="objects/turnoverCalculator.jsp"/> 
                     </div>
                 </div>
 
+                <div class="main-cards">
+                    <div class="card">
+                        <c:import url="objects/priceSetter.jsp"/>
+                    </div>
+                    <div class="card">
+                    </div>
+                </div>
             </main>
 
         </div>

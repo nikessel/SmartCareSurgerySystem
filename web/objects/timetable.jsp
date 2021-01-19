@@ -22,9 +22,9 @@
         <form method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="dateSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <label for="fromDate">Show from date:</label>
-            <input type="date" id="fromDate" name="fromDate"> 
+            <input type="date" name="fromDate"> 
             <label for="toDate">to date:</label>
-            <input type="date" id="toDate" name="toDate" onchange="this.form.submit();">
+            <input type="date" name="toDate" onchange="this.form.submit();">
         </form>
 
 
