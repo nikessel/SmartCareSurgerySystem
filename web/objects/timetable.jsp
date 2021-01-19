@@ -55,7 +55,7 @@
 
         <c:if test="${selectedTimeTable == '1'}">
             <h5>Surgery timetable</h5>
-            <c:import url="objects/surgeryTable.jsp"/>
+            <c:import url="/objects/surgeryTable.jsp"/>
         </c:if>
     </body>
 </html>

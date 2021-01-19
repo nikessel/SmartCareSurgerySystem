@@ -23,7 +23,6 @@ import javax.crypto.spec.PBEKeySpec;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -979,6 +978,26 @@ public class Database {
             if (thisInvoice.getDateOfInvoice().after(fromDate)
                     && thisInvoice.getDateOfInvoice().before(toDate)) {
                 output.add(thisInvoice);
+            }
+
+        });
+
+        return output;
+    }
+
+    public ArrayList<Surgery> getAllSurgeriesWhereIDIsFromTo(int id, Date fromDate, Date toDate) {
+
+        idString = getIDString(id);
+
+        ArrayList<Object> objects = getAllFromDatabaseWhereIs("surgeries", idString, String.valueOf(id));
+        ArrayList<Surgery> output = new ArrayList();
+
+        objects.forEach((obj) -> {
+            Surgery thisSurgery = (Surgery) obj;
+
+            if (thisSurgery.getSurgeryTime().after(fromDate)
+                    && thisSurgery.getSurgeryTime().before(toDate)) {
+                output.add(thisSurgery);
             }
 
         });

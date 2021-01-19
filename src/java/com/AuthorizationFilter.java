@@ -96,8 +96,8 @@ public class AuthorizationFilter implements Filter {
 
         } catch (Exception e) {
 
-            //session.setAttribute("message", "You are not allowed to access this resource");
-            session.setAttribute("message", e.toString());
+            session.setAttribute("message", "You are not allowed to access this resource");
+            //session.setAttribute("message", e.toString());
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);

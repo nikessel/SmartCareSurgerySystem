@@ -20,7 +20,7 @@
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <select name="pendingConsultationSelection">
                 <c:forEach var="pendingConsultation" items="${pendingConsultations}">
-                    <option value="${pendingConsultation.ID}" >${pendingConsultation.patient.firstName} ${pendingConsultation.patient.surName} ${ex:formatDate(pendingConsultation["consultationTime"], "dd-MM-yyyy HH:mm")}</option>
+                    <option value="${pendingConsultation.ID}" >${pendingConsultation.patient.firstName} ${pendingConsultation.patient.surName} ${ex:formatDate(pendingConsultation["consultationTime"], "dd-MM-yyyy HH:mm")}: ${pendingConsultation.note}</option>
                 </c:forEach>
             </select>
             <br><br>

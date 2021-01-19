@@ -508,12 +508,17 @@ public class Refresh extends HttpServlet {
     private void refreshSurgeries() {
 
         try {
-            surgeries = database.getAllSurgeriesWhereIDIs(currentUserID);
 
-            session.setAttribute("surgeries", surgeries);
-        } catch (Exception ex) {
-            message = ex.toString();
+            fromDate = Date.valueOf(request.getParameter("fromDate"));
+            toDate = Date.valueOf(request.getParameter("toDate"));
+
+            surgeries = database.getAllSurgeriesWhereIDIsFromTo(currentUserID, fromDate, toDate);
+
+        } catch (Exception e) {
+            surgeries = database.getAllSurgeriesWhereIDIs(currentUserID);
         }
+
+        session.setAttribute("surgeries", surgeries);
 
     }
 
@@ -772,6 +777,7 @@ public class Refresh extends HttpServlet {
 
             setTimeTable();
             refreshConsultations();
+            refreshSurgeries();
 
         } else if (jspContext.contains("pendingConfirmer")) {
 
