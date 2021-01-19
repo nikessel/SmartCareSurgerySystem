@@ -404,7 +404,7 @@ public class Refresh extends HttpServlet {
         } catch (Exception e) {
             consultations = database.getAllConsultationsWhereIDIs(currentUserID);
         }
-        
+
         session.setAttribute("consultations", consultations);
 
     }
@@ -412,23 +412,35 @@ public class Refresh extends HttpServlet {
     private void issueInvoice() {
 
         try {
-            int id = Integer.parseInt(request.getParameterValues("consultationSelection")[0]);
-            consultation = database.getConsultation(id);
-            patient = consultation.getPatient();
+            int id = Integer.parseInt(request.getParameterValues("appointmentSelection")[0]);
 
-            if (consultation.getNurse().getNurseID() == 30000) {
-                price = database.getPrice("consultation") / 60 * consultation.getDuration();
+            if (database.isConsultation(id)) {
+                consultation = database.getConsultation(id);
+                patient = consultation.getPatient();
+
+                if (consultation.getNurse().getNurseID() == 30000) {
+                    price = database.getPrice("consultation") / 60 * consultation.getDuration();
+                } else {
+                    price = database.getPrice("consultation_nurse") / 60 * consultation.getDuration();
+                }
+
+                invoice = new Invoice(patient, price,
+                        Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
+                        false, patient.isInsured());
             } else {
-                price = database.getPrice("consultation_nurse") / 60 * consultation.getDuration();
-            }
+                surgery = database.getSurgery(id);
+                patient = surgery.getPatient();
 
-            invoice = new Invoice(patient, price,
-                    Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
-                    false, patient.isInsured());
+                price = database.getPrice("surgery") / 60 * surgery.getDuration();
+
+                invoice = new Invoice(patient, price,
+                        Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
+                        false, patient.isInsured());
+            }
 
             database.addObjectToDatabase(invoice);
 
-            removeAppointment();
+            removeAppointment(id);
         } catch (Exception ex) {
             message = ex.toString();
         }
@@ -525,6 +537,18 @@ public class Refresh extends HttpServlet {
         try {
 
             int id = Integer.parseInt(request.getParameterValues("removeAppointmentID")[0]);
+
+            database.deleteObjectFromDatabase(id);
+
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
+
+    private boolean removeAppointment(int id) {
+        try {
 
             database.deleteObjectFromDatabase(id);
 

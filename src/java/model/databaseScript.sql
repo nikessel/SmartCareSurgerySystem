@@ -63,7 +63,7 @@ create table nurses (
 );
 
 insert into nurses (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('none', '0000', '0000', 'none', 'none', '1970-01-01', '1 Test Avenue--TE00 0ST-testCounty-TestTown-999999999999', false, false);
-insert into nurses (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('nurse', '77027f84aa6f001db0b0d44b253f23e906615843bc06cff3acedfe939cb2556a1ad4d144d95276b23228df0decfc3478c1eb5ab4792b5cad23de90448756c9af', 'a94ed051440a587c411ca18c6b74315878e31733c93900e9b511013aa0844dc6', 'Ms', 'First', '1980-05-02', '1177 Maple Drive--IW213 9LO-testCounty3-testTown3-5235443444322', false, false);
+insert into nurses (username, password_hash, salt, first_name, sur_name, date_of_birth, address, is_full_time, pending) values ('nurse', '77027f84aa6f001db0b0d44b253f23e906615843bc06cff3acedfe939cb2556a1ad4d144d95276b23228df0decfc3478c1eb5ab4792b5cad23de90448756c9af', 'a94ed051440a587c411ca18c6b74315878e31733c93900e9b511013aa0844dc6', 'Ms', 'Best', '1980-05-02', '1177 Maple Drive--IW213 9LO-testCounty3-testTown3-5235443444322', false, false);
 
 
 create table patients (

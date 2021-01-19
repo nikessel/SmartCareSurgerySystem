@@ -45,7 +45,7 @@ public class Logout extends HttpServlet {
             session.invalidate();
         }
 
-        request.getServletContext().setAttribute("errorMessage", "");
+        request.getServletContext().setAttribute("message", "");
         response.sendRedirect(request.getContextPath() + "/login.do");
     }
 

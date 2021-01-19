@@ -34,8 +34,6 @@
 
 
             <div class="wide_card">
-
-                <h3>${filterMessage}</h3>
                 <c:import url="objects/timetable.jsp"/>
                 <c:import url="objects/invoiceIssuer.jsp"/>
             </div>

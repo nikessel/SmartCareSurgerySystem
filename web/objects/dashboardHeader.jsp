@@ -15,7 +15,7 @@
     </head>
     <body>
         <header class="header">
-            <h3>Welcome, ${currentUser.firstName} ${currentUser.surName} ${message}</h3>
+            <h3>Welcome, ${currentUser.firstName} ${currentUser.surName}</h3>
             <div class="inline">
                 <p>You are logged in as a${loggedInAs}</p> <br>
                 <form class="logout_form" action="${pageContext.request.contextPath}/logout.do" method="post">

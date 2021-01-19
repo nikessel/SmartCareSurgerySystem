@@ -10,20 +10,24 @@
         </style>
     </head>
     <body>
-        <div class="dashboard login">
+        <div class="login card">
             <h1>Smart Care Surgery System Password Management</h1>
             <h2>${message}</h2>
             <br>
-            <form action="${pageContext.request.contextPath}/passwordChanger.do" method="post">
-                <input id="username" name="username" required="required" type="text" placeholder="Username"/>
-                <input id="password" name="password" required="required" type="password" placeholder="Password" />
-                <input id="updatePassword" name="updatePassword" required="required" type="password" placeholder="Input new password" />
-                <input id="repeatPassword" name="repeatPassword" required="required" type="password" placeholder="Repeat password" />
+            <form class="paddedForm" action="${pageContext.request.contextPath}/passwordChanger.do" method="post">
+                <input name="username" required="required" type="text" placeholder="Username"/>
+                <br><br>
+                <input name="password" required="required" type="password" placeholder="Password" />
+                <br><br>
+                <input name="updatePassword" required="required" type="password" placeholder="Input new password" />
+                <br><br>
+                <input name="repeatPassword" required="required" type="password" placeholder="Repeat password" />
+                <br><br>
                 <input type="submit" value="Submit" />
             </form>
             <br>
             <br>
-            <form action="${pageContext.request.contextPath}/logout.do" method="post">
+            <form class="paddedForm" action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Back" />
             </form>
 

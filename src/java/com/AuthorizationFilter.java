@@ -92,8 +92,6 @@ public class AuthorizationFilter implements Filter {
                 throw new Exception();
             }
 
-            session.setAttribute("message", "");
-
             chain.doFilter(httpRequest, response);
 
         } catch (Exception e) {

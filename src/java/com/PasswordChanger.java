@@ -6,6 +6,7 @@
 package com;
 
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,49 +33,57 @@ public class PasswordChanger extends HttpServlet {
     Database database;
     HttpSession session;
     int currentUserID;
+    RequestDispatcher view;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        username = request.getParameter("username");
-        password = request.getParameter("password");
-        updatedPassword = request.getParameter("updatePassword");
-        repeatPassword = request.getParameter("repeatPassword");
-        currentUserID = -1;
-        message = "";
-        database = (Database) getServletContext().getAttribute("database");
-        session = request.getSession();
+        view = request.getRequestDispatcher("/passwordChanger.jsp");
+        
 
-        if (!updatedPassword.equals(repeatPassword)) {
-            message = "The entered password update does not match";
-        } else {
-            try {
+        try {
+            username = request.getParameter("username");
+            password = request.getParameter("password");
+            updatedPassword = request.getParameter("updatePassword");
+            repeatPassword = request.getParameter("repeatPassword");
+            currentUserID = -1;
+            message = "";
+            database = (Database) getServletContext().getAttribute("database");
+            session = request.getSession();
 
-                currentUserID = database.getUserID(username, password);
+            if (!updatedPassword.equals(repeatPassword)) {
+                message = "The entered password update does not match";
+            } else {
+                try {
 
-                if (10000 <= currentUserID && currentUserID <= 49999) {
+                    currentUserID = database.getUserID(username, password);
 
-                    database.setPassword(currentUserID, updatedPassword);
-                    message = "Password changed";
+                    if (database.isUser(currentUserID)) {
 
-                } else if (currentUserID == -2) {
-                    message = "Username not found";
-                } else if (currentUserID == -1) {
-                    message = "Invalid password";
-                } else {
-                    throw new Exception();
+                        database.setPassword(currentUserID, updatedPassword);
+                        message = "Password changed";
+
+                    } else if (currentUserID == -2) {
+                        message = "Username not found";
+                    } else if (currentUserID == -1) {
+                        message = "Invalid password";
+                    } else {
+                        throw new Exception();
+                    }
+
+                } catch (Exception e) {
+                    message = "Error setting password";
                 }
 
-            } catch (Exception e) {
-                message = "Error setting password";
             }
-
+        } catch (Exception ex) {
+            
         }
 
         session.setAttribute("message", message);
 
-        response.sendRedirect(request.getContextPath() + "/passwordChanger.jsp");
+        view.forward(request, response);
 
     }
 

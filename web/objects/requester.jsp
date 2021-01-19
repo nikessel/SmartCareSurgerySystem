@@ -14,8 +14,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h3>${filterMessage}</h3>
-
         <c:if test="${empty requestType}">
             <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="requestTypeSelector">
                 <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />

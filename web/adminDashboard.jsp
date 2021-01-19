@@ -41,7 +41,6 @@
                         <c:import url="objects/personalInfo.jsp"/>
                     </div>
                     <div class="card">
-                        <h3>${filterMessage}</h3>
                         <c:import url="objects/turnoverCalculator.jsp"/> 
                     </div>
                 </div>

@@ -28,6 +28,7 @@ public class AuthenticationFilter implements Filter {
     private int currentUserID;
     private boolean isPending;
     private HttpSession session;
+    RequestDispatcher view;
     private Database database;
 
     private boolean wrongUsername() {
@@ -42,7 +43,7 @@ public class AuthenticationFilter implements Filter {
 
         if (database.isUser(currentUserID)) {
             session.setAttribute("isUser", "1");
-            
+
             if (database.isEmployee(currentUserID)) {
                 session.setAttribute("isEmployee", "1");
 
@@ -69,46 +70,49 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         response.setContentType("text/html;charset=UTF-8");
 
-        String username = httpRequest.getParameter("username");
-        String password = httpRequest.getParameter("password");
         session = httpRequest.getSession();
         database = (Database) httpRequest.getServletContext().getAttribute("database");
 
+        view = httpRequest.getRequestDispatcher("/login.jsp");
+
         errorMessage = "";
 
-        try {
-            currentUserID = database.getUserID(username, password);
-            isPending = database.isUserPending(currentUserID);
+        if (httpRequest.getParameter("username") != null) {
+            try {
+                String username = httpRequest.getParameter("username");
+                String password = httpRequest.getParameter("password");
+                currentUserID = database.getUserID(username, password);
+                isPending = database.isUserPending(currentUserID);
 
-            if (isPending) {
-                throw new NullPointerException();
-            } else {
-
-                if (currentUserID >= 0) {
-                    httpRequest.setAttribute("userID", currentUserID);
-                    setBooleans();
-                    chain.doFilter(httpRequest, response);
-                } else {
+                if (isPending) {
                     throw new NullPointerException();
+                } else {
+
+                    if (currentUserID >= 0) {
+                        httpRequest.setAttribute("userID", currentUserID);
+                        setBooleans();
+                        chain.doFilter(httpRequest, response);
+                        return;
+                    } else {
+                        throw new NullPointerException();
+                    }
                 }
+
+            } catch (NullPointerException e) {
+                if (isPending) {
+                    errorMessage = "Admin approval required before this user can login";
+                } else if (wrongUsername()) {
+                    errorMessage = "Invalid username, please try again";
+                } else if (wrongPassword()) {
+                    errorMessage = "Invalid password, please try again";
+                }
+
+                httpRequest.getServletContext().setAttribute("message", errorMessage);
+                session.setAttribute("message", errorMessage);
+
             }
-
-        } catch (NullPointerException e) {
-            if (isPending) {
-                errorMessage = "Admin approval required before this user can login";
-            } else if (wrongUsername()) {
-                errorMessage = "Invalid username, please try again";
-            } else if (wrongPassword()) {
-                errorMessage = "Invalid password, please try again";
-            }
-
-            httpRequest.getServletContext().setAttribute("message", errorMessage);
-            session.setAttribute("message", errorMessage);
-
-            RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/login.jsp");
-            requestDispatcher.forward(httpRequest, response);
         }
-
+        view.forward(httpRequest, response);
     }
 
     @Override

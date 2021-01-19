@@ -15,7 +15,7 @@
             <h3>${message}</h3>
 
             <c:if test = "${empty userType}">
-                <form action="${pageContext.request.contextPath}/addUser.do" method="post">
+                <form class="paddedForm" action="${pageContext.request.contextPath}/addUser.do" method="post">
                     <select id="userType" name="userType">
                         <option value="1">Patient</option>
                         <option value="2">Doctor</option>
@@ -26,14 +26,14 @@
             </c:if>
 
             <c:if test = "${not empty userType}">
-                <form action="${pageContext.request.contextPath}/addUser.do" method="post">
+                <form class="paddedForm" action="${pageContext.request.contextPath}/addUser.do" method="post">
 
                     <input id="lookupPostcode" name="lookupPostcode" required="required" type="text" placeholder="Lookup postcode"/>
                     <input type="submit" value="Submit" />
 
                 </form>
                 <br>
-                <form action="${pageContext.request.contextPath}/addUser.do" method="post">
+                <form class="paddedForm" action="${pageContext.request.contextPath}/addUser.do" method="post">
                     <h3>Credentials</h3>
                     <input id="username" name="username" required="required" type="text" placeholder="Username" value="${username}"/>
                     <input id="password" name="password" required="required" type="password" placeholder="Password"/>
@@ -66,7 +66,7 @@
                 <br>
             </c:if>
             <br>
-            <form action="${pageContext.request.contextPath}/logout.do" method="post">
+            <form class="paddedForm" action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Back" />
             </form>
 
