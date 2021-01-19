@@ -14,10 +14,10 @@
         </style>
     </head>
     <body>
-        <div class="login">
+        <div class="login card">
             <h1>Error page</h1>
             <h2>${message}</h2>
-            <form action="${pageContext.request.contextPath}/logout.do" method="post">
+            <form class="paddedForm" action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Return to login" />
             </form>
         </div>

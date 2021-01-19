@@ -28,7 +28,7 @@ public class AuthorizationFilter implements Filter {
     private int currentUserID;
     private HttpSession session;
     private Database database;
-    private boolean isUser, isAdmin, isEmployee, isPatient;
+    private boolean isUser, isAdmin, isDoctor, isNurse, isPatient;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -36,18 +36,20 @@ public class AuthorizationFilter implements Filter {
     }
 
     private void setBooleans() {
-        isUser = isAdmin = isEmployee = isPatient = false;
+        isUser = isAdmin = isDoctor = isNurse = isPatient = false;
 
         if (session.getAttribute("isUser") != null) {
             isUser = true;
 
-            if (session.getAttribute("isEmployee") != null) {
-                isEmployee = true;
+            if (session.getAttribute("isAdmin") != null) {
+                isAdmin = true;
 
-                if (session.getAttribute("isAdmin") != null) {
-                    isAdmin = true;
+            } else if (session.getAttribute("isDoctor") != null) {
+                isDoctor = true;
 
-                }
+            } else if (session.getAttribute("isNurse") != null) {
+                isNurse = true;
+
             } else {
                 isPatient = true;
             }
@@ -79,12 +81,12 @@ public class AuthorizationFilter implements Filter {
 
         try {
 
-            if ((isUser && requestURI.endsWith(protectedUrlPatterns[0])) ||
-                    isUser && requestURI.contains("/objects/")) {
+            if ((isUser && requestURI.endsWith(protectedUrlPatterns[0]))
+                    || isUser && requestURI.contains("/objects/")) {
 
             } else if (isAdmin && requestURI.endsWith(protectedUrlPatterns[1])) {
 
-            } else if (isEmployee && requestURI.endsWith(protectedUrlPatterns[2])) {
+            } else if ((isNurse || isDoctor) && requestURI.endsWith(protectedUrlPatterns[2])) {
 
             } else if (isPatient && requestURI.endsWith(protectedUrlPatterns[3])) {
 

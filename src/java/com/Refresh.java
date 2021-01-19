@@ -33,7 +33,7 @@ public class Refresh extends HttpServlet {
 
     double price, turnoverPaid, turnoverUnpaid, newPrice;
 
-    boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient, deleteConsultation, issueInvoice;
+    boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient, deleteConsultation, issueInvoice, approve;
     HttpSession session;
     HttpServletRequest request;
     Cookie cookie;
@@ -117,11 +117,11 @@ public class Refresh extends HttpServlet {
                     pendingConsultations.add(tempConsultation);
                 }
             }
-            session.setAttribute("pendingConsultations", pendingConsultations);
+
         } catch (Exception ex) {
 
         }
-
+        session.setAttribute("pendingConsultations", pendingConsultations);
     }
 
     private void setPendingSurgeries() {
@@ -140,11 +140,11 @@ public class Refresh extends HttpServlet {
                     pendingSurgeries.add(tempSurgery);
                 }
             }
-            session.setAttribute("pendingSurgeries", pendingSurgeries);
+
         } catch (Exception ex) {
             message = ex.toString();
         }
-
+        session.setAttribute("pendingSurgeries", pendingSurgeries);
     }
 
     private void setPendingPrescriptions() {
@@ -163,11 +163,11 @@ public class Refresh extends HttpServlet {
                     pendingPrescriptions.add(tempPrescription);
                 }
             }
-            session.setAttribute("pendingPrescriptions", pendingPrescriptions);
+
         } catch (Exception ex) {
             message = ex.toString();
         }
-
+        session.setAttribute("pendingPrescriptions", pendingPrescriptions);
     }
 
     private void setPendingEmployees() {
@@ -195,6 +195,7 @@ public class Refresh extends HttpServlet {
     private void approveEmployee() {
         try {
             int id = Integer.parseInt(request.getParameterValues("pendingEmployeeSelection")[0]);
+
             boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
 
             if (approve) {
@@ -305,7 +306,12 @@ public class Refresh extends HttpServlet {
     private boolean approvePendingConsultation() {
         try {
             int id = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
-            boolean approve = Boolean.parseBoolean(request.getParameter("approveConsultation"));
+
+            try {
+                approve = Boolean.parseBoolean(request.getParameter("approveConsultation"));
+            } catch (Exception ex) {
+                approve = false;
+            }
 
             if (approve) {
                 database.approve(id);
@@ -323,7 +329,11 @@ public class Refresh extends HttpServlet {
     private boolean approvePendingSurgery() {
         try {
             int id = Integer.parseInt(request.getParameterValues("pendingSurgerySelection")[0]);
-            boolean approve = Boolean.parseBoolean(request.getParameter("approveSurgery"));
+            try {
+                approve = Boolean.parseBoolean(request.getParameter("approveSurgery"));
+            } catch (Exception ex) {
+                approve = false;
+            }
 
             if (approve) {
                 database.approve(id);
@@ -341,7 +351,11 @@ public class Refresh extends HttpServlet {
     private boolean approvePendingPrescription() {
         try {
             int id = Integer.parseInt(request.getParameterValues("pendingPrescriptionSelection")[0]);
-            boolean approve = Boolean.parseBoolean(request.getParameter("approvePrescription"));
+            try {
+                approve = Boolean.parseBoolean(request.getParameter("approvePrescription"));
+            } catch (Exception ex) {
+                approve = false;
+            }
 
             if (approve) {
                 database.approve(id);
@@ -673,7 +687,6 @@ public class Refresh extends HttpServlet {
             } catch (Exception ex) {
 
             }
-            message = String.valueOf(request.getParameter("newPrice"));
             session.setAttribute("setPriceFor", setPriceFor);
             session.setAttribute("selectedPrice", choice);
 
@@ -759,6 +772,17 @@ public class Refresh extends HttpServlet {
         return success;
     }
 
+    private void setPricesFromDatabase() {
+        double consultationPrice = database.getPrice("consultation");
+        double consultationPriceNurse = database.getPrice("consultation_nurse");
+        double surgeryPrice = database.getPrice("surgery");
+        
+        
+        session.setAttribute("consultationPrice", consultationPrice);
+        session.setAttribute("consultationPriceNurse", consultationPriceNurse);
+        session.setAttribute("surgeryPrice", surgeryPrice);
+    }
+
     private void adminRevertUser() {
 
         currentUserID = previousUserID;
@@ -771,6 +795,7 @@ public class Refresh extends HttpServlet {
         this.session = session;
         this.currentUserID = currentUserID;
         selectedTimetable = 0;
+        setPricesFromDatabase();
         setBooleans();
 
         if (!isAdmin) {
@@ -853,23 +878,16 @@ public class Refresh extends HttpServlet {
         } else if (jspContext.contains(
                 "pendingConfirmer")) {
 
-            if (approvePendingConsultation()) {
-                refreshConsultations();
-                setPendingConsultations();
+            approvePendingConsultation();
+            approvePendingSurgery();
+            approvePendingPrescription();
 
-            }
-
-            if (approvePendingSurgery()) {
-                refreshSurgeries();
-                setPendingSurgeries();
-
-            }
-
-            if (approvePendingPrescription()) {
-                refreshPrescriptions();
-                setPendingPrescriptions();
-
-            }
+            setPendingConsultations();
+            refreshConsultations();
+            setPendingSurgeries();
+            refreshSurgeries();
+            setPendingPrescriptions();
+            refreshPrescriptions();
 
         } else if (jspContext.contains(
                 "patientTable")) {
@@ -903,6 +921,7 @@ public class Refresh extends HttpServlet {
         } else if (jspContext.contains(
                 "priceSetter")) {
             setPrice();
+            setPricesFromDatabase();
         } else if (jspContext.contains(
                 "userRemover")) {
             removeUser();

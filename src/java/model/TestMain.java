@@ -24,9 +24,11 @@ public class TestMain {
         Database database = new Database();
         
         database.connect();
-               System.out.println(database.getPrice("consultation"));
-        database.setPrice("consultation", 55.55);
-        System.out.println(database.getPrice("consultation"));
+        
+        
+               System.out.println(database.getPrice("surgery"));
+        database.setPrice("surgery", 55.55);
+        System.out.println(database.getPrice("surgery"));
         
         System.exit(0);
         

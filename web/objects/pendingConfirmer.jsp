@@ -26,7 +26,7 @@
             <br><br>
 
             <input type="checkbox" name="approveConsultation" value="true"/>
-            <label for="approve">Approve request</label>
+            <label for="approveConsultation">Approve request</label>
             <input class="paddedInput" type="submit" value="Confirm" />
         </form>
 
@@ -42,7 +42,7 @@
 
             <br><br>
             <input type="checkbox" name="approveSurgery" value="true"/>
-            <label for="approve">Approve request</label>
+            <label for="approveSurgery">Approve request</label>
             <input class="paddedInput" type="submit" value="Confirm" />
         </form>
 
