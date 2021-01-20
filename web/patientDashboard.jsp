@@ -18,32 +18,24 @@
         <c:import url="objects/keepScrollPosition.html"/>
         <c:import url="objects/dashboardHeader.jsp"/>
 
-        <aside class="sidenav">
-
-        </aside>
-
         <main class="main">
-            <div class="wideCard">
-                <c:import url="objects/timetable.jsp"/>
-                <c:import url="objects/appointmentRemover.jsp"/>
-            </div>
-
 
             <div class="mediumCardsMain">
                 <div class="mediumCard">
-                    <c:import url="objects/personalInfo.jsp"/>
+                    <c:import url="objects/timetable.jsp"/>
+                    <c:import url="objects/appointmentRemover.jsp"/>
+
                 </div>
-                <div class="mediumCard">
+                <div class="smallCard">
                     <c:import url="objects/requester.jsp"/>
                 </div>
-            </div>
 
-            <div class="mediumCardsMain">
-                <div class="mediumCard">
+
+                <div class="smallCard">
                     <c:import url="objects/invoicePayer.jsp"/>
                 </div>
-                <div class="mediumCard">
-
+                <div class="extraPadding flexDisplay smallCard">
+                    <c:import url="objects/personalInfo.jsp"/>
                 </div>
             </div>
 

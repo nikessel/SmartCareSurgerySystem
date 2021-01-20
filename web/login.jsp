@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-        <div class="wideCard login">
+        <div class="mediumCard login">
             <h1>Smart Care Surgery System</h1>
             <h2>Login</h2>
             <br>
