@@ -11,6 +11,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
+        
+        <h4>${message2}</h4>
         <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="invoicePayer">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <select name="invoiceSelection">

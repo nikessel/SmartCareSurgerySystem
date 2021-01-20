@@ -16,7 +16,7 @@
     <body>
         <div class="login card">
             <h1>Error page</h1>
-            <h2>${message}</h2>
+            <h2>${message} ${tempMessage}</h2>
             <form class="paddedForm" action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Return to login" />
             </form>

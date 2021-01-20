@@ -33,7 +33,7 @@ public class Refresh extends HttpServlet {
     private double price, turnoverPaid, turnoverUnpaid, newPrice, consultationPrice,
             consultationPriceNurse, surgeryPrice;
     private boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient, approve,
-            resetBookingType, success;
+            resetRequestType, success;
 
     private BigDecimal rounded;
 
@@ -423,6 +423,10 @@ public class Refresh extends HttpServlet {
         try {
             prescriptions = database.getAllPrescriptionsWhereIDIs(currentUserID);
 
+            if (prescriptions.size() == 0 && isPatient) {
+                message = "You have no existing prescriptions to extend";
+            }
+
         } catch (Exception ex) {
             message = ex.toString();
         }
@@ -482,8 +486,10 @@ public class Refresh extends HttpServlet {
                     session.setAttribute("consultations", consultations);
                     break;
                 case 1:
+
                     surgeries = database.getAllSurgeriesWhereIDIs(currentUserID);
                     session.setAttribute("surgeries", surgeries);
+
                     break;
             }
 
@@ -511,7 +517,7 @@ public class Refresh extends HttpServlet {
     Due to their similarity they are all handled by the same method.
     
      */
-    private Boolean makeRequest() {
+    private void makeRequest() {
 
         try {
             selectedConsultatantID = Integer.parseInt(request.getParameterValues("selectedConsultatantID")[0]);
@@ -558,9 +564,11 @@ public class Refresh extends HttpServlet {
 
                     consultation = new Consultation(patient, doctor, nurse, timestamp, note, 10);
                     database.addObjectToDatabase(consultation);
+                    message = "Consultation appointment request sent";
                 } else {
                     surgery = new Surgery(patient, doctor, timestamp, 10);
                     database.addObjectToDatabase(surgery);
+                    message = "Surgery appointment request sent";
                 }
 
                 // Requested object is a prescription
@@ -573,12 +581,12 @@ public class Refresh extends HttpServlet {
                 database.addObjectToDatabase(prescription);
 
                 database.setPending(thisID, true);
+                message = "Prescription extension request sent";
 
             }
 
         } catch (Exception ex) {
         }
-        return false;
     }
 
     /*  ---------- Add new object methods ----------
@@ -602,6 +610,8 @@ public class Refresh extends HttpServlet {
                 thisID = database.addObjectToDatabase(prescription);
 
                 database.setPending(thisID, false);
+                
+                message = "The new prescription has been sent to the patient";
 
                 return true;
             }
@@ -658,6 +668,12 @@ public class Refresh extends HttpServlet {
 
             database.addObjectToDatabase(invoice);
 
+            if (invoice.isInsured()) {
+                message = "Invoice paid by the NHS";
+            } else {
+                message = "Invoice settled from your bank account";
+            }
+
         } catch (Exception ex) {
             message = ex.toString();
         }
@@ -693,9 +709,9 @@ public class Refresh extends HttpServlet {
     /*  ---------- Set single attribute methods ----------   */
     private void setRequestType() {
         try {
-            resetBookingType = Boolean.parseBoolean(request.getParameter("resetBookingType"));
+            resetRequestType = Boolean.parseBoolean(request.getParameter("resetBookingType"));
 
-            if (resetBookingType) {
+            if (resetRequestType) {
                 session.setAttribute("requestType", null);
                 return;
             }
@@ -703,6 +719,10 @@ public class Refresh extends HttpServlet {
             requestType = Integer.parseInt(request.getParameterValues("requestTypeSelection")[0]);
 
             session.setAttribute("requestType", requestType);
+
+            if (requestType == 2) {
+                refreshPrescriptions();
+            }
 
         } catch (Exception ex) {
 
@@ -894,9 +914,7 @@ public class Refresh extends HttpServlet {
 
                 setPendingEmployees();
             } else {
-                // Patients need a list of their prescriptions
                 currentUser = database.getPatient(currentUserID);
-                refreshPrescriptions();
                 loggedInAs = " patient";
             }
         }
@@ -936,6 +954,12 @@ public class Refresh extends HttpServlet {
 
         // Setup local booleans from session attributes
         setBooleans();
+
+        message = "";
+
+        session.setAttribute("message1", "");
+        session.setAttribute("message2", "");
+        session.setAttribute("message3", "");
 
         /* --------- jspContext callers ----------
         
@@ -984,31 +1008,36 @@ public class Refresh extends HttpServlet {
             setRequestType();
             makeRequest();
 
+            session.setAttribute("message1", message);
+
         } else if (jspContext.contains("pendingEmployees")) {
             approveEmployee();
             setPendingEmployees();
-            
+
         } else if (jspContext.contains("invoiceIssuer")) {
             issueInvoice();
             refreshConsultations();
-            
+
         } else if (jspContext.contains("invoicePayer")) {
             payInvoice();
             refreshInvoices();
-            
+
+            session.setAttribute("message2", message);
+
         } else if (jspContext.contains("prescriptionIssuer")) {
             addNewPrescription();
-            
+            session.setAttribute("message3", message);
+
         } else if (jspContext.contains("turnoverCalculator")) {
             refreshInvoices();
-            
+
         } else if (jspContext.contains("priceSetter")) {
             setPrice();
             setPricesFromDatabase();
-            
+
         } else if (jspContext.contains("userRemover")) {
             removeUser();
-            
+
         } else if (jspContext.contains("appointmentRemover")) {
 
             if (isAdmin) {

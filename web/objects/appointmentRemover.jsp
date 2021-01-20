@@ -24,8 +24,8 @@
                                 <option value="${consultation.ID}" >
                                     Consultation time: ${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy HH:mm")}
                                     , with patient ${consultation.patient.firstName} ${consultation.patient.surName}</option>
-                            </c:when>
-                            <c:when test = "${consultation.doctor.ID == '20000'}">
+                                </c:when>
+                                <c:when test = "${consultation.doctor.ID == '20000'}">
                                 <option value="${consultation.ID}" >
                                     Consultation time: ${ex:formatDate(consultation["consultationTime"], "dd-MM-yyyy HH:mm")}
                                     , with nurse ${consultation.nurse.firstName} ${consultation.nurse.surName}</option>
@@ -50,10 +50,17 @@
                 <select name="removeAppointmentID">
                     <c:forEach var="surgery" items="${surgeries}">
                         <c:choose>
-                            <c:when test = "${not empty isDoctor}">
-                                <option value="${surgery.ID}" >
-                                    Surgery time: ${ex:formatDate(surgery["surgeryTime"], "dd-MM-yyyy HH:mm")}
-                                    , with patient ${surgery.patient.firstName} ${surgery.patient.surName}</option>
+                            <c:when test = "${not empty isDoctor or not empty isPatient}">
+                                <c:if test="${not empty isDoctor}">
+                                    <option value="${surgery.ID}" >
+                                        Surgery time: ${ex:formatDate(surgery["surgeryTime"], "dd-MM-yyyy HH:mm")}
+                                        , with patient ${surgery.patient.firstName} ${surgery.patient.surName}</option>
+                                    </c:if>
+                                    <c:if test="${not empty isPatient}">
+                                    <option value="${surgery.ID}" >
+                                        Surgery time: ${ex:formatDate(surgery["surgeryTime"], "dd-MM-yyyy HH:mm")}
+                                        , with doctor ${surgery.doctor.firstName} ${surgery.doctor.surName}</option>
+                                    </c:if>
                                 </c:when>
                                 <c:otherwise> 
                                 <option value="${consultation.ID}" >

@@ -14,18 +14,7 @@
     </head>
     <body>
         <h3>Invoice table</h3> <br>
-        <%--
-        <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="invoiceListSelectior">
-            <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
-            <select name="paidSelection" onchange="this.form.submit();">
-                <option disabled selected value>Show invoice status</option>
-                <option value="0">Not paid
-                <option value="1">Paid
-                <option value="2">All
-            </select>
-        </form>
-            --%>
-      
+
         <form method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="dateSelector">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
             <label for="fromDate">Show from date:</label>

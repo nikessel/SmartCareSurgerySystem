@@ -16,7 +16,7 @@
         <h3>Set new prices</h3> <br>
         
         <h4>Current prices: </h4>
-        <h5>Doctor consultations: ${consultationPrice}, Nurse consultations: ${consultationPriceNurse}, Surgeries: ${surgeryPrice}</h5>
+        <h5>Doctor consultations: £${consultationPrice}, Nurse consultations: £${consultationPriceNurse}, Surgeries: £${surgeryPrice}</h5>
 
         <c:if test="${empty selectedPrice}">
 

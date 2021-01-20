@@ -13,6 +13,8 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <h4>${message1}</h4>
+        
         <c:if test="${empty requestType}">
             <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="requestTypeSelector">
                 <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
@@ -27,6 +29,7 @@
 
         <c:if test="${not empty requestType}">
 
+            <h4>${requesterMessage}</h4>
             <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="requester">
                 <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
 

@@ -14,7 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h3>Pending requests${message}</h3>
+        <h3>Pending requests</h3>
         <h4>Consultations</h4>
         <form class="paddedForm" method="post" action="${pageContext.request.contextPath}/protected/refresh.do" name="pendingConsultationConfirmer">
             <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
