@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,10 +11,11 @@ import model.Database;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
-@WebServlet("/passwordChanger")
 
+// Requests and attempts to set a new password for a given user
 public class PasswordChanger extends HttpServlet {
 
     /**
@@ -31,53 +27,61 @@ public class PasswordChanger extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private String username, password, updatedPassword, repeatPassword, message;
+    private Database database;
+    private HttpSession session;
+    private int currentUserID;
+    private RequestDispatcher view;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        int currentUserID = -1;
-        boolean error = false;
-        String updatedPassword;
-        String message = "";
-        Database database = (Database) getServletContext().getAttribute("database");
-        HttpSession session = request.getSession();
+        view = request.getRequestDispatcher("/passwordChanger.jsp");
+        
 
         try {
-            currentUserID = database.getUserID(username, password);
+            username = request.getParameter("username");
+            password = request.getParameter("password");
             updatedPassword = request.getParameter("updatePassword");
+            repeatPassword = request.getParameter("repeatPassword");
+            currentUserID = -1;
+            message = "";
+            database = (Database) getServletContext().getAttribute("database");
+            session = request.getSession();
 
-            if (10000 <= currentUserID && currentUserID <= 49999) {
-                /* @note author - genius 
-                *lazy approach to change user password. 
-                * User is transfered to second login page at which they should enter username, password.
-                * And NEW_PASSWORD. if username,password are correct then NEW_PASSWORD will be saved,
-                * and user is logged in right away.
-                * If the user tries to log in again, they must use thier new password.
-                 */
-                database.setPassword(currentUserID, updatedPassword);
-                message = "Password changed";
+            if (!updatedPassword.equals(repeatPassword)) {
+                message = "The entered password update does not match";
+            } else {
+                try {
+
+                    currentUserID = database.getUserID(username, password);
+
+                    if (database.isUser(currentUserID)) {
+
+                        database.setPassword(currentUserID, updatedPassword);
+                        message = "Password changed";
+
+                    } else if (currentUserID == -2) {
+                        message = "Username not found";
+                    } else if (currentUserID == -1) {
+                        message = "Invalid password";
+                    } else {
+                        throw new Exception();
+                    }
+
+                } catch (Exception e) {
+                    message = "Error setting password";
+                }
 
             }
-            else if (currentUserID == -2) {
-                message = "Username not found";
-            }
-            else if (currentUserID == -1) {
-                message = "Invalid password";
-            }
-            else {
-                throw new Exception();
-            }
+        } catch (Exception ex) {
             
-        } catch (Exception e) {
-            message = "Error setting password";
-            error = true;
         }
 
         session.setAttribute("message", message);
-        
-        response.sendRedirect(request.getContextPath() + "/passwordChanger.jsp");
+
+        view.forward(request, response);
 
     }
 

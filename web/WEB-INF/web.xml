@@ -8,17 +8,25 @@
         <servlet-name>PasswordChanger</servlet-name>
         <servlet-class>com.PasswordChanger</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Refresh</servlet-name>
+        <servlet-class>com.Refresh</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
-        <url-pattern>/Logout.do</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TableHandler</servlet-name>
-        <url-pattern>/tableHandler.do</url-pattern>
+        <url-pattern>/logout.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PasswordChanger</servlet-name>
         <url-pattern>/passwordChanger.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddUser</servlet-name>
+        <url-pattern>/addUser.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Refresh</servlet-name>
+        <url-pattern>/protected/refresh.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>20</session-timeout>
@@ -27,13 +35,13 @@
         <servlet-name>Logout</servlet-name>
         <servlet-class>com.Logout</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>ServletContextInitializer</servlet-name>
-        <url-pattern>/ServletContextInitializer</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>AuthorisationFilter</servlet-name>
+        <servlet-class>com.AuthorisationFilter</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextListener</servlet-name>
-        <url-pattern>/servlet-context-listener</url-pattern>
+        <url-pattern>/servlet-context-listener.do</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/login.jsp</welcome-file>
@@ -55,12 +63,8 @@
         <servlet-class>com.PatientDashboard</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ServletContextInitializer</servlet-name>
-        <servlet-class>com.ServletContextInitializer</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>TableHandler</servlet-name>
-        <servlet-class>com.TableHandler</servlet-class>
+        <servlet-name>AddUser</servlet-name>
+        <servlet-class>com.AddUser</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -72,24 +76,37 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmployeeDashboard</servlet-name>
-        <url-pattern>/employeeDashboard.do</url-pattern>
+        <url-pattern>/protected/employeeDashboard.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminDashboard</servlet-name>
-        <url-pattern>/adminDashboard.do</url-pattern>
+        <url-pattern>/protected/adminDashboard.do</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PatientDashboard</servlet-name>
-        <url-pattern>/patientDashboard.do</url-pattern>
+        <url-pattern>/protected/patientDashboard.do</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>com.myServletContextListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>com.myServletAttributeListener</listener-class>
     </listener>
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/errorPage.jsp</location>
     </error-page>
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/login.do</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AuthorisationFilter</filter-name>
+        <filter-class>com.AuthorisationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthorisationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

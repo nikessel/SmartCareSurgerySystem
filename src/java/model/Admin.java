@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
+
+import java.util.Date;
 
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ *
  */
 public class Admin extends Employee {
 
@@ -18,15 +15,17 @@ public class Admin extends Employee {
 
     }
 
-    public Admin(String username, String firstName, String surName, boolean isFullTime) {
+    public Admin(String username, String firstName, String surName, Date dateOfBirth, Address address, boolean isFullTime) {
         this.username = username;
         this.firstName = firstName;
         this.surName = surName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
         this.fullTime = isFullTime;
         this.adminID = -1;
     }
 
-    protected Admin(String username, String firstName, String surName, boolean isFullTime, int adminID) {
+    protected Admin(String username, String firstName, String surName, Date dateOfBirth, Address address, boolean isFullTime, int adminID) {
         boolean isDatabase = false;
 
         try {
@@ -41,6 +40,8 @@ public class Admin extends Employee {
             this.username = username;
             this.firstName = firstName;
             this.surName = surName;
+            this.dateOfBirth = dateOfBirth;
+            this.address = address;
             this.fullTime = isFullTime;
             this.adminID = adminID;
         } else {
@@ -52,9 +53,14 @@ public class Admin extends Employee {
         return adminID;
     }
 
+    public int getID() {
+        return adminID;
+    }
+
     @Override
     public String toString() {
-        return "Admin{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", adminID=" + adminID + '}';
+        return "Admin{" + "adminID=" + adminID + ", username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", dateOfBirth=" + dateOfBirth + ", address=" + address + "fullTime=" + fullTime + '}';
     }
+
 
 }

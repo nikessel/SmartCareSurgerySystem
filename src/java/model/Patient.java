@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.util.Date;
@@ -15,8 +10,6 @@ import java.util.Date;
 public class Patient extends User {
 
     private int patientID;
-    private Date dateOfBirth;
-    private Address address;
     private boolean insured;
 
     public Patient() {
@@ -65,20 +58,12 @@ public class Patient extends User {
         return patientID;
     }
 
-    public String getDateOfBirth() {
-        return String.valueOf(dateOfBirth);
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
     }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    
+    public int getID() {
+        return patientID;
     }
 
     public boolean isInsured() {
@@ -91,7 +76,7 @@ public class Patient extends User {
 
     @Override
     public String toString() {
-        return "Patient{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", patientID=" + patientID + ", dateOfBirth=" + dateOfBirth + ", address=" + address + '}';
+        return "Patient{" + "patientID=" + patientID + ", username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", dateOfBirth=" + dateOfBirth + ", address=" + address + ", insured=" + insured + '}';
     }
 
 }

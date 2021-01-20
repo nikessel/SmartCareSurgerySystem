@@ -1,5 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1"%>
+<%-- 
+    Document   : passwordChanger
+    Author     : Niklas Sarup-Lytzen ID: 18036644
+--%>
+<%@ include file = "/objects/jspHeader.jsp"%>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,19 +14,24 @@
         </style>
     </head>
     <body>
-        <div class="dashboard login">
+        <div class="login card">
             <h1>Smart Care Surgery System Password Management</h1>
             <h2>${message}</h2>
             <br>
-            <form action="passwordChanger.do" method="post">
-                <input id="username" name="username" required="required" type="text" placeholder="Username"/>
-                <input id="password" name="password" required="required" type="password" placeholder="Password" />
-                <input id="updatePassword" name="updatePassword" required="required" type="password" placeholder="Input new password" />
+            <form class="paddedForm" action="${pageContext.request.contextPath}/passwordChanger.do" method="post">
+                <input name="username" required="required" type="text" placeholder="Username"/>
+                <br><br>
+                <input name="password" required="required" type="password" placeholder="Password" />
+                <br><br>
+                <input name="updatePassword" required="required" type="password" placeholder="Input new password" />
+                <br><br>
+                <input name="repeatPassword" required="required" type="password" placeholder="Repeat password" />
+                <br><br>
                 <input type="submit" value="Submit" />
             </form>
             <br>
             <br>
-            <form action="logout.do" method="post">
+            <form class="paddedForm" action="${pageContext.request.contextPath}/logout.do" method="post">
                 <input type="submit" value="Back" />
             </form>
 

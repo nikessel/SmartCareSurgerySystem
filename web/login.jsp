@@ -1,6 +1,10 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1"%>
+<%-- 
+    Document   : login
+    Author     : Niklas Sarup-Lytzen ID: 18036644
+--%>
+<%@ include file = "/objects/jspHeader.jsp"%>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,22 +14,27 @@
         </style>
     </head>
     <body>
-            <div class="dashboard login">
-                <h1>Smart Care Surgery System</h1>
-                <h2>Login</h2>
-                <br>
-                <form action="login.do" method="post">
-                    <input id="username" name="username" required="required" type="text" placeholder="Username"/>
-                    <input id="password" name="password" required="required" type="password" placeholder="Password" />
-                    <input type="submit" value="Submit" />
-                </form>
-                <br>
-                <br>
-                <form action="passwordChanger.jsp" method="post">
-                    <input type="submit" value="Change password" />
-                </form>
-                
-            </div>
+        <div class="wide_card login">
+            <h1>Smart Care Surgery System</h1>
+            <h2>Login</h2>
+            <br>
+            <form class="paddedForm" action="${pageContext.request.contextPath}/login.do" method="post">
+                <input type="hidden" name="jspName" value="${pageScope['javax.servlet.jsp.jspPage']}" />
+                <input class="paddedInput" id="username" name="username" required="required" type="text" placeholder="Username"/>
+                <input class="paddedInput" id="password" name="password" required="required" type="password" placeholder="Password" />
+                <input class="paddedInput" type="submit" value="Submit" />
+            </form>
+            <br>
+            <h3>${message}</h3>
+            <br>
+            <form class="paddedForm" action="${pageContext.request.contextPath}/passwordChanger.do" method="post">
+                <input class="paddedInput" type="submit" value="Change password" />
+            </form>
+            <form class="paddedForm" action="${pageContext.request.contextPath}/addUser.do" method="post">
+                <input class="paddedInput" type="submit" value="Create a new user" />
+            </form>
+
+        </div>
     </body>
 </html>
 

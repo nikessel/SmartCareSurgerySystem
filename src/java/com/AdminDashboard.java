@@ -1,45 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ *
  */
-import model.*;
 
-@WebServlet("/adminDashboard")
-
+// Web.xml servlet mapping forwarder, main logic is handled in the Refresh servlet
 public class AdminDashboard extends HttpServlet {
 
-    int currentUserID;
-    HttpSession session;
-    Cookie cookie;
-    Cookie[] cookies;
-    Database database;
-    String loggedInAs = "";
     RequestDispatcher view;
-    User currentUser;
-    List<Consultation> consultations;
-    List<Patient> patients;
-    String message = "";
-    Date fromDate, toDate;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,36 +30,11 @@ public class AdminDashboard extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         // Set view
         view = getServletContext().getRequestDispatcher("/adminDashboard.jsp");
 
-        //Get session
-        session = request.getSession();
-
-        // Get attributes
-        currentUserID = (int) session.getAttribute("userID");
-        database = (Database) getServletContext().getAttribute("database");
-
-        // Set currentUser
-        currentUser = database.getAdmin(currentUserID);
-        loggedInAs = "admin";
-        Cookie[] cookies = request.getCookies();
-
-        // Set cookie
-        //cookie.setMaxAge(20 * 60);
-        //response.addCookie(cookie);
-        // Get database lists
-        
-        // Set / update attributes for currentSession
-        synchronized (session) {
-            session.setAttribute("currentUser", currentUser);
-            session.setAttribute("message", message);
-            session.setAttribute("loggedInAs", loggedInAs);
-
-        }
-
-        response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
-        //view.forward(request, response);
+        view.forward(request, response);
 
     }
 

@@ -1,45 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ *
  */
-import model.*;
 
-@WebServlet("/employeeDashboard")
-
+// Web.xml servlet mapping forwarder, main logic is handled in the Refresh servlet
 public class EmployeeDashboard extends HttpServlet {
 
-    int currentUserID;
-    HttpSession session;
-    Cookie cookie;
-    Cookie[] cookies;
-    Database database;
     RequestDispatcher view;
-    User currentUser;
-    String loggedInAs = "";
-    List<Consultation> consultations;
-    List<Patient> patients;
-    String message = "";
-    Date fromDate, toDate;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,93 +27,15 @@ public class EmployeeDashboard extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         // Set view
         view = getServletContext().getRequestDispatcher("/employeeDashboard.jsp");
 
-        //Get session
-        session = request.getSession();
-        
-        
-
-        try {
-            if (Boolean.parseBoolean(String.valueOf(request.getAttribute("resetDates")))) {
-                consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-                fromDate = null;
-                toDate = null;
-            } else {
-
-                fromDate = Date.valueOf(request.getParameter("fromDate"));
-                toDate = Date.valueOf(request.getParameter("toDate"));
-
-                consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
-
-            }
-
-            session.setAttribute("consultations", consultations);
-            view.forward(request, response);
-
-        } catch (Exception e) {
-
-        }
-
-        try {
-            int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
-            boolean insured = true;
-
-            switch (choice) {
-                case 2:
-                    session.setAttribute("patients", database.getAllPatients());
-                    break;
-                case 1:
-                    insured = false;
-                default:
-                    session.setAttribute("patients", database.getAllPatientsWhereIs("insured", String.valueOf(insured)));
-            }
-
-            session.setAttribute("insuranceSelection", null);
-            view.forward(request, response);
-
-        } catch (Exception ex) {
-            message = "";
-        }
-
-        // Get attributes
-        currentUserID = (int) session.getAttribute("userID");
-        database = (Database) getServletContext().getAttribute("database");
-
-        // Set currentUser
-        if (20000 <= currentUserID && currentUserID <= 29999) {
-            currentUser = database.getDoctor(currentUserID);
-            loggedInAs = "doctor";
-        } else {
-            currentUser = database.getNurse(currentUserID);
-            loggedInAs = "nurse";
-        }
-
-        Cookie[] cookies = request.getCookies();
-
-        // Set cookie
-        //cookie.setMaxAge(20 * 60);
-        //response.addCookie(cookie);
-        // Get database lists
-        consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-        patients = database.getAllPatients();
-
-        // Set / update attributes for currentSession
-        synchronized (session) {
-            session.setAttribute("consultations", consultations);
-            session.setAttribute("patients", patients);
-            session.setAttribute("currentUser", currentUser);
-            session.setAttribute("message", message);
-            session.setAttribute("loggedInAs", loggedInAs);
-
-        }
-
-        response.sendRedirect(request.getContextPath() + "/employeeDashboard.jsp");
-        //view.forward(request, response);
+        view.forward(request, response);
 
     }
 

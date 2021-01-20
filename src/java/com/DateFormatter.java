@@ -1,36 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ *
  */
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// Used for some date handling directly in the .jsps, using a custom tag mapping
+// In /WEB-INF/custom.tld
 public final class DateFormatter {
-
-    Date date;
 
     private DateFormatter() {
     }
 
     public static String formatDate(Date date, String pattern) {
-        pattern = "dd-MM-yyyy";
         return new SimpleDateFormat(pattern).format(date);
     }
 
-    public Date getDate() {
-        return date;
+    public static boolean isInThePast(Date date) {
+        Date currentDate = new Date();  
+        
+        return date.before(currentDate);
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
 }

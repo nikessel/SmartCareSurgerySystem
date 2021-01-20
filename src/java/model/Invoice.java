@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.util.Date;
@@ -12,9 +7,9 @@ import java.util.Date;
  * @author Niklas Sarup-Lytzen ID: 18036644
  *
  */
-public class Invoice extends DatabaseObject {
+public class Invoice {
 
-    private Consultation consultation;
+    private Patient patient;
     private double price;
     private Date dateOfInvoice;
     private boolean paid;
@@ -25,7 +20,7 @@ public class Invoice extends DatabaseObject {
 
     }
 
-    protected Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
+    protected Invoice(Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured, int invoiceID) {
         boolean isDatabase = false;
 
         try {
@@ -37,7 +32,7 @@ public class Invoice extends DatabaseObject {
         }
 
         if (isDatabase) {
-            this.consultation = consultation;
+            this.patient = patient;
             this.price = price;
             this.dateOfInvoice = dateOfInvoice;
             this.paid = paid;
@@ -48,8 +43,8 @@ public class Invoice extends DatabaseObject {
         }
     }
 
-    public Invoice(Consultation consultation, double price, Date dateOfInvoice, boolean paid, boolean insured) {
-        this.consultation = consultation;
+    public Invoice(Patient patient, double price, Date dateOfInvoice, boolean paid, boolean insured) {
+        this.patient = patient;
         this.price = price;
         this.dateOfInvoice = dateOfInvoice;
         this.paid = paid;
@@ -60,22 +55,27 @@ public class Invoice extends DatabaseObject {
     public int getInvoiceID() {
         return invoiceID;
     }
+    
+    public int getID() {
+        return invoiceID;
+    }
 
     public void setInvoiceID(int invoiceID) {
         this.invoiceID = invoiceID;
     }
 
-    public Consultation getConsultation() {
-        return consultation;
-    }
-
-    public void setConsultation(Consultation consultation) {
-        this.consultation = consultation;
-    }
-
     public double getPrice() {
         return price;
     }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+    
 
     public void setPrice(double price) {
         this.price = price;
@@ -107,7 +107,7 @@ public class Invoice extends DatabaseObject {
 
     @Override
     public String toString() {
-        return "Invoice{" + "invoiceID=" + invoiceID + ", consultationID=" + consultation.getConsultationID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
+        return "Invoice{" + "invoiceID=" + invoiceID + ", patient_id=" + patient.getPatientID() + ", price=" + price + ", dateOfInvoice=" + dateOfInvoice + ", paid=" + paid + ", insured=" + insured + '}';
     }
 
 }

@@ -1,9 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
+
+import java.util.Date;
 
 /**
  *
@@ -18,15 +15,17 @@ public class Doctor extends Employee {
 
     }
 
-    public Doctor(String username, String firstName, String surName, boolean isFullTime) {
+    public Doctor(String username, String firstName, String surName, Date dateOfBirth, Address address, boolean isFullTime) {
         this.username = username;
         this.firstName = firstName;
         this.surName = surName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
         this.fullTime = isFullTime;
         this.doctorID = -1;
     }
 
-    protected Doctor(String username, String firstName, String surName, boolean isFullTime, int doctorID) {
+    protected Doctor(String username, String firstName, String surName, Date dateOfBirth, Address address, boolean isFullTime, int doctorID) {
         boolean isDatabase = false;
 
         try {
@@ -41,6 +40,8 @@ public class Doctor extends Employee {
             this.username = username;
             this.firstName = firstName;
             this.surName = surName;
+            this.dateOfBirth = dateOfBirth;
+            this.address = address;
             this.fullTime = isFullTime;
             this.doctorID = doctorID;
 
@@ -54,9 +55,13 @@ public class Doctor extends Employee {
         return doctorID;
     }
 
+    public int getID() {
+        return doctorID;
+    }
+
     @Override
     public String toString() {
-        return "Doctor{" + "username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", isFullTime=" + fullTime + ", doctorID=" + doctorID + '}';
+        return "Doctor{" + "doctorID=" + doctorID + ", username=" + username + ", firstName=" + firstName + ", surName=" + surName + ", dateOfBirth=" + dateOfBirth + ", address=" + address + "fullTime=" + fullTime + '}';
     }
 
 }

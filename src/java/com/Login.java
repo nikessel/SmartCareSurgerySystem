@@ -1,30 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.*;
-
+import model.Database;
 /**
  *
- * @author Genius
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
-@WebServlet("/login")
-
 public class Login extends HttpServlet {
 
-    private String message;
     private int currentUserID;
+    private HttpSession session;
+    private Database database;
+    private Refresh refresh;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,47 +28,42 @@ public class Login extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+
+    // This servlet only redirects to the correct dashboard, actual authentication
+    // Is handled in the authentication filter
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        Database database = (Database) getServletContext().getAttribute("database");
-
-        HttpSession session = null;
-        Cookie cookie = null;
-
-        String forwardTo = "login.jsp";
+        database = (Database) request.getServletContext().getAttribute("database");
 
         try {
-            currentUserID = database.getUserID(username, password);
+            // The userID will have been set by the authentication filter
+            currentUserID = (int) request.getAttribute("userID");
+            session = request.getSession();
+            session.setAttribute("userID", currentUserID);
+            
+            // Run the initialise method in the refresh servlet for populating
+            // The dashboard with data from the database
+            refresh = new Refresh();
+            refresh.initialise(currentUserID, session, request);
 
-            // username  password validation 
-            if (10000 <= currentUserID && currentUserID <= 19999) {
-                session = request.getSession();
-
-                session.setAttribute("username", username);
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/adminDashboard.do").forward(request, response);
-            } else if (20000 <= currentUserID && currentUserID <= 39999) {
-                session = request.getSession();
-
-                session.setAttribute("username", username);
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/employeeDashboard.do").forward(request, response);
-            } else if (40000 <= currentUserID && currentUserID <= 49999) {
-                session = request.getSession();
-
-                session.setAttribute("username", username);
-                session.setAttribute("userID", currentUserID);
-                request.getRequestDispatcher("/patientDashboard.do").forward(request, response);
+            // Dashboard redirection
+            if (database.isAdmin(currentUserID)) {
+                response.sendRedirect(request.getContextPath() + "/protected/adminDashboard.do");
+                
+            } else if (database.isEmployee(currentUserID)) {
+                response.sendRedirect(request.getContextPath() + "/protected/employeeDashboard.do");
+                
+            } else if (database.isPatient(currentUserID)) {
+                response.sendRedirect(request.getContextPath() + "/protected/patientDashboard.do");
+                
             } else {
                 throw new Exception();
             }
 
         } catch (Exception e) {
-            response.sendRedirect("login.jsp");
+
+            response.sendRedirect(request.getContextPath() + "/logout.do");
 
         }
 

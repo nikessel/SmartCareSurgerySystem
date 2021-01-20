@@ -1,12 +1,8 @@
 <%-- 
     Document   : adminDashboard
-    Created on : 09-Dec-2020, 20:15:47
     Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
-<%@ taglib prefix = "ex" uri = "/WEB-INF/custom.tld"%>
+<%@ include file = "/objects/jspHeader.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -18,21 +14,52 @@
         </style>
     </head>
     <body>
-        <div class="dashboard">
-            <div class="bg"></div>
-            
-            <h1>Hello ${currentUser.firstName} ${currentUser.surName}.${message}</h1>
-            <h2>Welcome to your personal dashboard.</h2>
-            
-            <br>
-            <form action="logout.do" method="post">
-                <input type="submit" value="Logout" />
-            </form>
-            <br>
-            <p style="text-align: right">You are logged in as an ${loggedInAs}<p>
+        <div class="grid-container">    
+
+            <c:import url="objects/keepScrollPosition.html"/>
+            <c:import url="objects/dashboardHeader.jsp"/>
+
+            <aside class="sidenav">
+
+            </aside>                  
+
+            <main class="main">
+                <div class="wide_card">
+                    <c:import url="objects/timetable.jsp"/>
+                    <c:import url="objects/appointmentRemover.jsp"/>
+                </div>
+
+                <div class="main-cards">
+                    <div class="card">
+                        <c:import url="objects/patientTable.jsp"/>
+                    </div>
+                    <div class="card">
+                        <c:import url="objects/pendingEmployeesConfirmer.jsp"/>
+                    </div>
+
+
+                </div>
+
+                <div class="main-cards">
+                    <div class="card">
+                        <c:import url="objects/personalInfo.jsp"/>
+                    </div>
+                    <div class="card">
+                        <c:import url="objects/turnoverCalculator.jsp"/> 
+                    </div>
+                </div>
+
+                <div class="main-cards">
+                    <div class="card">
+                        <c:import url="objects/priceSetter.jsp"/>
+                    </div>
+                    <div class="card">
+                        <c:import url="objects/userRemover.jsp"/>
+                    </div>
+                </div>
+            </main>
+
         </div>
-
-
     </body>
 </html>
 

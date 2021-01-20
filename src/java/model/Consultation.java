@@ -1,30 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
  *
  */
-public class Consultation extends DatabaseObject {
+public class Consultation {
 
     private Patient patient;
     private Doctor doctor;
     private Nurse nurse;
-    private Date consultationDate;
+    private Timestamp consultationTime;
     private int consultationID;
+    private String note;
+    private int duration;
 
     public Consultation() {
 
     }
 
-    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Date consultationDate, int consulationID) {
+    protected Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime, String note, int duration, int consulationID) {
         boolean isDatabase = false;
 
         try {
@@ -39,18 +36,22 @@ public class Consultation extends DatabaseObject {
             this.patient = patient;
             this.doctor = doctor;
             this.nurse = nurse;
-            this.consultationDate = consultationDate;
+            this.consultationTime = consultationTime;
             this.consultationID = consulationID;
+            this.note = note;
+            this.duration = duration;
         } else {
             System.out.println("Constructor with ID can only be called by the Database class");
         }
     }
 
-    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Date consultationDate) {
+    public Consultation(Patient patient, Doctor doctor, Nurse nurse, Timestamp consultationTime, String note, int duration) {
         this.patient = patient;
         this.doctor = doctor;
         this.nurse = nurse;
-        this.consultationDate = consultationDate;
+        this.consultationTime = consultationTime;
+        this.note = note;
+        this.duration = duration;
         this.consultationID = -1;
     }
 
@@ -82,18 +83,41 @@ public class Consultation extends DatabaseObject {
         this.nurse = nurse;
     }
 
-    public Date getConsultationDate() {
-        return consultationDate;
+    public Timestamp getConsultationTime() {
+        return consultationTime;
     }
 
-    public void setConsultationDate(Date consultationDate) {
-        this.consultationDate = consultationDate;
+    public void setConsultationTime(Timestamp consultationTime) {
+        this.consultationTime = consultationTime;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+    
+    public int getID() {
+        return consultationID;
+    }
 
     @Override
     public String toString() {
-        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + ", nurse=" + nurse + ", consultationDate=" + consultationDate + ", consulationID=" + consultationID + '}';
+        return "Consultation{" + "patient=" + patient + ", doctor=" + doctor + 
+                ", nurse=" + nurse + ", consultationTime=" + consultationTime + 
+                ", note:" + note + ", duration:" + duration +
+                ", consulationID=" + consultationID + '}';
     }
+
 
 }

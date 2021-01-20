@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +11,10 @@ import javax.servlet.http.HttpSession;
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
- * *
+ *
  */
+
+// This servlet clears the session and redirects to the login page
 public class Logout extends HttpServlet {
 
     /**
@@ -48,9 +43,8 @@ public class Logout extends HttpServlet {
             session.invalidate();
         }
 
-        RequestDispatcher view = getServletContext().getRequestDispatcher("/login");
-
-        view.forward(request, response);
+        request.getServletContext().setAttribute("message", "");
+        response.sendRedirect(request.getContextPath() + "/login.do");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
