@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.util.Date;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
-public class Prescription extends DatabaseObject {
+public class Prescription {
 
     private Patient patient;
     private Doctor doctor;

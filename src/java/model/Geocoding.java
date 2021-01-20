@@ -10,7 +10,9 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 /**
- * @author Callum
+ * 
+ * @author Callum Gill ID: 1020363
+ * 
  */
 
 import javax.net.ssl.*;

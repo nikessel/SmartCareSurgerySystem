@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.sql.Timestamp;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
-public class Surgery extends DatabaseObject {
+public class Surgery {
     private Patient patient;
     private Doctor doctor;
     private Timestamp surgeryTime;

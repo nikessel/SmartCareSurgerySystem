@@ -482,7 +482,7 @@ public class Database {
 
     }
 
-    private DatabaseObject getDatabaseObject(ResultSet rs) throws ClassCastException {
+    private Object getDatabaseObject(ResultSet rs) throws ClassCastException {
 
         boolean paid, insured, isFullTime;
         paid = insured = isFullTime = false;
@@ -651,7 +651,7 @@ public class Database {
             return new Prescription(patient, doctor, medication, expirationDate, id);
         }
 
-        return new DatabaseObject();
+        return new Object();
     }
 
     private Boolean isPending(int id) {

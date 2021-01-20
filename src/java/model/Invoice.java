@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.util.Date;
@@ -12,7 +7,7 @@ import java.util.Date;
  * @author Niklas Sarup-Lytzen ID: 18036644
  *
  */
-public class Invoice extends DatabaseObject {
+public class Invoice {
 
     private Patient patient;
     private double price;

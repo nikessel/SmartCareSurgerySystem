@@ -24,10 +24,7 @@ import model.Database;
 public class AuthorizationFilter implements Filter {
 
     private FilterConfig fc;
-    private String errorMessage;
-    private int currentUserID;
     private HttpSession session;
-    private Database database;
     private boolean isUser, isAdmin, isDoctor, isNurse, isPatient;
 
     @Override
@@ -81,8 +78,7 @@ public class AuthorizationFilter implements Filter {
 
         try {
 
-            if ((isUser && requestURI.endsWith(protectedUrlPatterns[0]))
-                    || isUser && requestURI.contains("/objects/")) {
+            if (isUser && requestURI.endsWith(protectedUrlPatterns[0])) {
 
             } else if (isAdmin && requestURI.endsWith(protectedUrlPatterns[1])) {
 
