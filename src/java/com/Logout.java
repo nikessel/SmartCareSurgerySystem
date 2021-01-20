@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
@@ -15,8 +10,11 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Niklas Sarup-Lytzen ID: 18036644 *
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
+
+// This servlet clears the session and redirects to the login page
 public class Logout extends HttpServlet {
 
     /**

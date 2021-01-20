@@ -1,8 +1,8 @@
 <%-- 
     Document   : errorPage
-    Created on : 28-Dec-2020, 09:41:25
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
+
 <%@ include file = "/objects/jspHeader.jsp"%>
 
 <!DOCTYPE html>

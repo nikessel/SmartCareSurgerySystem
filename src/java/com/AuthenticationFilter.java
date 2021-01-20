@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.*;
@@ -19,16 +14,19 @@ import model.Database;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
+
+// The authentication filter will run a single time when the user attempts to login
 public class AuthenticationFilter implements Filter {
 
     private FilterConfig fc;
-    private String errorMessage;
+    private String errorMessage, username, password;
     private int currentUserID;
     private boolean isPending;
     private HttpSession session;
-    RequestDispatcher view;
+    private RequestDispatcher view;
     private Database database;
 
     private boolean wrongUsername() {
@@ -39,6 +37,8 @@ public class AuthenticationFilter implements Filter {
         return currentUserID == -1;
     }
 
+    // This method will set User subclass specific session attributes, used 
+    // authorisation later on
     private void setBooleans() {
 
         if (database.isUser(currentUserID)) {
@@ -67,20 +67,21 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        
+        // Filters handle all request types, not just http. Therefore we need to
+        // Parse the request as a httpRequest
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         response.setContentType("text/html;charset=UTF-8");
 
         session = httpRequest.getSession();
         database = (Database) httpRequest.getServletContext().getAttribute("database");
-
         view = httpRequest.getRequestDispatcher("/login.jsp");
-
         errorMessage = "";
 
         if (httpRequest.getParameter("username") != null) {
             try {
-                String username = httpRequest.getParameter("username");
-                String password = httpRequest.getParameter("password");
+                username = httpRequest.getParameter("username");
+                password = httpRequest.getParameter("password");
                 currentUserID = database.getUserID(username, password);
                 isPending = database.isUserPending(currentUserID);
 

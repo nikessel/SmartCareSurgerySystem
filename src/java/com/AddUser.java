@@ -22,7 +22,8 @@ import model.Nurse;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
 public class AddUser extends HttpServlet {
 
@@ -35,25 +36,27 @@ public class AddUser extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    String username, password, repeatPassword, message, addressLine1, addressLine2,
-            postcode, county, town, telephoneNumber, lookupPostcode, headline;
-    String firstName, surName;
-    Date dateOfBirth;
-    boolean isFullTime;
+    // Attribute declarations
+    private String username, password, repeatPassword, message, addressLine1, addressLine2,
+            postcode, county, town, telephoneNumber, lookupPostcode, headline, firstName, surName;
+    private Date dateOfBirth;
+    private int currentUserID, streetNumber, userType;
+    private boolean isFullTime, redirectToLogin, insured;
+    private Address address;
 
-    Database database;
-    int currentUserID, streetNumber, userType;
-    HttpSession session;
-    HttpServletRequest request;
+    // Temporary User objects
+    private Patient patient;
+    private Doctor doctor;
+    private Nurse nurse;
 
-    RequestDispatcher view;
-    Address address;
-    Patient thisPatient;
-    Doctor thisDoctor;
-    Nurse thisNurse;
+    private Database database;
+    private HttpSession session;
+    private HttpServletRequest request;
+    private RequestDispatcher view;
 
-    boolean redirect, insured;
-
+    /*  This method will attempt to add a new user with the parameters given, 
+        Based on whether or not it is successful, it will determine whether or 
+        Not to redirect the user to the login page or forward to the addUser page */
     private boolean attemptAddUser() {
         currentUserID = 0;
         database = (Database) getServletContext().getAttribute("database");
@@ -61,27 +64,33 @@ public class AddUser extends HttpServlet {
 
         if (currentUserID != -2) {
             message = "Username already exists, please login instead";
-            redirect = true;
+            redirectToLogin = true;
         } else if (!password.equals(repeatPassword)) {
             message = "The entered passwords does not match";
         } else {
-            redirect = true;
+            redirectToLogin = true;
 
-            if (userType == 1) {
-                thisPatient = new Patient(username, firstName, surName, dateOfBirth, address, insured);
-                database.addObjectToDatabase(thisPatient);
-                database.addPasswordToUser(thisPatient, password);
-                message = "User added succesfully, please login";
-            } else if (userType == 2) {
-                Doctor thisDoctor = new Doctor(username, firstName, surName, dateOfBirth, address, isFullTime);
-                database.addObjectToDatabase(thisDoctor);
-                database.addPasswordToUser(thisDoctor, password);
-                message = "Request to add a doctor has been forwarded to admin for approval";
-            } else if (userType == 3) {
-                Nurse thisNurse = new Nurse(username, firstName, surName, dateOfBirth, address, isFullTime);
-                database.addObjectToDatabase(thisNurse);
-                database.addPasswordToUser(thisNurse, password);
-                message = "Request to add a nurse has been forwarded to admin for approval";
+            switch (userType) {
+                case 1:
+                    patient = new Patient(username, firstName, surName, dateOfBirth, address, insured);
+                    database.addObjectToDatabase(patient);
+                    database.addPasswordToUser(patient, password);
+                    message = "User added succesfully, please login";
+                    break;
+                case 2:
+                    doctor = new Doctor(username, firstName, surName, dateOfBirth, address, isFullTime);
+                    database.addObjectToDatabase(doctor);
+                    database.addPasswordToUser(doctor, password);
+                    message = "Request to add a doctor has been forwarded to admin for approval";
+                    break;
+                case 3:
+                    nurse = new Nurse(username, firstName, surName, dateOfBirth, address, isFullTime);
+                    database.addObjectToDatabase(nurse);
+                    database.addPasswordToUser(nurse, password);
+                    message = "Request to add a nurse has been forwarded to admin for approval";
+                    break;
+                default:
+                    break;
             }
             return true;
         }
@@ -89,6 +98,7 @@ public class AddUser extends HttpServlet {
         return false;
     }
 
+    // Attempt to get attributes common for all Users
     private void getUserAttributes() {
         username = request.getParameter("username");
         password = request.getParameter("password");
@@ -106,10 +116,12 @@ public class AddUser extends HttpServlet {
         address = new Address(addressLine1, addressLine2, postcode, county, town, telephoneNumber);
     }
 
+    // Get patient specific attribute
     private void getPatientAttributes() {
         insured = Boolean.parseBoolean(request.getParameter("insured"));
     }
 
+    // Get employee specific attribute
     private void getEmployeeAttributes() {
         isFullTime = Boolean.parseBoolean(request.getParameter("isFullTime"));
     }
@@ -119,17 +131,19 @@ public class AddUser extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         message = "";
-        redirect = false;
+        redirectToLogin = false;
         session = request.getSession();
         this.request = request;
-
         view = getServletContext().getRequestDispatcher("/addUser.jsp");
         address = new Address("", "", "", "", "", "");
 
+        // Attempt to determine the userType from previous user selection in session
         try {
             userType = (Integer) session.getAttribute("userType");
 
         } catch (Exception ex1) {
+            // If not found then user has just chosen the userType, set it as
+            // an attribute in the session
             try {
                 userType = Integer.parseInt(request.getParameter("userType"));
                 session.setAttribute("userType", String.valueOf(userType));
@@ -154,6 +168,9 @@ public class AddUser extends HttpServlet {
         }
 
         if (request.getParameter("lookupPostcode") != null) {
+            
+            // Attempt to lookup the postcode, if found, set as a session attribute
+            // To autofill the relevant boxes
             if (Geocoding.validateGeocode(request.getParameter("lookupPostcode"))) {
 
                 address = Geocoding.getAddress();
@@ -162,6 +179,7 @@ public class AddUser extends HttpServlet {
             }
         } else {
 
+            // Else try to get entered user attributes and add the user to the database
             try {
                 getUserAttributes();
 
@@ -179,8 +197,8 @@ public class AddUser extends HttpServlet {
 
         session.setAttribute("message", message);
 
-        if (redirect) {
-            session.setAttribute("userType", "");
+        if (redirectToLogin) {
+            session.setAttribute("userType", null);
 
             response.sendRedirect(request.getContextPath() + "/login.do");
         } else {

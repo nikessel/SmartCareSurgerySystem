@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.*;
@@ -15,13 +10,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import model.Database;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
-public class AuthorizationFilter implements Filter {
+public class AuthorisationFilter implements Filter {
 
     private FilterConfig fc;
     private HttpSession session;
@@ -32,6 +27,7 @@ public class AuthorizationFilter implements Filter {
         this.fc = filterConfig;
     }
 
+    // Set local booleans based on session attributes from the authentication filter
     private void setBooleans() {
         isUser = isAdmin = isDoctor = isNurse = isPatient = false;
 
@@ -66,6 +62,7 @@ public class AuthorizationFilter implements Filter {
             "/login.do", "/passwordChanger.do", "/errorPage.jsp", "/addUser.do",
             "/logout.do"};
 
+        // If the requestURI is public, the filter is done
         for (int i = 0; i < publicUrlPatterns.length; i++) {
             if (requestURI.endsWith(publicUrlPatterns[i])) {
                 chain.doFilter(httpRequest, response);
@@ -78,14 +75,17 @@ public class AuthorizationFilter implements Filter {
 
         try {
 
+            // Any valid user can make a request to the refresh servlet
             if (isUser && requestURI.endsWith(protectedUrlPatterns[0])) {
 
+            // Otherwise users are only allowed to access their own respective dashboards
             } else if (isAdmin && requestURI.endsWith(protectedUrlPatterns[1])) {
 
             } else if ((isNurse || isDoctor) && requestURI.endsWith(protectedUrlPatterns[2])) {
 
             } else if (isPatient && requestURI.endsWith(protectedUrlPatterns[3])) {
 
+            // If none of these cases are true forward the user to the error page
             } else {
                 throw new Exception();
             }
@@ -95,7 +95,6 @@ public class AuthorizationFilter implements Filter {
         } catch (Exception e) {
 
             session.setAttribute("message", "You are not allowed to access this resource");
-            //session.setAttribute("message", e.toString());
 
             RequestDispatcher requestDispatcher = httpRequest.getRequestDispatcher("/errorPage.jsp");
             requestDispatcher.forward(httpRequest, response);

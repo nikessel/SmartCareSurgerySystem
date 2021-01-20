@@ -1,7 +1,6 @@
 <%-- 
     Document   : dashboardHeader
-    Created on : 15-Jan-2021, 15:16:07
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@ include file = "/objects/jspHeader.jsp"%>

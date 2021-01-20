@@ -1,8 +1,8 @@
 <%-- 
     Document   : pendingConsultationsTable
-    Created on : 17-Jan-2021, 09:28:28
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
+
 <%@ include file = "/objects/jspHeader.jsp"%>
 
 

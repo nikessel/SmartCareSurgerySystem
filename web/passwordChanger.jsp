@@ -1,3 +1,7 @@
+<%-- 
+    Document   : passwordChanger
+    Author     : Niklas Sarup-Lytzen ID: 18036644
+--%>
 <%@ include file = "/objects/jspHeader.jsp"%>
 
 

@@ -1,7 +1,6 @@
 <%-- 
     Document   : consultationTable
-    Created on : 18-Jan-2021, 13:36:14
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
@@ -15,8 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
 
+// Web.xml servlet mapping forwarder, main logic is handled in the Refresh servlet
 public class AdminDashboard extends HttpServlet {
 
     RequestDispatcher view;
@@ -37,7 +34,6 @@ public class AdminDashboard extends HttpServlet {
         // Set view
         view = getServletContext().getRequestDispatcher("/adminDashboard.jsp");
 
-        //response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
         view.forward(request, response);
 
     }

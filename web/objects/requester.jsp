@@ -1,10 +1,9 @@
 <%-- 
-    Document   : bookConsultation
-    Created on : 16-Jan-2021, 16:40:21
-    Author     : niklas
+    Document   : requester
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file = "/objects/jspHeader.jsp"%>
 
 <!DOCTYPE html>

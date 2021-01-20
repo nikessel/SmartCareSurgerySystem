@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,11 +9,15 @@ import javax.servlet.http.HttpSession;
 import model.Database;
 /**
  *
- * @author Genius
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
 public class Login extends HttpServlet {
 
     private int currentUserID;
+    private HttpSession session;
+    private Database database;
+    private Refresh refresh;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,23 +29,25 @@ public class Login extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
 
-
+    // This servlet only redirects to the correct dashboard, actual authentication
+    // Is handled in the authentication filter
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        HttpSession session = null;
-        Cookie cookie = null;
-        Database database = (Database) request.getServletContext().getAttribute("database");
+        database = (Database) request.getServletContext().getAttribute("database");
 
         try {
+            // The userID will have been set by the authentication filter
             currentUserID = (int) request.getAttribute("userID");
             session = request.getSession();
             session.setAttribute("userID", currentUserID);
-            Refresh refresh = new Refresh();
+            
+            // Run the initialise method in the refresh servlet for populating
+            // The dashboard with data from the database
+            refresh = new Refresh();
             refresh.initialise(currentUserID, session, request);
 
-            // username password validation 
+            // Dashboard redirection
             if (database.isAdmin(currentUserID)) {
                 response.sendRedirect(request.getContextPath() + "/protected/adminDashboard.do");
                 

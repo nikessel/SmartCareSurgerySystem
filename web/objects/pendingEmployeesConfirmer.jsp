@@ -1,7 +1,6 @@
 <%-- 
-    Document   : pendingEmployeesTable
-    Created on : 15-Jan-2021, 15:53:45
-    Author     : niklas
+    Document   : pendingEmployeesConfirmer
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@ include file = "/objects/jspHeader.jsp"%>

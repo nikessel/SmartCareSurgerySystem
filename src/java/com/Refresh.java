@@ -11,10 +11,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,51 +21,71 @@ import model.*;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
 public class Refresh extends HttpServlet {
 
-    int currentUserID, selectedConsultatantID, selectedHour, selectedMinute,
+    // Attributes
+    private int currentUserID, selectedConsultatantID, selectedHour, selectedMinute,
             selectedYear, selectedMonth, selectedDayOfMonth, checkID, selectedTimetable,
-            requestType, choice, selectedPrice, previousUserID;
+            requestType, choice, selectedPrice, previousUserID, thisID, newUserID;
+    private double price, turnoverPaid, turnoverUnpaid, newPrice, consultationPrice,
+            consultationPriceNurse, surgeryPrice;
+    private boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient, approve,
+            resetBookingType, success;
 
-    double price, turnoverPaid, turnoverUnpaid, newPrice;
+    private BigDecimal rounded;
 
-    boolean isEmployee, isAdmin, isDoctor, isNurse, isPatient, deleteConsultation, issueInvoice, approve;
-    HttpSession session;
-    HttpServletRequest request;
-    Cookie cookie;
-    Cookie[] cookies;
-    Database database;
-    String loggedInAs, jspContext, viewString;
-    RequestDispatcher view;
-    User currentUser, previousUser;
-    List<Consultation> consultations;
-    List<Patient> patients;
-    String message, note, medication, of, setPriceFor;
-    Date fromDate, toDate, expirationDate;
-    ArrayList<Employee> pendingEmployees;
-    ArrayList<Integer> pendingEmployeeIDs, pendingConsultationIDs, pendingSurgeryIDs, pendingPrescriptionIDs;
-    ArrayList<Consultation> pendingConsultations;
-    ArrayList<Prescription> pendingPrescriptions;
-    ArrayList<Surgery> pendingSurgeries;
-    ArrayList<Invoice> invoices;
-    ArrayList<Object> temps;
-    ArrayList<Surgery> surgeries;
-    ArrayList<Prescription> prescriptions;
-    Object temp;
-    Invoice invoice;
-    Patient patient;
-    Surgery surgery;
-    Doctor doctor;
-    Nurse nurse;
-    BigDecimal rounded;
-    Prescription prescription;
-    Consultation consultation;
-    ArrayList<Doctor> doctors;
-    ArrayList<Nurse> nurses;
-    Timestamp timestamp;
-    String[] selectedDate, selectedTime;
+    private String loggedInAs, jspContext, viewString, message, note, medication, of, setPriceFor;
+
+    private Date fromDate, toDate, expirationDate;
+
+    private Timestamp timestamp;
+
+    private String[] selectedDate, selectedTime;
+
+    // User objects
+    private User currentUser, previousUser;
+
+    private Doctor doctor;
+    private Nurse nurse;
+    private Patient patient;
+
+    // Other database objects
+    private Consultation consultation;
+    private Invoice invoice;
+    private Surgery surgery;
+    private Prescription prescription;
+
+    private Object temp;
+
+    // Object ID lists
+    private ArrayList<Integer> pendingEmployeeIDs, pendingConsultationIDs,
+            pendingSurgeryIDs, pendingPrescriptionIDs;
+
+    // User object lists
+    private ArrayList<Doctor> doctors;
+    private ArrayList<Nurse> nurses;
+    private ArrayList<Patient> patients;
+    private ArrayList<Employee> pendingEmployees;
+
+    // Other database object lists
+    private ArrayList<Consultation> consultations;
+    private ArrayList<Consultation> pendingConsultations;
+    private ArrayList<Prescription> pendingPrescriptions;
+    private ArrayList<Surgery> pendingSurgeries;
+    private ArrayList<Invoice> invoices;
+    private ArrayList<Object> temps;
+    private ArrayList<Surgery> surgeries;
+    private ArrayList<Prescription> prescriptions;
+
+    // Servlet releated objects
+    private HttpSession session;
+    private HttpServletRequest request;
+    private RequestDispatcher view;
+
+    private Database database;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -78,6 +96,7 @@ public class Refresh extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    // Set the user booleans based on session attributes set previously by the authentication filter
     private void setBooleans() {
 
         isEmployee = isAdmin = isDoctor = isPatient = false;
@@ -97,24 +116,24 @@ public class Refresh extends HttpServlet {
         }
     }
 
+    // ---------- Set pending lists methods ----------
     private void setPendingConsultations() {
         pendingConsultationIDs = database.getPending("consultations");
         pendingConsultations = new ArrayList<>();
-        Consultation tempConsultation;
 
         try {
 
             for (int id : pendingConsultationIDs) {
-                tempConsultation = database.getConsultation(id);
+                consultation = database.getConsultation(id);
 
                 if (database.isDoctor(currentUserID)) {
-                    checkID = tempConsultation.getDoctor().getDoctorID();
+                    checkID = consultation.getDoctor().getDoctorID();
                 } else {
-                    checkID = tempConsultation.getNurse().getNurseID();
+                    checkID = consultation.getNurse().getNurseID();
                 }
 
                 if (checkID == currentUserID) {
-                    pendingConsultations.add(tempConsultation);
+                    pendingConsultations.add(consultation);
                 }
             }
 
@@ -127,17 +146,16 @@ public class Refresh extends HttpServlet {
     private void setPendingSurgeries() {
         pendingSurgeryIDs = database.getPending("surgeries");
         pendingSurgeries = new ArrayList<>();
-        Surgery tempSurgery;
 
         try {
 
             for (int id : pendingSurgeryIDs) {
-                tempSurgery = database.getSurgery(id);
+                surgery = database.getSurgery(id);
 
-                checkID = tempSurgery.getDoctor().getDoctorID();
+                checkID = surgery.getDoctor().getDoctorID();
 
                 if (checkID == currentUserID) {
-                    pendingSurgeries.add(tempSurgery);
+                    pendingSurgeries.add(surgery);
                 }
             }
 
@@ -150,17 +168,16 @@ public class Refresh extends HttpServlet {
     private void setPendingPrescriptions() {
         pendingPrescriptionIDs = database.getPending("prescriptions");
         pendingPrescriptions = new ArrayList<>();
-        Prescription tempPrescription;
 
         try {
 
             for (int id : pendingPrescriptionIDs) {
-                tempPrescription = database.getPrescription(id);
+                prescription = database.getPrescription(id);
 
-                checkID = tempPrescription.getDoctor().getDoctorID();
+                checkID = prescription.getDoctor().getDoctorID();
 
                 if (checkID == currentUserID) {
-                    pendingPrescriptions.add(tempPrescription);
+                    pendingPrescriptions.add(prescription);
                 }
             }
 
@@ -192,17 +209,18 @@ public class Refresh extends HttpServlet {
 
     }
 
+    // ---------- Approve selected object methods ----------
     private void approveEmployee() {
         try {
-            int id = Integer.parseInt(request.getParameterValues("pendingEmployeeSelection")[0]);
+            thisID = Integer.parseInt(request.getParameterValues("pendingEmployeeSelection")[0]);
 
-            boolean approve = Boolean.parseBoolean(request.getParameter("approve"));
+            approve = Boolean.parseBoolean(request.getParameter("approve"));
 
             if (approve) {
-                database.approve(id);
+                database.approve(thisID);
 
             } else {
-                database.deleteObjectFromDatabase(id);
+                database.deleteObjectFromDatabase(thisID);
             }
 
         } catch (Exception ex) {
@@ -210,7 +228,84 @@ public class Refresh extends HttpServlet {
         }
     }
 
-    private void setDoctorsAndNurses() {
+    private boolean approvePendingConsultation() {
+        try {
+            thisID = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
+
+            try {
+                approve = Boolean.parseBoolean(request.getParameter("approveConsultation"));
+            } catch (Exception ex) {
+                approve = false;
+            }
+
+            if (approve) {
+                database.approve(thisID);
+                return true;
+
+            } else {
+                database.deleteObjectFromDatabase(thisID);
+            }
+
+        } catch (Exception ex) {
+        }
+        return false;
+    }
+
+    private boolean approvePendingSurgery() {
+        try {
+            thisID = Integer.parseInt(request.getParameterValues("pendingSurgerySelection")[0]);
+            try {
+                approve = Boolean.parseBoolean(request.getParameter("approveSurgery"));
+            } catch (Exception ex) {
+                approve = false;
+            }
+
+            if (approve) {
+                database.approve(thisID);
+                return true;
+
+            } else {
+                database.deleteObjectFromDatabase(thisID);
+            }
+
+        } catch (Exception ex) {
+        }
+        return false;
+    }
+
+    private boolean approvePendingPrescription() {
+        try {
+            thisID = Integer.parseInt(request.getParameterValues("pendingPrescriptionSelection")[0]);
+            try {
+                approve = Boolean.parseBoolean(request.getParameter("approvePrescription"));
+            } catch (Exception ex) {
+                approve = false;
+            }
+
+            if (approve) {
+                database.approve(thisID);
+
+                Date expirationDate = Date.valueOf(request.getParameter("newPrescriptionDate"));
+
+                prescription = database.getPrescription(thisID);
+
+                prescription.setExpirationDate(expirationDate);
+
+                database.addObjectToDatabase(prescription);
+
+                return true;
+
+            } else {
+                database.deleteObjectFromDatabase(thisID);
+            }
+
+        } catch (Exception ex) {
+        }
+        return false;
+    }
+
+    // ---------- Refresh lists methods ----------
+    private void refreshDoctorsAndNurses() {
         doctors = new ArrayList<>();
         nurses = new ArrayList<>();
 
@@ -235,6 +330,99 @@ public class Refresh extends HttpServlet {
         } catch (Exception ex) {
 
         }
+
+    }
+
+    private void refreshConsultations() {
+        try {
+
+            fromDate = Date.valueOf(request.getParameter("fromDate"));
+            toDate = Date.valueOf(request.getParameter("toDate"));
+
+            consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
+            session.setAttribute("consultations", consultations);
+
+        } catch (Exception e) {
+            consultations = database.getAllConsultationsWhereIDIs(currentUserID);
+        }
+
+        session.setAttribute("consultations", consultations);
+
+    }
+
+    private void refreshInvoices() {
+
+        try {
+            if (!isAdmin) {
+                invoices = database.getAllInvoicesWhereIDIs(currentUserID);
+            } else {
+                turnoverPaid = 0;
+                turnoverUnpaid = 0;
+
+                try {
+                    fromDate = Date.valueOf(request.getParameter("fromDate"));
+                    toDate = Date.valueOf(request.getParameter("toDate"));
+
+                    invoices = database.getAllInvoicesFromTo(fromDate, toDate);
+
+                } catch (Exception ex) {
+                    invoices = database.getAllInvoices();
+                }
+
+                invoices.forEach((thisInvoice) -> {
+                    if (thisInvoice.isPaid()) {
+                        turnoverPaid += thisInvoice.getPrice();
+                    } else {
+                        turnoverUnpaid += thisInvoice.getPrice();
+                    }
+                });
+
+                rounded = new BigDecimal(turnoverPaid);
+                rounded = rounded.setScale(2, BigDecimal.ROUND_HALF_UP);
+                session.setAttribute("turnoverPaid", rounded);
+
+                rounded = new BigDecimal(turnoverUnpaid);
+                rounded = rounded.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                session.setAttribute("turnoverUnpaid", rounded);
+
+            }
+
+        } catch (Exception ex) {
+            message = ex.toString();
+        }
+
+        session.setAttribute("invoices", invoices);
+
+    }
+
+    private void refreshPrescriptions() {
+
+        try {
+            prescriptions = database.getAllPrescriptionsWhereIDIs(currentUserID);
+
+        } catch (Exception ex) {
+            message = ex.toString();
+        }
+
+        session.setAttribute("prescriptions", prescriptions);
+
+    }
+
+    private void refreshSurgeries() {
+
+        try {
+
+            fromDate = Date.valueOf(request.getParameter("fromDate"));
+            toDate = Date.valueOf(request.getParameter("toDate"));
+
+            surgeries = database.getAllSurgeriesWhereIDIsFromTo(currentUserID, fromDate, toDate);
+
+        } catch (Exception e) {
+            surgeries = database.getAllSurgeriesWhereIDIs(currentUserID);
+        }
+
+        session.setAttribute("surgeries", surgeries);
 
     }
 
@@ -286,92 +474,16 @@ public class Refresh extends HttpServlet {
                     database.addObjectToDatabase(surgery);
                 }
             } else {
-                int prescriptionID = Integer.parseInt(request.getParameterValues("selectedPrescription")[0]);
-                prescription = database.getPrescription(prescriptionID);
+                thisID = Integer.parseInt(request.getParameterValues("selectedPrescription")[0]);
+                prescription = database.getPrescription(thisID);
 
                 prescription.setDoctor(doctor);
 
                 database.addObjectToDatabase(prescription);
 
-                database.setPending(prescriptionID);
+                database.setPending(thisID);
 
                 message = prescription.toString();
-            }
-
-        } catch (Exception ex) {
-        }
-        return false;
-    }
-
-    private boolean approvePendingConsultation() {
-        try {
-            int id = Integer.parseInt(request.getParameterValues("pendingConsultationSelection")[0]);
-
-            try {
-                approve = Boolean.parseBoolean(request.getParameter("approveConsultation"));
-            } catch (Exception ex) {
-                approve = false;
-            }
-
-            if (approve) {
-                database.approve(id);
-                return true;
-
-            } else {
-                database.deleteObjectFromDatabase(id);
-            }
-
-        } catch (Exception ex) {
-        }
-        return false;
-    }
-
-    private boolean approvePendingSurgery() {
-        try {
-            int id = Integer.parseInt(request.getParameterValues("pendingSurgerySelection")[0]);
-            try {
-                approve = Boolean.parseBoolean(request.getParameter("approveSurgery"));
-            } catch (Exception ex) {
-                approve = false;
-            }
-
-            if (approve) {
-                database.approve(id);
-                return true;
-
-            } else {
-                database.deleteObjectFromDatabase(id);
-            }
-
-        } catch (Exception ex) {
-        }
-        return false;
-    }
-
-    private boolean approvePendingPrescription() {
-        try {
-            int id = Integer.parseInt(request.getParameterValues("pendingPrescriptionSelection")[0]);
-            try {
-                approve = Boolean.parseBoolean(request.getParameter("approvePrescription"));
-            } catch (Exception ex) {
-                approve = false;
-            }
-
-            if (approve) {
-                database.approve(id);
-
-                Date expirationDate = Date.valueOf(request.getParameter("newPrescriptionDate"));
-
-                prescription = database.getPrescription(id);
-
-                prescription.setExpirationDate(expirationDate);
-
-                database.addObjectToDatabase(prescription);
-
-                return true;
-
-            } else {
-                database.deleteObjectFromDatabase(id);
             }
 
         } catch (Exception ex) {
@@ -382,11 +494,11 @@ public class Refresh extends HttpServlet {
     private boolean addNewPrescription() {
         try {
             if (isDoctor) {
-                int patientID = Integer.parseInt(request.getParameterValues("patientSelection")[0]);
+                thisID = Integer.parseInt(request.getParameterValues("patientSelection")[0]);
 
                 doctor = (Doctor) currentUser;
 
-                patient = database.getPatient(patientID);
+                patient = database.getPatient(thisID);
 
                 expirationDate = Date.valueOf(request.getParameter("expirationDate"));
 
@@ -394,9 +506,9 @@ public class Refresh extends HttpServlet {
 
                 prescription = new Prescription(patient, doctor, medication, expirationDate);
 
-                int prescriptionID = database.addObjectToDatabase(prescription);
+                thisID = database.addObjectToDatabase(prescription);
 
-                database.approve(prescriptionID);
+                database.approve(thisID);
 
                 return true;
             }
@@ -406,30 +518,13 @@ public class Refresh extends HttpServlet {
         return false;
     }
 
-    private void refreshConsultations() {
-        try {
-
-            fromDate = Date.valueOf(request.getParameter("fromDate"));
-            toDate = Date.valueOf(request.getParameter("toDate"));
-
-            consultations = database.getAllConsultationsWhereIDIsFromTo(currentUserID, fromDate, toDate);
-            session.setAttribute("consultations", consultations);
-
-        } catch (Exception e) {
-            consultations = database.getAllConsultationsWhereIDIs(currentUserID);
-        }
-
-        session.setAttribute("consultations", consultations);
-
-    }
-
     private void issueInvoice() {
 
         try {
-            int id = Integer.parseInt(request.getParameterValues("appointmentSelection")[0]);
+            thisID = Integer.parseInt(request.getParameterValues("appointmentSelection")[0]);
 
-            if (database.isConsultation(id)) {
-                consultation = database.getConsultation(id);
+            if (database.isConsultation(thisID)) {
+                consultation = database.getConsultation(thisID);
                 patient = consultation.getPatient();
 
                 if (consultation.getNurse().getNurseID() == 30000) {
@@ -442,7 +537,7 @@ public class Refresh extends HttpServlet {
                         Date.valueOf(DateFormatter.formatDate(java.util.Date.from(Instant.now()), "yyyy-MM-dd")),
                         false, patient.isInsured());
             } else {
-                surgery = database.getSurgery(id);
+                surgery = database.getSurgery(thisID);
                 patient = surgery.getPatient();
 
                 price = database.getPrice("surgery") / 60 * surgery.getDuration();
@@ -454,92 +549,17 @@ public class Refresh extends HttpServlet {
 
             database.addObjectToDatabase(invoice);
 
-            removeAppointment(id);
+            removeAppointment(thisID);
         } catch (Exception ex) {
             message = ex.toString();
         }
-
-    }
-
-    private void refreshInvoices() {
-
-        try {
-            if (!isAdmin) {
-                invoices = database.getAllInvoicesWhereIDIs(currentUserID);
-            } else {
-                turnoverPaid = 0;
-                turnoverUnpaid = 0;
-
-                try {
-                    fromDate = Date.valueOf(request.getParameter("fromDate"));
-                    toDate = Date.valueOf(request.getParameter("toDate"));
-
-                    invoices = database.getAllInvoicesFromTo(fromDate, toDate);
-
-                } catch (Exception ex) {
-                    invoices = database.getAllInvoices();
-                }
-
-                for (Invoice invoice : invoices) {
-                    if (invoice.isPaid()) {
-                        turnoverPaid += invoice.getPrice();
-                    } else {
-                        turnoverUnpaid += invoice.getPrice();
-                    }
-                }
-                rounded = new BigDecimal(turnoverPaid);
-                rounded = rounded.setScale(2, BigDecimal.ROUND_HALF_UP);
-                session.setAttribute("turnoverPaid", rounded);
-
-                rounded = new BigDecimal(turnoverUnpaid);
-                rounded = rounded.setScale(2, BigDecimal.ROUND_HALF_UP);
-
-                session.setAttribute("turnoverUnpaid", rounded);
-
-            }
-
-        } catch (Exception ex) {
-            message = ex.toString();
-        }
-
-        session.setAttribute("invoices", invoices);
-
-    }
-
-    private void refreshPrescriptions() {
-
-        try {
-            prescriptions = database.getAllPrescriptionsWhereIDIs(currentUserID);
-
-        } catch (Exception ex) {
-            message = ex.toString();
-        }
-
-        session.setAttribute("prescriptions", prescriptions);
-
-    }
-
-    private void refreshSurgeries() {
-
-        try {
-
-            fromDate = Date.valueOf(request.getParameter("fromDate"));
-            toDate = Date.valueOf(request.getParameter("toDate"));
-
-            surgeries = database.getAllSurgeriesWhereIDIsFromTo(currentUserID, fromDate, toDate);
-
-        } catch (Exception e) {
-            surgeries = database.getAllSurgeriesWhereIDIs(currentUserID);
-        }
-
-        session.setAttribute("surgeries", surgeries);
 
     }
 
     private void payInvoice() {
         try {
-            int id = Integer.parseInt(request.getParameterValues("invoiceSelection")[0]);
-            invoice = database.getInvoice(id);
+            thisID = Integer.parseInt(request.getParameterValues("invoiceSelection")[0]);
+            invoice = database.getInvoice(thisID);
 
             invoice.setPaid(true);
 
@@ -555,9 +575,9 @@ public class Refresh extends HttpServlet {
     private boolean removeAppointment() {
         try {
 
-            int id = Integer.parseInt(request.getParameterValues("removeAppointmentID")[0]);
+            thisID = Integer.parseInt(request.getParameterValues("removeAppointmentID")[0]);
 
-            database.deleteObjectFromDatabase(id);
+            database.deleteObjectFromDatabase(thisID);
 
         } catch (Exception e) {
 
@@ -580,7 +600,7 @@ public class Refresh extends HttpServlet {
 
     private void setPatientTable() {
         try {
-            int choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
+            choice = Integer.parseInt(request.getParameterValues("insuranceSelection")[0]);
 
             switch (choice) {
                 case 0:
@@ -595,14 +615,14 @@ public class Refresh extends HttpServlet {
 
             session.setAttribute("insuranceSelection", null);
 
-        } catch (NumberFormatException ex) {
+        } catch (Exception ex) {
             patients = database.getAllPatients();
         }
     }
 
     private void setRequestType() {
         try {
-            boolean resetBookingType = Boolean.parseBoolean(request.getParameter("resetBookingType"));
+            resetBookingType = Boolean.parseBoolean(request.getParameter("resetBookingType"));
 
             if (resetBookingType) {
                 session.setAttribute("requestType", null);
@@ -614,7 +634,6 @@ public class Refresh extends HttpServlet {
             session.setAttribute("requestType", requestType);
 
         } catch (Exception ex) {
-            // message = ex.toString();
 
         }
 
@@ -622,7 +641,7 @@ public class Refresh extends HttpServlet {
 
     private void setTimeTable() {
         try {
-            int choice = Integer.parseInt(request.getParameterValues("timeTableSelection")[0]);
+            choice = Integer.parseInt(request.getParameterValues("timeTableSelection")[0]);
 
             switch (choice) {
                 case 0:
@@ -703,12 +722,12 @@ public class Refresh extends HttpServlet {
     private void removeUser() {
         try {
 
-            int id = Integer.valueOf(request.getParameterValues("removeUserSelection")[0]);
+            thisID = Integer.valueOf(request.getParameterValues("removeUserSelection")[0]);
 
-            database.deleteObjectFromDatabase(id);
+            database.deleteObjectFromDatabase(thisID);
 
-            if (database.isDoctor(id)) {
-                setDoctorsAndNurses();
+            if (database.isDoctor(thisID)) {
+                refreshDoctorsAndNurses();
             } else {
                 refreshPatients();
             }
@@ -719,7 +738,7 @@ public class Refresh extends HttpServlet {
     }
 
     private boolean adminSetUser() {
-        boolean success = false;
+        success = false;
 
         try {
             previousUserID = currentUserID;
@@ -728,7 +747,7 @@ public class Refresh extends HttpServlet {
             try {
                 currentUserID = (Integer) session.getAttribute("adminSelectedID");
 
-                int newUserID = Integer.valueOf(request.getParameterValues("userSelection")[0]);
+                newUserID = Integer.valueOf(request.getParameterValues("userSelection")[0]);
 
                 if (currentUserID != newUserID) {
                     currentUserID = newUserID;
@@ -773,11 +792,10 @@ public class Refresh extends HttpServlet {
     }
 
     private void setPricesFromDatabase() {
-        double consultationPrice = database.getPrice("consultation");
-        double consultationPriceNurse = database.getPrice("consultation_nurse");
-        double surgeryPrice = database.getPrice("surgery");
-        
-        
+        consultationPrice = database.getPrice("consultation");
+        consultationPriceNurse = database.getPrice("consultation_nurse");
+        surgeryPrice = database.getPrice("surgery");
+
         session.setAttribute("consultationPrice", consultationPrice);
         session.setAttribute("consultationPriceNurse", consultationPriceNurse);
         session.setAttribute("surgeryPrice", surgeryPrice);
@@ -810,7 +828,7 @@ public class Refresh extends HttpServlet {
         }
 
         if (isAdmin || isPatient) {
-            setDoctorsAndNurses();
+            refreshDoctorsAndNurses();
             refreshInvoices();
 
             if (isAdmin) {

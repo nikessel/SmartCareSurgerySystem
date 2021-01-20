@@ -1,7 +1,6 @@
 <%-- 
     Document   : consultationEditor
-    Created on : 18-Jan-2021, 09:31:43
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

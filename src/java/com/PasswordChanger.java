@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com;
 
 import java.io.IOException;
@@ -16,8 +11,11 @@ import model.Database;
 
 /**
  *
- * @author niklas
+ * @author Niklas Sarup-Lytzen ID: 18036644
+ *
  */
+
+// Requests and attempts to set a new password for a given user
 public class PasswordChanger extends HttpServlet {
 
     /**
@@ -29,11 +27,11 @@ public class PasswordChanger extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    String username, password, updatedPassword, repeatPassword, message;
-    Database database;
-    HttpSession session;
-    int currentUserID;
-    RequestDispatcher view;
+    private String username, password, updatedPassword, repeatPassword, message;
+    private Database database;
+    private HttpSession session;
+    private int currentUserID;
+    private RequestDispatcher view;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

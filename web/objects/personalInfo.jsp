@@ -1,7 +1,6 @@
 <%-- 
     Document   : personalInfo
-    Created on : 16-Jan-2021, 15:32:22
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@ include file = "/objects/jspHeader.jsp"%>

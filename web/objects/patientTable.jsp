@@ -1,7 +1,6 @@
 <%-- 
     Document   : patientTable
-    Created on : 15-Jan-2021, 14:56:50
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@ include file = "/objects/jspHeader.jsp"%>

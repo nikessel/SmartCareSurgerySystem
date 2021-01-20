@@ -1,9 +1,7 @@
 <%-- 
     Document   : jspHeader
-    Created on : 15-Jan-2021, 15:00:21
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
-
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>

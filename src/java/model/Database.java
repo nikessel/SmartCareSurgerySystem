@@ -35,7 +35,7 @@ public class Database {
 
     private Connection connection;
     private Statement statement;
-    private ResultSet rs = null;
+    private final ResultSet rs = null;
     private final String DATABASEPATH = "jdbc:derby://localhost:1527/SmartCareSurgeryDatabase";
     private final String USERNAME = "databaseUser";
     private final String PASSWORD = "password";
@@ -43,28 +43,25 @@ public class Database {
     private final String[] USERTABLENAMES = {"admins", "doctors", "nurses", "patients"};
 
     // Hashing variables for PBKDF2
-    byte[] hash_candidate = new byte[64];
-    byte[] check_hash = new byte[64];
-    char[] thisPassCharArray;
-    byte[] thisSalt = new byte[32];
-    int iterations = 65536;
-    int keyLength = 512;
-    KeySpec spec;
-    SecureRandom random = new SecureRandom();
+    private byte[] hash_candidate = new byte[64];
+    private byte[] check_hash = new byte[64];
+    private char[] thisPassCharArray;
+    private byte[] thisSalt = new byte[32];
+    private final int iterations = 65536;
+    private final int keyLength = 512;
+    private KeySpec spec;
+    private final SecureRandom random = new SecureRandom();
 
     private final Calendar calendar = Calendar.getInstance(Locale.UK);
-    int currentWeekNumber;
+    private int currentWeekNumber;
 
-    String queryString = "";
-    String idString = "";
-    int thisID = -2;
-    boolean userNameFound = false;
-    String tableName = "";
-    String idValue = "";
+    private String queryString = "";
+    private String idString = "";
+    private int thisID = -2;
+    private boolean userNameFound = false;
+    private String tableName = "";
 
-    // Display more infomation
-    int verbosity = 0;
-
+    
     // This method connects to the database
     public void connect() {
 

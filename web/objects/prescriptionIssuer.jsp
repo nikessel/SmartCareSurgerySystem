@@ -1,7 +1,6 @@
 <%-- 
     Document   : prescriptionIssuer
-    Created on : 19-Jan-2021, 06:04:41
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

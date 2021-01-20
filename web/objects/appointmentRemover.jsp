@@ -1,7 +1,6 @@
 <%-- 
-    Document   : consultationRemover
-    Created on : 19-Jan-2021, 10:22:19
-    Author     : niklas
+    Document   : appointmentRemover
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

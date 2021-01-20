@@ -36,8 +36,8 @@
         <servlet-class>com.Logout</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AuthorizationFilter</servlet-name>
-        <servlet-class>com.AuthorizationFilter</servlet-class>
+        <servlet-name>AuthorisationFilter</servlet-name>
+        <servlet-class>com.AuthorisationFilter</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServletContextListener</servlet-name>
@@ -102,11 +102,11 @@
         <url-pattern>/login.do</url-pattern>
     </filter-mapping>
     <filter>
-        <filter-name>AuthorizationFilter</filter-name>
-        <filter-class>com.AuthorizationFilter</filter-class>
+        <filter-name>AuthorisationFilter</filter-name>
+        <filter-class>com.AuthorisationFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>AuthorizationFilter</filter-name>
+        <filter-name>AuthorisationFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

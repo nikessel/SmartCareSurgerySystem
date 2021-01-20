@@ -1,7 +1,6 @@
 <%-- 
     Document   : surgeryTable
-    Created on : 18-Jan-2021, 13:35:36
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

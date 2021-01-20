@@ -1,7 +1,6 @@
 <%-- 
     Document   : priceSetter
-    Created on : 19-Jan-2021, 09:07:01
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

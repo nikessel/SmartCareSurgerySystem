@@ -1,9 +1,7 @@
 <%-- 
     Document   : userRemover
-    Created on : 19-Jan-2021, 10:11:26
-    Author     : niklas
+    Author     : Niklas Sarup-Lytzen ID: 18036644
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file = "/objects/jspHeader.jsp"%>
 
