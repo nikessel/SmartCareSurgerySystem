@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h5>Personal information</h5>
+        <h3>Personal information</h3>
         <p>
             Date of birth: ${currentUser.dateOfBirth}<br>
 

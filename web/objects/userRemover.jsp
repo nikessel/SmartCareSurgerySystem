@@ -27,7 +27,6 @@
                     <option value="${nurse.ID}" >${nurse.firstName} ${nurse.surName}</option>
                 </c:forEach>
             </select>
-
             <input class="paddedInput" type="submit" value="Remove user" />
         </form>
     </body>

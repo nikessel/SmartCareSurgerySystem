@@ -610,7 +610,7 @@ public class Refresh extends HttpServlet {
                 thisID = database.addObjectToDatabase(prescription);
 
                 database.setPending(thisID, false);
-                
+
                 message = "The new prescription has been sent to the patient";
 
                 return true;
@@ -975,12 +975,16 @@ public class Refresh extends HttpServlet {
                 adminSetUser();
             }
 
-            refreshTimeTable();
-            refreshConsultations();
+            try {
+                refreshTimeTable();
+                refreshConsultations();
 
-            // Nurses don't need to refresh surgeries
-            if (!database.isNurse(currentUserID)) {
-                refreshSurgeries();
+                // Nurses don't need to refresh surgeries
+                if (!database.isNurse(currentUserID)) {
+                    refreshSurgeries();
+                }
+            } catch (NullPointerException ex) {
+
             }
 
             // Admin will need to revert to their own user again
@@ -1044,13 +1048,16 @@ public class Refresh extends HttpServlet {
                 adminSetUser();
             }
 
-            removeAppointment();
-            refreshConsultations();
+            try {
+                removeAppointment();
+                refreshConsultations();
 
-            if (!database.isNurse(currentUserID)) {
-                refreshSurgeries();
+                if (!database.isNurse(currentUserID)) {
+                    refreshSurgeries();
+                }
+            } catch (NullPointerException ex) {
+
             }
-
             if (isAdmin) {
                 adminRevertUser();
             }

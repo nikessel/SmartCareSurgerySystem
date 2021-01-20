@@ -23,7 +23,9 @@
                 </c:forEach>
             </select>
             <input type="checkbox" name="approve" value="true"/>
+   
             <label for="approve">Approve request</label>
+
             <input class="paddedInput" type="submit" value="Confirm" />
         </form>
     </body>
