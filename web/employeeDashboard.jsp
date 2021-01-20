@@ -18,7 +18,7 @@
 
 
 
-    <div class="grid-container">  
+    <div class="mainGridContainer">  
 
 
         <c:import url="objects/keepScrollPosition.html"/>
@@ -32,26 +32,26 @@
         <main class="main">
 
 
-            <div class="wide_card">
+            <div class="wideCard">
                 <c:import url="objects/timetable.jsp"/>
                 <c:import url="objects/invoiceIssuer.jsp"/>
             </div>
 
-            <div class="main-cards">
-                <div class="card">
+            <div class="mediumCardsMain">
+                <div class="mediumCard">
                     <c:import url="objects/patientTable.jsp"/>
                 </div>
-                <div class="card">
+                <div class="mediumCard">
                     <c:import url="objects/personalInfo.jsp"/>
                 </div>
             </div>
 
-            <div class="main-cards">
-                <div class="card">
+            <div class="mediumCardsMain">
+                <div class="mediumCard">
                     <c:import url="objects/pendingConfirmer.jsp"/>
                 </div>
 
-                <div class="card">
+                <div class="mediumCard">
                     <c:if test="${not empty isDoctor}">
                         <c:import url="objects/prescriptionIssuer.jsp"/>
                     </c:if>

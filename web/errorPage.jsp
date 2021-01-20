@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-        <div class="login card">
+        <div class="login mediumCard">
             <h1>Error page</h1>
             <h2>${message} ${tempMessage}</h2>
             <form class="paddedForm" action="${pageContext.request.contextPath}/logout.do" method="post">

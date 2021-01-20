@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-        <div class="login card">
+        <div class="login mediumCard">
             <h1>Smart Care Surgery System Password Management</h1>
             <h2>${message}</h2>
             <br>

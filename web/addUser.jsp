@@ -13,7 +13,7 @@
         </style>
     </head>
     <body>
-        <div class="login card">
+        <div class="login mediumCard">
             <h1>Smart Care Surgery System Add New User</h1>
             <h2>${headline}</h2>
             <h3>${message}</h3>

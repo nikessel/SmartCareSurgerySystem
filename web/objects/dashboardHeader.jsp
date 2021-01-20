@@ -17,7 +17,7 @@
             <h3>Welcome, ${currentUser.firstName} ${currentUser.surName}</h3>
             <div class="inline">
                 <p>You are logged in as a${loggedInAs}</p> <br>
-                <form class="logout_form" action="${pageContext.request.contextPath}/logout.do" method="post">
+                <form class="logoutForm" action="${pageContext.request.contextPath}/logout.do" method="post">
                     <input type="submit" value="Logout" />
                 </form>
             </div>

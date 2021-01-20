@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-        <div class="grid-container">    
+        <div class="mainGridContainer">    
 
             <c:import url="objects/keepScrollPosition.html"/>
             <c:import url="objects/dashboardHeader.jsp"/>
@@ -24,36 +24,36 @@
             </aside>                  
 
             <main class="main">
-                <div class="wide_card">
+                <div class="wideCard">
                     <c:import url="objects/timetable.jsp"/>
                     <c:import url="objects/appointmentRemover.jsp"/>
                 </div>
 
-                <div class="main-cards">
-                    <div class="card">
+                <div class="mediumCardsMain">
+                    <div class="mediumCard">
                         <c:import url="objects/patientTable.jsp"/>
                     </div>
-                    <div class="card">
+                    <div class="mediumCard">
                         <c:import url="objects/pendingEmployeesConfirmer.jsp"/>
                     </div>
 
 
                 </div>
 
-                <div class="main-cards">
-                    <div class="card">
+                <div class="mediumCardsMain">
+                    <div class="mediumCard">
                         <c:import url="objects/personalInfo.jsp"/>
                     </div>
-                    <div class="card">
+                    <div class="mediumCard">
                         <c:import url="objects/turnoverCalculator.jsp"/> 
                     </div>
                 </div>
 
-                <div class="main-cards">
-                    <div class="card">
+                <div class="mediumCardsMain">
+                    <div class="mediumCard">
                         <c:import url="objects/priceSetter.jsp"/>
                     </div>
-                    <div class="card">
+                    <div class="mediumCard">
                         <c:import url="objects/userRemover.jsp"/>
                     </div>
                 </div>

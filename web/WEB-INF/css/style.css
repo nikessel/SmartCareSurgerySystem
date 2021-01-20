@@ -6,8 +6,8 @@ body {
     box-sizing: border-box;
 }
 
-/* Assign grid instructions to our parent grid container, mobile-first (hide the sidenav) */
-.grid-container {
+
+.mainGridContainer {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 50px 1fr 50px;
@@ -18,7 +18,7 @@ body {
     height: 100vh;
 }
 
-/* Give every child element its grid name */
+
 .header {
     display: flex;
     align-items: center;
@@ -39,7 +39,7 @@ body {
     height: max-content;
 }
 
-.logout_form {
+.logoutForm {
     padding: 16px;
     justify-content: space-between;
 }
@@ -55,38 +55,8 @@ body {
     transform: translateX(-245px);
     transition: all .6s ease-in-out;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
-    z-index: 2; /* Needs to sit above the hamburger menu icon */
+    z-index: 2;
     background-color: #394263;
-}
-
-.sidenav.active {
-    transform: translateX(0);
-}
-
-.sidenav__close-icon {
-    position: absolute;
-    visibility: visible;
-    top: 8px;
-    right: 12px;
-    cursor: pointer;
-    font-size: 20px;
-    color: black;
-}
-
-.sidenav__list {
-    padding: 0;
-    margin-top: 85px;
-    list-style-type: none;
-}
-
-.sidenav__list-item {
-    padding: 20px 20px 20px 40px;
-    color: white;
-}
-
-.sidenav__list-item:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    cursor: pointer;
 }
 
 .main {
@@ -94,7 +64,7 @@ body {
     background-color: white;
 }
 
-.wide_card {
+.wideCard {
     display: fixed;
     margin: 20px;
     padding: 20px;
@@ -108,7 +78,7 @@ body {
 
 }
 
-.main-overview {
+.smallCardMain {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
     grid-auto-rows: 94px;
@@ -117,7 +87,7 @@ body {
 
 }
 
-.overviewcard {
+.smallCard {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -128,7 +98,7 @@ body {
     border-radius: 5px;
 }
 
-.main-cards {
+.mediumCardsMain {
     column-count: 1;
     column-gap: 20px;
     margin: 20px;
@@ -136,7 +106,7 @@ body {
 
 }
 
-.card {
+.mediumCard {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -161,10 +131,10 @@ body {
     background-color: #648ca6;
 }
 
-/* Non-mobile styles, 750px breakpoint */
+
 @media only screen and (min-width: 46.875em) {
-    /* Show the sidenav */
-    .grid-container {
+
+    .mainGridContainer {
         break-inside: avoid;
         grid-template-columns: 240px 1fr;
         grid-template-areas:
@@ -173,30 +143,22 @@ body {
             "sidenav footer";
     }
 
-    .header__search {
-        margin-left: 0;
-    }
-
     .sidenav {
         position: relative;
         transform: translateX(0);
     }
 
-    .sidenav__close-icon {
-        visibility: hidden;
-    }
+
 }
 
-/* Medium screens breakpoint (1050px) */
+
 @media only screen and (min-width: 65.625em) {
     /* Break out main cards into two columns */
-    .main-cards {
+    .mediumCardsMain {
         column-count: 2;
         break-inside: avoid;
     }
 }
-
-
 
 .timeTable {
     width:max-content;
