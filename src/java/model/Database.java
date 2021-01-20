@@ -31,6 +31,15 @@ import java.util.Locale;
  * @author Niklas Sarup-Lytzen ID: 18036644
  *
  */
+
+/* ---------- Database class ----------
+
+This class handles almost all model logic in the webapp. Any communication
+with the database and all java Object instantiation will be done in this class
+
+*/
+
+
 public class Database {
 
     private Connection connection;
@@ -61,7 +70,6 @@ public class Database {
     private boolean userNameFound = false;
     private String tableName = "";
 
-    
     // This method connects to the database
     public void connect() {
 
@@ -104,21 +112,7 @@ public class Database {
         }
     }
 
-    private void closeRSAndStatement(ResultSet thisRS, Statement thisStatement) {
-
-        try {
-            if (thisRS != null) {
-                thisRS.close();
-            }
-            if (thisStatement != null) {
-                thisStatement.close();
-            }
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        }
-
-    }
-
+    // Will return a password as a hashed byte array
     public byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
 
         try {
@@ -133,6 +127,7 @@ public class Database {
 
     }
 
+    // Converts a byte array to a hexidecimal string
     public String byteArrayToString(byte[] byteArray) {
         StringBuilder result = new StringBuilder();
 
@@ -155,6 +150,7 @@ public class Database {
         return output;
     }
 
+    // Generate a random salt value
     public byte[] getRandomSalt() {
         random.nextBytes(thisSalt);
 
@@ -189,6 +185,7 @@ public class Database {
         return currentWeekNumber;
     }
 
+    // Determines the name of a id column name based on the id
     private String getIDString(int id) {
         if (id <= 0) {
             return "";
@@ -196,6 +193,7 @@ public class Database {
 
         tableName = TABLENAMES[(int) id / 10000 - 1];
 
+        // Fix for incorrect spelling of "surgerie_id"
         if (tableName.equals("surgeries")) {
             return tableName.substring(0, tableName.length() - 3) + "y_id";
         } else {
@@ -203,6 +201,7 @@ public class Database {
         }
     }
 
+    // Same as above, but based on tableName
     private String getIDString(String tableName) {
         if (tableName.equals("surgeries")) {
             return tableName.substring(0, tableName.length() - 3) + "y_id";
@@ -211,6 +210,8 @@ public class Database {
         }
     }
 
+    // Addresses are stored in the database as a string string.
+    // This method makes the conversion from the string to an Address object
     private Address convertStringToAddress(String thisAddressString) {
 
         String[] stringArray = thisAddressString.split("-");
@@ -242,6 +243,7 @@ public class Database {
 
     }
 
+    // Fix for a Timestamp bug sometimes setting the year to around 3900
     private String formatSQLTimestamp(Timestamp thisTimestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String string = dateFormat.format(thisTimestamp);
@@ -266,6 +268,7 @@ public class Database {
         return TABLENAMES[(int) id / 10000 - 1];
     }
 
+    // Booleans used for determining the object in question
     public boolean isUser(int thisID) {
         return 10000 <= thisID && thisID <= 49999;
     }
@@ -306,24 +309,34 @@ public class Database {
         return 80000 <= thisID && thisID <= 89999;
     }
 
+    // This is the main method used for user authentication
     public int getUserID(String username, String password) {
 
         thisPassCharArray = password.toCharArray();
         userNameFound = false;
 
+        // Loop through all User tables
         for (String tableName : USERTABLENAMES) {
 
+            // Get the username, password hash and salt
             queryString = getCredentialsSQLString(tableName) + " WHERE username='" + username + "'";
             ResultSet rs = executeQuery(queryString);
 
             try {
                 while (rs.next()) {
+                    // If the resultSet has a row, the user has been found
                     userNameFound = true;
+
                     thisID = rs.getInt(1);
+
+                    // Revert the hex strings to a byte array
                     thisSalt = hexStringToByteArray(rs.getString("salt"));
                     check_hash = hexStringToByteArray(rs.getString("password_hash"));
+
+                    // Hash the entered password with the users salt from the database
                     hash_candidate = hashPassword(thisPassCharArray, thisSalt, iterations, keyLength);
 
+                    // If the hashes are the same, return the user's ID
                     if (Arrays.equals(check_hash, hash_candidate)) {
                         return thisID;
                     }
@@ -337,13 +350,16 @@ public class Database {
             }
         }
 
+        // Return -2 if the user was not found
         if (!userNameFound) {
             return -2;
         }
 
+        // If the user was found, but the password was incorrect, return -1
         return -1;
     }
 
+    // Returns a list of all userIDs
     public ArrayList<Integer> getIDs() {
         ArrayList<Integer> output = new ArrayList();
 
@@ -366,6 +382,7 @@ public class Database {
         return output;
     }
 
+    // Get all pending users
     public ArrayList<Integer> getPendingUsers() {
         ArrayList<Integer> output = new ArrayList();
 
@@ -389,6 +406,7 @@ public class Database {
         return output;
     }
 
+    // Get all pending from a specific table
     public ArrayList<Integer> getPending(String tableName) {
         ArrayList<Integer> output = new ArrayList();
 
@@ -409,12 +427,13 @@ public class Database {
         return output;
     }
 
-    public void setPending(int id) {
+    // Set an objects pending status to true
+    public void setPending(int id, boolean to) {
         idString = getIDString(id);
         tableName = getTableName(id);
 
         try {
-            queryString = "UPDATE " + tableName + " SET pending=true WHERE " + idString + "=" + id;
+            queryString = "UPDATE " + tableName + " SET pending=" + to + " WHERE " + idString + "=" + id;
 
             executeUpdate(queryString);
 
@@ -440,6 +459,7 @@ public class Database {
         return -1;
     }
 
+    // Returns true if the "pending" column of the user is true
     public boolean isUserPending(int id) {
 
         try {
@@ -460,25 +480,7 @@ public class Database {
         return false;
     }
 
-    public void approve(int id) {
-        idString = getIDString(id);
-        tableName = getTableName(id);
-
-        try {
-
-            queryString = "UPDATE " + tableName + " SET pending=false WHERE " + idString + "=" + id;
-
-            System.out.println(queryString);
-            executeUpdate(queryString);
-
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        } finally {
-            closeRSAndStatement();
-        }
-
-    }
-
+    // This method will generate any single valid object from a given resultSet
     private Object getDatabaseObject(ResultSet rs) throws ClassCastException {
 
         boolean paid, insured, isFullTime;
@@ -503,7 +505,7 @@ public class Database {
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
 
-        // Get ID
+        // Get ID, used for determining the database tableName / type of object
         try {
             if (rs.next()) {
                 id = rs.getInt(1);
@@ -521,6 +523,7 @@ public class Database {
             try {
                 rs.beforeFirst();
 
+                // Get common User attributes
                 if (rs.next()) {
                     username = rs.getString("username");
 
@@ -534,6 +537,7 @@ public class Database {
                     dateOfBirth = rs.getDate("date_of_birth");
                 }
 
+                // Get common Employee attributes
                 if (isEmployee(id)) {
                     try {
                         rs.beforeFirst();
@@ -545,6 +549,7 @@ public class Database {
                     } catch (SQLException ex) {
                         System.err.println(ex);
                     }
+                    // Get Patient attributes
                 } else if (isPatient(id)) {
                     try {
                         rs.beforeFirst();
@@ -561,6 +566,8 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
+
+            // Get consultation specific attributes
         } else if (isConsultation(id)) {
             try {
                 rs.beforeFirst();
@@ -577,6 +584,8 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
+
+            // Get invoice specific attributes
         } else if (isInvoice(id)) {
             try {
                 rs.beforeFirst();
@@ -591,6 +600,8 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
+
+            // Get surgery specific attributes
         } else if (isSurgery(id)) {
             try {
                 rs.beforeFirst();
@@ -605,6 +616,8 @@ public class Database {
             } catch (SQLException ex) {
                 System.err.println(ex);
             }
+
+            // Get prescription specific attributes
         } else if (isPrescription(id)) {
             try {
                 rs.beforeFirst();
@@ -621,12 +634,15 @@ public class Database {
             }
         }
 
+        // Generate and return the correct object
         if (isUser(id)) {
             if (isEmployee(id)) {
                 if (isAdmin(id)) {
                     return new Admin(username, firstName, surName, dateOfBirth, address, isFullTime, id);
+
                 } else if (isDoctor(id)) {
                     return new Doctor(username, firstName, surName, dateOfBirth, address, isFullTime, id);
+
                 } else if (isNurse(id)) {
                     return new Nurse(username, firstName, surName, dateOfBirth, address, isFullTime, id);
                 }
@@ -635,17 +651,16 @@ public class Database {
             }
         } else if (isConsultation(id)) {
             return new Consultation(patient, doctor, nurse, consultationTime, note, duration, id);
+
         } else if (isInvoice(id)) {
             return new Invoice(patient, price, invoiceDate, paid, insured, id);
+
         } else if (isSurgery(id)) {
             return new Surgery(patient, doctor, surgeryTime, duration, id);
+
         } else if (isPrescription(id)) {
-            System.out.println(patient);
-            System.out.println(doctor);
-            System.out.println(medication);
-            System.out.println(expirationDate);
-            System.out.println(id);
             return new Prescription(patient, doctor, medication, expirationDate, id);
+
         }
 
         return new Object();
@@ -664,12 +679,13 @@ public class Database {
         }
     }
 
+    // Returns a list of Objects based on a multirow resultSet
     public ArrayList<Object> getListFromDatabase(ResultSet rs) throws ArrayIndexOutOfBoundsException {
 
         ArrayList<Object> outputList = new ArrayList();
         int id = -1;
 
-        // Get ID
+        // Get ID, for determining the table
         try {
             if (rs.next()) {
                 id = rs.getInt(1);
@@ -686,12 +702,13 @@ public class Database {
 
         String name = TABLENAMES[(int) id / 10000 - 1];
 
-        // iterate through the sql resultset
+        // Iterate through the sql resultset
         try {
             rs.beforeFirst();
             while (rs.next()) {
                 int thisID = rs.getInt(1);
 
+                // Skip adding pending entries
                 if (isPending(thisID)) {
                     rs.next();
                     continue;
@@ -764,6 +781,11 @@ public class Database {
         return executeQuery(queryString);
     }
 
+    /* ---------- Get single object methods ----------
+    
+    The following methods will generate and return a single object based on an ID
+    
+     */
     public Admin getAdmin(int adminID) {
 
         ResultSet rs1 = selectFromWhere("*", "admins", "admin_id", String.valueOf(adminID));
@@ -871,6 +893,7 @@ public class Database {
         return new Prescription();
     }
 
+    // Get every Object from a specific table
     public ArrayList<Object> getAllFromDatabase(String tableToGet) {
 
         idString = getIDString(tableToGet);
@@ -892,6 +915,14 @@ public class Database {
 
     }
 
+    /* --------- Get specific object type list -----------
+    
+    The following methods uses the method above, but parses the return list
+    into a specfic object type ArrayList.
+    Optionally returns lists based on parameters such as start date and end date,
+    or where an id_string is equal to some specific value
+    
+     */
     public ArrayList<Patient> getAllPatients() {
         ResultSet rs1 = executeQuery("SELECT * FROM patients");
 
@@ -1063,6 +1094,7 @@ public class Database {
 
     }
 
+    // Prints all or one of the tables in the database
     public void printDatabaseTable(String tableToPrint) {
         if ("all".equals(tableToPrint)) {
             for (String TABLENAMES1 : TABLENAMES) {
@@ -1083,10 +1115,12 @@ public class Database {
         }
     }
 
+    // As the database automatically generates IDs for new rows added, this is
+    // Needed for getting the ID of a newly added object
     public int getLastEntryID(String tableName) {
         idString = getIDString(tableName);
         int output = -1;
-        String queryString = "SELECT * FROM " + tableName + " ORDER BY " + idString;
+        queryString = "SELECT * FROM " + tableName + " ORDER BY " + idString;
         System.out.println(queryString);
         ResultSet rs1 = executeQuery(queryString);
 
@@ -1100,6 +1134,7 @@ public class Database {
         return output;
     }
 
+    // This method will add a new object or update an existing one
     public int addObjectToDatabase(Object object) {
         StringBuilder namesString = new StringBuilder();
         StringBuilder valuesString = new StringBuilder();
@@ -1113,9 +1148,11 @@ public class Database {
 
         namesString.append("(");
 
+        // Attempt to parse the input Object in various ways to determine the correct table
         if (object instanceof User) {
             User user = (User) object;
 
+            // Set User common attributes
             namesString.append("username, first_name, sur_name, date_of_birth, address, ");
 
             valuesString.append("'" + user.getUsername() + "', ");
@@ -1251,6 +1288,9 @@ public class Database {
         queryString = insertPrefix + tableName + " " + nameStringAsString + valuesPrefix + valuesStringAsString;
 
         System.out.println(queryString);
+
+        // If the Object is newly created, INSERT the Object and let the database
+        // Generate an ID
         if (thisID == -1) {
             try {
                 executeUpdate(queryString);
@@ -1259,6 +1299,8 @@ public class Database {
                 System.out.println(ex);
                 return -1;
             }
+
+            // If the Object already has an ID, UPDATE the Object instead
         } else {
 
             namesString.deleteCharAt(0);
@@ -1291,6 +1333,7 @@ public class Database {
         return 0;
     }
 
+    // Helper method for setPassword if an ID is not known. Used for adding a new User
     public void addPasswordToUser(User user, String password) {
         String username = user.getUsername();
 
@@ -1320,6 +1363,7 @@ public class Database {
         setPassword(thisID, password);
     }
 
+    // Hashes and generates a salt for a User, saves the output in the database
     public void setPassword(int userID, String password) {
         int lowerBound;
         int upperBound;
@@ -1347,12 +1391,11 @@ public class Database {
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE " + tableName + " SET password_hash = ?, salt = ? WHERE " + idString + " = ?");
 
-            // set the preparedstatement parameters
+            // Set the preparedstatement parameters
             ps.setString(1, byteArrayToString(passwordHash));
             ps.setString(2, byteArrayToString(salt));
             ps.setInt(3, userID);
 
-            // call executeUpdate to execute our sql update statement
             ps.executeUpdate();
             ps.close();
 
@@ -1376,7 +1419,8 @@ public class Database {
     }
 
     /*
-    This method uses the same concept as above, but will delete an object from
+    
+    This method uses the same concept as addObjectToDatabase, but will delete an object from
     the database
     
      */
@@ -1436,6 +1480,7 @@ public class Database {
         }
     }
 
+    // Simply knowing the ID simplifies the process
     public void deleteObjectFromDatabase(int id) {
 
         try {

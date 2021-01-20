@@ -10,7 +10,7 @@ import model.*;
  */
 public class myServletContextListener implements ServletContextListener {
     
-    /*  Whenever the webapp is started, this method will run
+    /*  Whenever the webapp is started, this method will run.
         The method will connect the database and set the database as a global
         attribute accessible by all servlets */
     @Override
