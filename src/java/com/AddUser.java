@@ -38,9 +38,9 @@ public class AddUser extends HttpServlet {
      */
     // Attribute declarations
     private String username, password, repeatPassword, message, addressLine1, addressLine2,
-            postcode, county, town, telephoneNumber, lookupPostcode, headline, firstName, surName;
+            postcode, county, town, telephoneNumber, headline, firstName, surName;
     private Date dateOfBirth;
-    private int currentUserID, streetNumber, userType;
+    private int currentUserID, userType;
     private boolean isFullTime, redirectToLogin, insured;
     private Address address;
 
