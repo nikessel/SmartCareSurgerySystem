@@ -995,15 +995,19 @@ public class Refresh extends HttpServlet {
         } else if (jspContext.contains("pendingConfirmer")) {
 
             approvePendingConsultation();
-            approvePendingSurgery();
-            approvePendingPrescription();
 
             setPendingConsultations();
             refreshConsultations();
-            setPendingSurgeries();
-            refreshSurgeries();
-            setPendingPrescriptions();
-            refreshPrescriptions();
+
+            if (!isNurse) {
+                approvePendingSurgery();
+                approvePendingPrescription();
+                
+                setPendingSurgeries();
+                refreshSurgeries();
+                setPendingPrescriptions();
+                refreshPrescriptions();
+            }
 
         } else if (jspContext.contains("patientTable")) {
             refreshPatientTable();

@@ -13,6 +13,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <h3>Book an appointment or request a prescription extension</h3>
         <h4>${message1}</h4>
         
         <c:if test="${empty requestType}">

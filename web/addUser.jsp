@@ -44,7 +44,7 @@
                     <input id="repeatPassword" name="repeatPassword" required="required" type="password" placeholder="Repeat password"/>
                     <h3>Personal information</h3>
                     <input id="firstName" name="firstName" required="required" type="text" placeholder="First name" value="${firstName}"/>
-                    <input id="surName" name="surName" required="required" type="text" placeholder="Sur name" value="${surName}"/><br><br>
+                    <input id="surName" name="surName" required="required" type="text" placeholder="Surname" value="${surName}"/><br><br>
                     <label for="dateOfBirth">Date of birth</label>
                     <input id="dateOfBirth" name="dateOfBirth" required="required" type="date"/>
                     <c:if test = "${userType eq '1'}">

@@ -197,7 +197,7 @@ insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, p
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20001, 30000, '2021-01-28 12:50:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40001, 20002, 30000, '2021-01-28 12:10:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40014, 20001, 30000, '2021-01-28 12:00:00', false, '', 10);
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40001, 20002, 30000, '2021-01-28 17:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20001, 30000, '2021-01-28 17:00:00', false, 'Knee pain', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40001, 20001, 30000, '2021-01-28 11:10:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20001, 30000, '2021-01-29 10:40:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40001, 20002, 30000, '2021-01-29 11:00:00', false, '', 10);
@@ -238,7 +238,7 @@ insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, p
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20000, 30001, '2021-01-25 13:10:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40010, 20000, 30001, '2021-01-25 12:20:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40009, 20000, 30001, '2021-01-26 11:50:00', false, '', 10);
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20000, 30001, '2020-01-26 10:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40009, 20000, 30001, '2020-01-26 10:00:00', false, '', 10);
 
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40005, 20000, 30001, '2021-01-27 13:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20000, 30001, '2021-01-27 15:00:00', false, '', 10);
@@ -246,17 +246,17 @@ insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, p
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40011, 20000, 30001, '2021-01-27 16:10:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40012, 20000, 30001, '2021-01-28 12:40:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20000, 30001, '2021-01-28 12:20:00', false, '', 10);
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20000, 30001, '2021-01-28 12:50:00', false, '', 10);
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20000, 30001, '2021-01-28 12:10:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20000, 30001, '2021-01-28 12:50:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40004, 20000, 30001, '2021-01-28 12:10:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40011, 20000, 30001, '2021-01-28 12:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40005, 20000, 30001, '2021-01-28 17:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40007, 20000, 30001, '2021-01-28 11:10:00', false, '', 10);
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20000, 30001, '2021-01-29 10:40:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40007, 20000, 30001, '2021-01-29 10:40:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40006, 20000, 30001, '2021-01-29 11:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20000, 30001, '2021-01-29 12:40:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40003, 20000, 30001, '2021-01-29 16:10:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40004, 20000, 30001, '2021-01-29 18:30:00', false, '', 10);
-insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40002, 20000, 30001, '2021-01-29 17:00:00', false, '', 10);
+insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20000, 30001, '2021-01-29 17:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40008, 20000, 30001, '2021-01-30 12:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40001, 20000, 30001, '2021-01-30 11:00:00', false, '', 10);
 insert into consultations (patient_id, doctor_id, nurse_id, consultation_time, pending, note, duration) values (40011, 20000, 30001, '2021-01-30 16:00:00', false, '', 10);
@@ -358,17 +358,17 @@ insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) v
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40012, 20002, '2021-01-24 10:00:00', 10, false);
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2021-01-26 11:00:00', 10, false);
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20001, '2021-01-26 12:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20002, '2021-01-26 13:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40004, 20001, '2021-01-26 13:00:00', 10, false);
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40002, 20001, '2021-01-26 14:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-01-27 15:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-01-27 16:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20002, '2021-01-27 17:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-28 18:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-28 19:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40006, 20001, '2021-01-26 15:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-01-26 16:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40007, 20002, '2021-01-26 17:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-26 18:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20002, '2021-01-26 19:00:00', 10, false);
 
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20002, '2021-01-28 08:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-01-28 09:00:00', 10, false);
-insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20001, '2021-01-28 10:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40008, 20002, '2021-01-26 08:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40001, 20002, '2021-01-26 09:00:00', 10, false);
+insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40009, 20001, '2021-01-26 10:00:00', 10, false);
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40011, 20001, '2021-01-29 11:00:00', 10, false);
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20001, '2021-01-29 12:00:00', 10, false);
 insert into surgeries (patient_id, doctor_id, surgery_time, duration, pending) values (40010, 20002, '2021-01-29 13:00:00', 10, false);
